@@ -1,0 +1,189 @@
+<Features>
+	<Feature name="Stroke" supported="true">
+		<Property name="Style" default="Solid" supported="true">
+			<Value name="Solid" supported="true"/>
+			<Value name="Hairline" supported="true"/>
+			<Value name="Dashed" supported="false"/>
+			<Value name="Dotted" supported="false"/>
+			<Value name="Ragged" supported="false"/>
+			<Value name="Stippled" supported="false"/>
+			<Value name="Hatched" supported="false"/>
+		</Property>
+		<Property name="Scale" default="Normal" supported="true">
+			<Value name="Normal" supported="true"/>
+			<Value name="Horizontal" supported="false"/>
+			<Value name="Vertical" supported="false"/>
+			<Value name="None" supported="false"/>
+		</Property>
+		<Property name="VariableWidth" supported="false"/>
+	</Feature>
+	<Feature name="Fill" supported="true">
+		<Property name="Filltype" default="Solid" supported="true">
+			<Value name="NoFill" supported="true"/>
+			<Value name="SolidFill" supported="true"/>
+			<Value name="LinearGradientFill" supported="true"/>
+			<Value name="RadialGradientFill" supported="false"/>
+			<Value name="BitmapFill" supported="true"/>
+		</Property>
+		<Property name="GradientFlow" default="Extend" supported="true">
+			<Value name="Extend" supported="true"/>
+			<Value name="Reflect" supported="true"/>
+			<Value name="Repeat" supported="true"/>
+		</Property>
+		<Property name="LinearRGB" default="false" supported="true"/>
+	</Feature>
+	<Feature name="Text" supported="true">
+		<Property name="RenderAsHTML" supported="true"/>
+		<Property name="TextType" default="DynamicText" supported="true">
+			<Value name="StaticText" supported="false"/>
+			<Value name="DynamicText" supported="true"/>
+			<Value name="InputText" supported="false"/>
+		</Property>
+		<Property name="TextFormat" default="LeftAlign" supported="true">
+			<Value name="LeftAlign" supported="true"/>
+			<Value name="Justify" supported="true"/>
+			<Value name="RightAlign" supported="true"/>
+			<Value name="CentreAlign" supported="true"/>
+		</Property>
+		<Property name="FontEmbed" supported="false"/>
+		<Property name="LetterSpacing" default="0.0" supported="false"/>
+		<Property name="AutoKern" default="false" supported="false"/>
+		<Property name="AntiAlias" supported="false"/>
+		<Property name="Selectable" default="true" supported="false"/>
+		<Property name="RenderAsHtml" default="false" supported="false"/>
+		<Property name="Border" default="false" supported="false"/>
+		<Property name="SuperScript" default="false" supported="false"/>
+		<Property name="SubScript" default="false" supported="false"/>
+		<Property name="Margins" default="0.0" supported="false"/>
+		<Property name="LineType" default="SingleLine" supported="false">
+			<Value name="SingleLine" supported="false"/>
+			<Value name="MultiLine" supported="false"/>
+			<Value name="MultiLineNoWrap" supported="false"/>
+			<Value name="Password" supported="false"/>
+		</Property>
+		<Property name="TextLinkage" supported="false"/>
+		<Property name="Scrollable" supported="false"/>
+	</Feature>
+	<Feature name="Scene" supported="false" />
+	<Feature name="Components" supported="false" />
+	<Feature name="Debug" supported="false" />
+	<Feature name="SwfObjects" supported="false" >
+		<Property name ="ImportEmbeddedSWF" supported="false"/>
+	</Feature>
+	<Feature name="3D" supported="false" />
+	<Feature name="ScriptLinkage" supported="false">
+		<Property name ="Declaration" supported="true"/>
+		<Property name ="Definition" supported="true"/>
+	</Feature>
+	<Feature name="9Slice" supported="false" />
+	<Feature name="Symbol" supported="true">
+		<Property name="SymbolType" default="Graphic" supported="true">
+			<Value name="MovieClip" supported="true"/>
+			<Value name="Button" supported="true"/>
+			<Value name="Graphic" supported="true"/>
+		</Property>
+		<Property name="BlendModes" default="Normal" supported="true">
+			<Value name="Normal" supported="true"/>
+			<Value name="Layer" supported="false"/>
+			<Value name="Darken" supported="false"/>
+			<Value name="Add" supported="false"/>
+			<Value name="Multiply" supported="false"/>
+			<Value name="Lighten" supported="false"/>
+			<Value name="Screen" supported="false"/>
+			<Value name="Overlay" supported="false"/>
+			<Value name="HardLight" supported="false"/>
+			<Value name="Subtract" supported="false"/>
+			<Value name="Difference" supported="false"/>
+			<Value name="Invert" supported="false"/>
+			<Value name="Alpha" supported="false"/>
+			<Value name="Erase" supported="false"/>
+		</Property>
+		<Property name="ColorEffect" default="None" supported="true">
+			<Value name="None" supported="true"/>
+			<Value name="Brightness" supported="false"/>
+			<Value name="Tint" supported="false"/>
+			<Value name="Alpha" supported="false"/> 
+			<Value name="Advanced" supported="false"/>
+		</Property>
+		<Property name="Render" default="Original" supported="true">
+			<Value name="Original" supported="true"/>
+			<Value name="CacheAsBitmap" supported="false"/>
+			<Value name="ExportAsBitmap" supported="false"/>
+		</Property>
+		<Property name="BitmapBackground" default="Transparent" supported="true">
+			<Value name="Transparent" supported="true"/>
+			<Value name="Opaque" supported="true"/>
+		</Property>
+		<Property name="Tracking" default="TrackAsButton" supported="false">
+			<Value name="TrackAsButton" supported="true"/>
+			<Value name="TrackAsMenuItem" supported="true"/>
+		</Property>
+	</Feature>
+	<Feature name="Filters" supported="false"/>
+	<Feature name="DropShadowFilter" supported="true">
+		<Property name="Quality" default="Low" supported="true"/>
+		<Property name="Angle" default ="0.785" supported="true"/>  !--- measured in radians ----!
+		<Property name="Distance" default = "0" supported="true"/>
+		<Property name="Knockout" default = "false" supported="true"/>
+		<Property name="Inner" default = "false" supported="true"/>
+		<Property name="HideObject" default = "false" supported="true"/>	
+	</Feature>
+	<Feature name="GlowFilter" supported="true">
+		<Property name="Quality" default="Low" supported="true"/>
+		<Property name="Knockout" default = "false" supported="true"/>
+		<Property name="Inner" default = "false" supported="true"/>
+	</Feature>
+	<Feature name="BlurFilter" supported="true"/>
+	<Feature name="BevelFilter" supported="true"/>
+	<Feature name="GradientGlowFilter" supported="true"/>
+	<Feature name="GradientBevelFilter" supported="true"/>
+	<Feature name="AdjustColorFilter" supported="true"/>
+	<Feature name="Compiler" supported="false"/>
+	<Feature name="Video" supported="false"/>
+	<Feature name="FrameScript" supported="false"/>
+	<Feature name="RuntimeSharedLibraries" supported="false"/>
+	<Feature name="Accessibility" supported="false"/>
+	<Feature name="Sound" supported="true">
+		<Property name="Effect" supported="true"/>
+		<Property name="Sync" default="Event" supported="true">
+			<Value name="Event" supported="true"/>
+			<Value name="Start" supported="true"/>
+			<Value name="Stop" supported="true"/>
+			<Value name="Stream" supported="true"/>
+		</Property>
+		<Property name="FileFormat" supported="true">
+			<Value name="AIF" supported = "true"/>
+			<Value name="WAV" supported = "true"/>
+			<Value name="MP3" supported = "true"/>
+			<Value name="ASND" supported = "true"/>
+			<Value name="SND" supported = "true"/>
+			<Value name="AU" supported = "true"/>
+			<Value name="SD2" supported = "true"/>
+			<Value name="OGG" supported = "true"/>
+			<Value name="OGA" supported = "true"/>
+			<Value name="FLAC" supported = "true"/>
+		</Property>
+		<Property name="Compression" default="Default" supported="true">
+			<Value name="Default" supported = "true"/>
+			<Value name="ADPCM" supported = "true"/>
+			<Value name="MP3" supported = "true"/>
+			<Value name="Raw" supported = "true"/>
+			<Value name="Speech" supported ="true"/>
+		</Property>
+	</Feature>		
+	<Feature name="ActionScript" supported="false">
+	</Feature>
+	<Feature name="Layer" supported="true">
+		<Property name="MaskLayer" supported="false"/>
+		<Property name="GuideLayer" supported="true"/>
+	</Feature>
+	<Feature name="ClassicTween" supported="true">
+		<Property name="Rotate" default="Auto" supported="true">
+			<Value name="None" supported = "true"/>
+			<Value name="Auto" supported = "true"/>
+			<Value name="CW" supported = "true"/>
+			<Value name="CCW" supported = "true"/>
+		</Property>
+		<Property name="Scale" default = "true" supported="true"/>
+	</Feature>
+</Features>

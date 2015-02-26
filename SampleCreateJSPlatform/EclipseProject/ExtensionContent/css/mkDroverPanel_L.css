@@ -1,0 +1,55 @@
+body {
+            margin:0px;
+            background:#d2d2d2;
+            height:100%;
+            color:#000000;
+            font-size:12px;
+        }
+        #container{
+            margin:10px;
+        }
+      .myLabel{
+           width:70px;
+            text-align:right;
+            display:block;
+            float:left;
+			padding-top:4px;
+			padding-right:11px;
+      }
+        input[type="text"]{
+            background:#ededed;
+            border:1px solid #585858;
+            float:left;
+            display:block;
+            width:350px;
+            color:#000000;
+        }
+        
+        input[type="text"]:selected{
+            border:1px solid #D49B00;
+        }
+        
+        #publish{
+       margin-left:350px;
+        margin-right:auto;
+        bottom:25px;
+        height:25px;
+        width:100px;
+        position:absolute;
+        border:1px solid #585858;
+        background:#d2d2d2;
+        padding:4px;
+        color:#000000;
+        }
+        
+    #publish:hover{
+       background:#cdcdcd;
+    }
+    
+    input[type="image"] {
+    height:16px;
+    width:16px;
+    border:1px solid #585858;
+    margin-left:5px;
+    margin-top:3px;
+}
