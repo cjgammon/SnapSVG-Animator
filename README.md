@@ -7,6 +7,7 @@ The plugin is an early stage proof of concept.
 
 ##Install
 Simply open the SnapPlatform.zxp file found in the EclipseProject folder. This should launch Adobe Extensions Manager. Follow instructions to install the plugin.
+
 More detailed instructions can be found here:
 https://helpx.adobe.com/flash/using/custom-platform-support.html
 
