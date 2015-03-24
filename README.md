@@ -5,6 +5,8 @@ This is a Custom Platform Plugin for Flash CC exporting animated content to SVG 
 
 The plugin is an early stage proof of concept. Currently to test the project directly from flash, the .fla must live at localhost on your server.
 
+Example FLA and output included.
+
 ##Install
 Simply open the SnapPlatform.zxp file found in the EclipseProject folder. This should launch Adobe Extensions Manager. Follow instructions to install the plugin.
 Copy Runtime js directory into same directory as published project to load libraries necessary to run.
