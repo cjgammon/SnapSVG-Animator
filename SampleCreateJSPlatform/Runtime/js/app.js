@@ -5,14 +5,14 @@ define(function (require) {
 	var App,
 		Component = require('app/component');
 		
-	require('tweenmax');
+	require('tweenlite');
 
     App = function () {
 		var json,
 			comp;
 			
 		fps = fps || 60;
-		TweenMax.ticker.fps(fps);
+		TweenLite.ticker.fps(fps);
 	
 		if (jsonfile) {
 			AJAX_JSON_Req(jsonfile);
