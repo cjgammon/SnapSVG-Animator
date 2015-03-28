@@ -107,7 +107,6 @@ define(function (require) {
 			}
 
 			var transformArray = transform.split(",");
-			var scaleX,scaleY,rotation,skewX,skewY;
 			var TransformMat = new Snap.Matrix(transformArray[0],transformArray[1],transformArray[2],transformArray[3],transformArray[4],transformArray[5]);
 
 			pathContainer.transform(TransformMat.toTransformString());
@@ -130,7 +129,7 @@ define(function (require) {
 				}
 				
 			}
-		}
+		},
 
 		/*
 		function CreateBitmap(parentMC,resourceManager,charId,ObjectId,placeAfter,transform)
@@ -189,66 +188,74 @@ define(function (require) {
 		}
 		*/
 
-		/*
-		function CreateText(parentMC,resourceManager,charId,ObjectId,placeAfter,transform)
+		CreateText: function (s,resourceManager,charId,ObjectId,placeAfter,transform)
 		{
-		for(var b =0;b<resourceManager.m_data.DOMDocument.Text.length;b++)
+			var textContainer = s.g();
+			textContainer.attr({token: parseInt(ObjectId)});
+			
+			for(var b =0;b<resourceManager.m_data.DOMDocument.Text.length;b++)
 			{
 				if(resourceManager.m_data.DOMDocument.Text[b].charid == charId)
 				{
-				var displayString = resourceManager.m_data.DOMDocument.Text[b].displayText;
-				var txt = displayString.replace(/\\r/g,"\r");
-
-				var font = resourceManager.m_data.DOMDocument.Text[b].font;
-				var fontColor = resourceManager.m_data.DOMDocument.Text[b].color;
-				var textOutput = new createjs.Text(txt,font,fontColor);
-				textOutput.id = parseInt(ObjectId);
+					var displayString = resourceManager.m_data.DOMDocument.Text[b].displayText;
+					var txt = displayString.replace(/\\r/g,"\r");
+					var font = resourceManager.m_data.DOMDocument.Text[b].font;
+					var fontArray = font.split(' ', 2);
+					var fontStyle = fontArray[0];
+					var fontSize = fontArray[1];
+					var fontFamily = /\'(.*?)\'/.exec(font)[1];
+					var fontColor = resourceManager.m_data.DOMDocument.Text[b].color;
+					var textOutput = s.text(0, 0, txt);
+					textOutput.attr({
+						fill: fontColor, 
+						fontFamily: 
+						fontFamily, 
+						fontSize: fontSize, 
+						fontStyle: fontStyle
+					});
+					
+					textContainer.add(textOutput);
 				}
-
 			}
+			
 			var transformArray = transform.split(",");
-			var scaleX,scaleY,rotation,skewX,skewY;
-			var TransformMat = new createjs.Matrix2D(transformArray[0],transformArray[1],transformArray[2],transformArray[3],transformArray[4],transformArray[5])
-			scaleX = Math.sqrt((transformArray[0]*transformArray[0])+ (transformArray[1]*transformArray[1]));
-			scaleY = Math.sqrt((transformArray[2]*transformArray[2]) + (transformArray[3]*transformArray[3]));
-			skewX = Math.atan2(-(transformArray[2]), transformArray[3]);
-			skewY = Math.atan2(transformArray[1], transformArray[0]);			
-			skewX = skewX * (180*7/22);
-			skewY=skewY *(180*7/22);
-			textOutput.setTransform(transformArray[4],transformArray[5],scaleX,scaleY,0,skewX,skewY);
-
-			if(parentMC != undefined)
+			var TransformMat = new Snap.Matrix(transformArray[0],transformArray[1],transformArray[2],transformArray[3],transformArray[4],transformArray[5]);
+			textContainer.transform(TransformMat.toTransformString());
+				
+			if(s != undefined)
 			{				
 				if(placeAfter != 0)
-				{				
-					for(var index =0 ; index<parentMC.children.length; index++)
-					{
-						if(parentMC.children[index].id == parseInt(placeAfter))
-						{
-							parentMC.addChildAt(textOutput , index);
-							index ++;							
-						}					
-					}
+				{	
+					children = s.selectAll('[token="' + placeAfter + '"]');
+					for (i = 0; i < children.length; i += 1) {
+						if (children[i].parent().id == s.id) { //ensure child of current movie clip
+							children[i].before(textContainer);
+							break;
+						}
+					}	
 				}
 				else
 				{
-					parentMC.addChild(textOutput);
-				}				
-				while(parentMC.mode != undefined)
+					s.add(textContainer);
+				}	
+				/*			
+				while(s.mode != undefined)
 				{
 					parentMC.getStage();	 
 					parentMC = parentMC.parent;
 				}				 
 
 				parentMC.update();
+				*/
 			}
+			/*
 			else
 			{
 				stage.addChildAt(textOutput);	
 				stage.update();				
 			}
+			*/
 		}
-		*/
 		
 	}
 	

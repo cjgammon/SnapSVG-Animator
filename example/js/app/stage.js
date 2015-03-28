@@ -117,6 +117,8 @@ define(function (require) {
 		console.log('Place command execute');
 		
 		var shape = resourceManager.getShape(this.m_charID),
+			//bitmap = resourceManager.getBitmap(this.m_charID),
+			text = resourceManager.getText(this.m_charID),
 			parentMC = stage.el,
 			movieclipTimeline,
 			movieclip,
@@ -128,6 +130,16 @@ define(function (require) {
 		if(shape !== null && shape !== undefined)
 		{
 			Utils.CreateShape(parentMC, resourceManager, this.m_charID, this.m_objectID, this.m_placeAfter, this.m_transform);
+		} 
+		/*
+		else if(bitmap !== null && bitmap !== undefined)
+		{
+			CreateBitmap(parentMC, resourceManager, this.m_charID, this.m_objectID, this.m_placeAfter, this.m_transform);
+		}
+		*/
+		else if (text !== null && text !== undefined) 
+		{
+			Utils.CreateText(parentMC, resourceManager, this.m_charID, this.m_objectID, this.m_placeAfter, this.m_transform);
 		}
 		else
 		{

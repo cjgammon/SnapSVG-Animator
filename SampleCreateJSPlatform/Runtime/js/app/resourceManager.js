@@ -26,6 +26,7 @@ define(function (require) {
 			var bitmapData = this.m_data.DOMDocument.Bitmaps[bitmapIndex];
 			this.m_bitmaps[id] = bitmapData;
 		}
+		*/
 
 		for(var textIndex =0; textIndex < this.m_data.DOMDocument.Text.length; textIndex++)
 		{
@@ -33,7 +34,6 @@ define(function (require) {
 			var textData = this.m_data.DOMDocument.Text[textIndex];
 			this.m_text[id] = textData;
 		}
-		*/
 		
 		if(this.m_data.DOMDocument.Timeline !== undefined)
 		{
@@ -58,10 +58,10 @@ define(function (require) {
 	ResourceManager.prototype.getBitmap = function(id) {
 		return this.m_bitmaps[id];
 	}
-
+*/
 	ResourceManager.prototype.getText = function(id) {
 		return this.m_text[id];
 	}
-*/
+
 	return ResourceManager;
 });
