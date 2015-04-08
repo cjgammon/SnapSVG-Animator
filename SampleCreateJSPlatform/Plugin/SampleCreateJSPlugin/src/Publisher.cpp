@@ -16,11 +16,6 @@
 * from Adobe Systems Incorporated.
 **************************************************************************/
 
-#ifdef _WINDOWS
-#include <Windows.h>
-#include "ShellApi.h"
-#endif
-
 #include "Publisher.h"
 #include "Utils.h"
 
@@ -73,7 +68,7 @@
 #include "OutputWriter.h"
 
 #include "Exporter/Service/IResourcePalette.h"
-#include "Exporter/Service/ITimelineBuilder.h"
+#include "Exporter/Service/ITimelineBuilder2.h"
 #include "Exporter/Service/ITimelineBuilderFactory.h"
 
 #include "Exporter/Service/ISWFExportService.h"
@@ -84,7 +79,7 @@ namespace CreateJS
 {
 
     /* ----------------------------------------------------- CPublisher */
-	
+    
     CPublisher::CPublisher()
     {
 
@@ -156,13 +151,13 @@ namespace CreateJS
 #ifdef USE_SWF_EXPORTER_SERVICE
 
         // Use the SWF Exporter Service to export to a SWF
-		
+        
         res = GetCallback()->GetService(Exporter::Service::EXPORTER_SWF_SERVICE, pUnk.m_Ptr);
         if (FCM_FAILURE_CODE(res))
         {
             return res;
         }
-		
+        
         FCM::StringRep16 outputFilePath = Utils::ToString16(outFile, GetCallback());
 
         FCM::AutoPtr<Exporter::Service::ISWFExportService> pSWfExportService = pUnk;
@@ -182,8 +177,8 @@ namespace CreateJS
         {
             return res;
         }
-		
-		// Post-process the SWF
+        
+        // Post-process the SWF
 
 #else
         DOM::Utils::COLOR color;
@@ -362,7 +357,7 @@ namespace CreateJS
             // Launch the browser
             std::string fileName;
             Utils::GetFileName(outFile, fileName);
-            LaunchBrowser(fileName);
+            Utils::LaunchBrowser(fileName);
         }
 
 #endif
@@ -536,28 +531,6 @@ namespace CreateJS
         return res;
     }
 
-
-    void CPublisher::LaunchBrowser(const std::string& outputFileName)
-    {
-
-#ifdef _WINDOWS
-
-        std::wstring output = L"http://localhost/";
-        std::wstring tail;
-        tail.assign(outputFileName.begin(), outputFileName.end());
-        output += tail;
-        ShellExecute(NULL, L"open", output.c_str(), NULL, NULL, SW_SHOWNORMAL);
-
-#else
-
-        std::string output = "http://localhost/";
-        output += outputFileName;
-        std::string str = "/usr/bin/open " + output;
-        system(str.c_str());
-
-#endif // _WINDOWS
-
-    }
 
     //
     // Note: This function is NOT completely implemented but provides guidelines 
@@ -1779,7 +1752,19 @@ namespace CreateJS
         return res;
     }
 
-    FCM::Result TimelineBuilder::Remove(FCM::U_Int32 objectId)
+     FCM::Result TimelineBuilder::UpdateMask(FCM::U_Int32 objectId, FCM::U_Int32 maskTillObjectId)
+    {
+        FCM::Result res = FCM_SUCCESS;
+
+        LOG(("[UpdateMask] ObjId: %d MaskTill: %d\n", 
+            objectId, maskTillObjectId));
+
+        res = m_pTimelineWriter->UpdateMask(objectId, maskTillObjectId);
+
+        return res;
+    }
+     
+     FCM::Result TimelineBuilder::Remove(FCM::U_Int32 objectId)
     {
         FCM::Result res;
 
@@ -1961,7 +1946,7 @@ namespace CreateJS
 
     FCM::Result TimelineBuilderFactory::CreateTimelineBuilder(PITimelineBuilder& pTimelineBuilder)
     {
-        FCM::Result res = GetCallback()->CreateInstance(NULL, CLSID_TimelineBuilder, IID_ITimelineBuilder, (void**)&pTimelineBuilder);
+        FCM::Result res = GetCallback()->CreateInstance(NULL, CLSID_TimelineBuilder, IID_ITIMELINE_BUILDER_2, (void**)&pTimelineBuilder);
 
         TimelineBuilder* pTimeline = static_cast<TimelineBuilder*>(pTimelineBuilder);
         

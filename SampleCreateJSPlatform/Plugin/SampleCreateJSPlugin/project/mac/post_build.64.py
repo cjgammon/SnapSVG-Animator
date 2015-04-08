@@ -91,10 +91,10 @@ def copy_files_main(options):
 	print ' Copying files...'
 
 	if options.config == 'Debug':
-		do_copy(r'../../../Common/ThirdParty/xerces-c-3.1.1/Build/Mac/Release/libxerces-c-3.1.dylib',r'../../project')
+		do_copy(r'../../../../../Common/ThirdParty/xerces-c-3.1.1/Build/Mac/Release/libxerces-c-3.1.dylib',r'../')
 
 	if options.config == 'Release':
-		do_copy(r'../../../Common/ThirdParty/xerces-c-3.1.1/Build/Mac/Release/libxerces-c-3.1.dylib',r'../../project')
+		do_copy(r'../../../../../Common/ThirdParty/xerces-c-3.1.1/Build/Mac/Release/libxerces-c-3.1.dylib',r'../')
 
 
 #-----------------------------------------------------

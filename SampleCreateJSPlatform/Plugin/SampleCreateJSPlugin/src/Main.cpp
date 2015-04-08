@@ -87,9 +87,9 @@ namespace CreateJS
 
         AutoPtr<IFCMDictionary> pDictionary = pPluginDict;
 
-	    AutoPtr<IFCMDictionary> pPlugins;
-	    pDictionary->AddLevel((const FCM::StringRep8)kFCMComponent, pPlugins.m_Ptr);
-	
+        AutoPtr<IFCMDictionary> pPlugins;
+        pDictionary->AddLevel((const FCM::StringRep8)kFCMComponent, pPlugins.m_Ptr);
+    
         res = RegisterDocType(pPlugins, g_createJSModule.GetResPath());
         if (FCM_FAILURE_CODE(res))
         {

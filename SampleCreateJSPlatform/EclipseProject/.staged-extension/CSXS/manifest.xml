@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<ExtensionManifest Version="4.0" ExtensionBundleId="com.example.SampleCreateJSPlatform" ExtensionBundleVersion="1.0.0"
-		ExtensionBundleName="SampleCreateJSPlatform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ExtensionManifest Version="4.0" ExtensionBundleId="com.example.SnapPlatform" ExtensionBundleVersion="1.0.0"
+		ExtensionBundleName="SnapPlatform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<ExtensionList>
-		<Extension Id="com.example.SampleCreateJSPlatform.Plugin" Version="1.0" />
-		<Extension Id="com.example.SamplePlugin.PublishSettings" Version="1.0" />
+		<Extension Id="com.example.SnapPlatform.Plugin" Version="1.0" />
+		<Extension Id="com.example.SnapPlugin.PublishSettings" Version="1.0" />
 	</ExtensionList>
 	<ExecutionEnvironment>
 		<HostList>
-			<Host Name="FLPR" Version="14.0" />
+			<Host Name="FLPR" Version="14.1" />
 		</HostList>
 		<LocaleList>
 			<Locale Code="All" />
@@ -19,7 +19,7 @@
 		</RequiredRuntimeList>
 	</ExecutionEnvironment>
 	<DispatchInfoList>
-		<Extension Id="com.example.SampleCreateJSPlatform.Plugin">
+		<Extension Id="com.example.SnapPlatform.Plugin">
 			<DispatchInfo >
 				<Resources>
 				<MainPath>./plugin/fcm.xml</MainPath>
@@ -29,7 +29,7 @@
 				</Lifecycle>
 				<UI>
 					<Type>ModalDialog</Type>
-					<Menu>Sample CreateJS Publish Settings</Menu>
+					<Menu>Snap Publish Settings</Menu>
 					<Geometry>
 						<Size>
 							<Height>200</Height>
@@ -39,7 +39,7 @@
 				</UI>
 			</DispatchInfo>
 		</Extension>
-		<Extension Id="com.example.SamplePlugin.PublishSettings">
+		<Extension Id="com.example.SnapPlugin.PublishSettings">
 			<DispatchInfo >
 				<Resources>
 				<MainPath>./index.html</MainPath>
@@ -49,7 +49,7 @@
 				</Lifecycle>
 				<UI>
 					<Type>ModalDialog</Type>
-					<Menu>Sample CreateJS Publish Settings</Menu>
+					<Menu>Snap Publish Settings</Menu>
 					<Geometry>
 						<Size>
 							<Height>170</Height>

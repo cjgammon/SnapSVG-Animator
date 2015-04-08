@@ -3,7 +3,7 @@
 		<Property name="Style" default="Solid" supported="true">
 			<Value name="Solid" supported="true"/>
 			<Value name="Hairline" supported="true"/>
-			<Value name="Dashed" supported="false"/>
+			<Value name="Dashed" supported="true"/>
 			<Value name="Dotted" supported="false"/>
 			<Value name="Ragged" supported="false"/>
 			<Value name="Stippled" supported="false"/>
@@ -102,7 +102,7 @@
 			<Value name="None" supported="true"/>
 			<Value name="Brightness" supported="false"/>
 			<Value name="Tint" supported="false"/>
-			<Value name="Alpha" supported="false"/> 
+			<Value name="Alpha" supported="true"/>
 			<Value name="Advanced" supported="false"/>
 		</Property>
 		<Property name="Render" default="Original" supported="true">
@@ -174,7 +174,7 @@
 	<Feature name="ActionScript" supported="false">
 	</Feature>
 	<Feature name="Layer" supported="true">
-		<Property name="MaskLayer" supported="false"/>
+		<Property name="MaskLayer" supported="true"/>
 		<Property name="GuideLayer" supported="true"/>
 	</Feature>
 	<Feature name="ClassicTween" supported="true">

@@ -141,11 +141,11 @@ namespace CreateJS
             SAXParser *parser = new SAXParser();
             parser->setDocumentHandler(&featureXmlDocHandler);
             
-            XERCES_CPP_NAMESPACE::MemBufInputSource	*memInput = new XERCES_CPP_NAMESPACE::MemBufInputSource((const XMLByte*) buffer, length, "dummy", false);
+            XERCES_CPP_NAMESPACE::MemBufInputSource *memInput = new XERCES_CPP_NAMESPACE::MemBufInputSource((const XMLByte*) buffer, length, "dummy", false);
             m_bInited = true;
             parser->parse(*memInput);
             delete parser;
-			delete memInput;
+            delete memInput;
             XMLPlatformUtils::Terminate();
         }
         catch (...) {
@@ -278,7 +278,7 @@ namespace CreateJS
             CStringRep16 inPropName,
             FCM::VARIANT& outDefVal)
     {
-		// Any boolean value retuened as string should be "true" or "false"
+        // Any boolean value retuened as string should be "true" or "false"
         FCM::Result res = FCM_INVALID_PARAM;
         std::string featureName = Utils::ToString(inFeatureName, GetCallback());
         std::string propName = Utils::ToString(inPropName, GetCallback());
@@ -292,7 +292,7 @@ namespace CreateJS
             {
                 std::string strVal = pProperty->GetDefault();
                 std::istringstream iss(strVal);
-				res = FCM_SUCCESS;
+                res = FCM_SUCCESS;
                 switch (outDefVal.m_type) {
                     case kFCMVarype_UInt32: iss>>outDefVal.m_value.uVal;break;
                     case kFCMVarype_Float: iss>>outDefVal.m_value.fVal;break;
@@ -300,9 +300,9 @@ namespace CreateJS
                     case kFCMVarype_CString: outDefVal.m_value.strVal = Utils::ToString16(strVal, GetCallback()); break;
                     case kFCMVarype_Double: iss>>outDefVal.m_value.dVal;break;
                     default: 
-					ASSERT(0);
-					res = FCM_INVALID_PARAM;
-					break;
+                    ASSERT(0);
+                    res = FCM_INVALID_PARAM;
+                    break;
                 }
             }
         }

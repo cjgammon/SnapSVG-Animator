@@ -4,8 +4,8 @@ The sample custom platform provided as part of this package can be used as refer
 1. Software Requirements for 'SampleCreateJSPlatform':
    ===========================================
 - Microsoft Windows 7 or Apple Mac OS 10.8 and later
-- Microsoft Visual Studio 2012 (for Windows) or XCode 5.0.2
-- Adobe Flash Professional CC 2014.1 (October)
+- Microsoft Visual Studio 2012 (for Windows) or XCode 4.5.2
+- Adobe Flash Professional CC 2014.2 (Feb/2015)
 - Eclipse IDE for C/C++ Developers
 - Adobe Extension Builder 3.0
 - Adobe Extension Manager CC 7.2.1.6
@@ -15,7 +15,7 @@ The sample custom platform provided as part of this package can be used as refer
 2. Installation steps for 'SampleCreateJSPlatform':
 =======================================
 
-a. Ensure that you have installed 'Adobe Flash Professional CC 2014.1'. You can install it using 'Adobe Creative Cloud Application'.
+a. Ensure that you have installed 'Adobe Flash Professional CC 2014.2'. You can install it using 'Adobe Creative Cloud Application'.
 b. Ensure that you have installed 'Adobe Extension Manager CC 7.2.1.6'. You can install it using 'Adobe Creative Cloud Application'.
 c. Double click on the 'SampleCreateJSPlatform.zxp' and install the plugin using Adobe Extension Manager CC 
 d. Close Adobe Extension Manager CC
@@ -26,11 +26,11 @@ e. Launch Flash CC 2014
 =================
 
 The downloaded package contains an sample implementation of a custom platform 'SampleCreateJSPlatform'. 
-This sample platform outputs to CreateJS. This sample can refered by developers to add support for custom platforms of their choice.
+This sample platform outputs to CreateJS. This sample can referred by developers to add support for custom platforms of their choice.
 
 It has following contents:
 
-- Plugin : Contains C/C++ source along with the Visual Studio 2012 project and the XCode 5.0.2 projects for the plugin.
+- Plugin : Contains C/C++ source along with the Visual Studio 2012 project and the XCode 4.5.2 projects for the plugin.
 - EclipseProject - Contains an Eclipse project that can be used to generate the final platform ZXP. 
 - Runtime - Contains a sample runtime that makes use of the 'CreateJS' runtime.
 - SampleCreateJSPlatform.zxp - This is the final custom platform package that can be installed using 'Adobe Extension Manager CC'.
@@ -44,19 +44,19 @@ This section talks about the steps to build and install of the SampleCreateJSPla
 
 4.1 Building the C++ project
 
-a. Ensure that you have Microsoft Visual Studio 2012 (for Windows) or XCode 5.0.2 (for MAC).
+a. Ensure that you have Microsoft Visual Studio 2012 (for Windows) or XCode 4.5.2 (for MAC).
 
 b. Make sure you have downloaded ''CustomPlatformDevelopmentKit''. You can get it from 'http://help.adobe.com/flash/using/enabling-support-custom-platforms.html'
 
 c. Copy the folders 'SampleCreateJSPlatform' and 'CustomPlatformDevelopmentKit' to a folder on your system. Both this folders must be in the same level.
 
-d. Open the solution file 'DocTypePublisherPlugin.mp.64.sln' present inside:
+d. Open the solution file 'SampleCreateJSPlugin.mp.64.sln' present inside:
 
 SampleCreateJSPlatform->Plugin->SampleCreateJSPlugin->project->win  (for Windows)
 
 (or)
 
-Open 'DocTypePublisherPlugin.mp.xcodeproj' present inside:
+Open 'SampleCreateJSPlugin.mp.xcodeproj' present inside:
 
 SampleCreateJSPlatform->Plugin->SampleCreateJSPlugin->project->mac   (for MAC)
 
@@ -67,6 +67,7 @@ e. Build the project to get the DLL or .plugin (on MAC)
 If you want to customize the sample code, you will need to make following changes:
 
 a. You can customize 'Features.xml' to enable/disable tools and menus in FlashPro.
+
 b. Configure the parameters present in 'SampleCreateJSPlatform\Plugin\SampleCreateJSPlugin\include\PluginConfiguration.h'. This is a MANDATORY step in case you intend to re-use the plugin for your own custom platform.
 
 4.2 Building the Eclipse project
@@ -121,7 +122,7 @@ a. You can control the features for the new doc type by changing 'Features.xml'.
 b. Developers MUST modify ALL the configuration parameters in 'SampleCreateJSPlatform\Plugin\SampleCreateJSPlugin\include\PluginConfiguration.h'. 
     This is necessary to avoid any two plugins clashing with each other.
 
-c. Normally, if a developer wants to test any change in the plugin, he/she will have to follow the following steps:
+c. Follow the below steps to test any change made to the plugin:
 
   - Compile the *.dll/*.plugin in Visual Studio/XCode.
   - Package the *.zxp in eclipse
@@ -138,5 +139,25 @@ c. Normally, if a developer wants to test any change in the plugin, he/she will 
     Once a developer performs the above steps, he/she can quickly test the changes by doing following steps:
        - Compile the *.dll/*.plugin in Visual Studio/XCode.
        - Replace the new *.dll/*.plugin in the installed location of the zxp.
+
+6. ChangeLogs:
+=============
+
+This section lists the changes that were done for the SDK version 1.1.0.0
+
+Features:
+=========
+a. Added support for masking support in IFrameCommandGenerator service.
+   The new interface ITimelineBuilder2 that is inherited from the existing ITimelineBuilder interface contains a 
+   function "UpdateMask" that the plugin has to implement to make this feature work. Our sample runtime does not support 
+   masking so we have commented out the body of the function UpdateMask in out sample plugin code.
+
+b. The SampleCreateJSPlugin Xcode project now builds on Xcode 6.1   
+   
+Bugs Fixed:
+===========
+#3841079: For SWF based exporters the functionality is swapped in case of "LZMA" and "Deflate" options.
+#3841085: Color transform does not get updated properly for color tweens.
+
 
 

@@ -31,7 +31,7 @@
 #include "FCMTypes.h"
 #include "FCMPluginInterface.h"
 #include "Exporter/Service/IResourcePalette.h"
-#include "Exporter/Service/ITimelineBuilder.h"
+#include "Exporter/Service/ITimelineBuilder2.h"
 #include "Exporter/Service/ITimelineBuilderFactory.h"
 #include "Publisher/IPublisher.h"
 #include "FillStyle/ISolidFillStyle.h"
@@ -90,6 +90,11 @@ namespace DOM
     #define OUTPUT_FILE_EXTENSION       "html"
 #endif
 
+
+/* -------------------------------------------------- Structs / Unions */
+
+
+/* -------------------------------------------------- Class Decl */
 
 namespace CreateJS
 {
@@ -234,7 +239,7 @@ namespace CreateJS
 
         FCM::Result CreateSoundFileName(DOM::ILibraryItem* pLibItem, std::string& name);
 
-		FCM::Result GetFontInfo(DOM::FrameElement::ITextStyle* pTextStyleItem, std::string& name,FCM::U_Int16 fontSize);
+        FCM::Result GetFontInfo(DOM::FrameElement::ITextStyle* pTextStyleItem, std::string& name,FCM::U_Int16 fontSize);
 
         FCM::Result HasFancyStrokes(DOM::FrameElement::PIShape pShape, FCM::Boolean& hasFancy); 
 
@@ -256,12 +261,12 @@ namespace CreateJS
     };
 
 
-    class TimelineBuilder : public ITimelineBuilder, public FCMObjectBase
+    class TimelineBuilder : public ITimelineBuilder2, public FCMObjectBase
     {
     public:
 
         BEGIN_INTERFACE_MAP(TimelineBuilder, SAMPLE_PLUGIN_VERSION)    
-            INTERFACE_ENTRY(ITimelineBuilder)            
+            INTERFACE_ENTRY(ITimelineBuilder2)            
         END_INTERFACE_MAP    
 
         virtual FCM::Result _FCMCALL AddShape(
@@ -293,6 +298,10 @@ namespace CreateJS
         virtual FCM::Result _FCMCALL UpdateZOrder(
             FCM::U_Int32 objectId, 
             FCM::U_Int32 placeAfterObjectId);
+
+        virtual FCM::Result UpdateMask(
+            FCM::U_Int32 objectId,
+            FCM::U_Int32 maskTillObjectId);
 
         virtual FCM::Result _FCMCALL Remove(FCM::U_Int32 objectId);
             

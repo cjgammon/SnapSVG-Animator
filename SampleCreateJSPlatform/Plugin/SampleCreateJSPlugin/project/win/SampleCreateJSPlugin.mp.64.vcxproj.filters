@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <ItemGroup>
+        <Filter Include="(metaproject files)">
+            <UniqueIdentifier>{BAA99ED2-3144-B461-3CF2-2411608BDCA5}</UniqueIdentifier>
+        </Filter>
+        <Filter Include="(metaproject files)\MP.include">
+            <UniqueIdentifier>{8C250B9C-F3DC-76E4-64B8-93B70141BC86}</UniqueIdentifier>
+        </Filter>
+        <Filter Include="Common/ThirdParty">
+            <UniqueIdentifier>{91BCCDFC-230F-D6B8-4BAF-96F3AD37459D}</UniqueIdentifier>
+        </Filter>
+        <Filter Include="Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source">
+            <UniqueIdentifier>{A6511C25-0F00-D36F-ED11-92E5CEA62871}</UniqueIdentifier>
+        </Filter>
+        <Filter Include="SampleCreateJSPlugin">
+            <UniqueIdentifier>{12212D0A-DB66-8E26-2FF1-64B746E5A190}</UniqueIdentifier>
+        </Filter>
+        <Filter Include="SampleCreateJSPlugin\project/win">
+            <UniqueIdentifier>{6DCFD5D1-3BCD-7CB7-872B-DDD0F22331B4}</UniqueIdentifier>
+        </Filter>
+        <Filter Include="SampleCreateJSPlugin\src">
+            <UniqueIdentifier>{F50807DB-6135-EFB9-3F4D-ADBEAA47DE0D}</UniqueIdentifier>
+        </Filter>
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="..\SampleCreateJSPlugin.mp">
+            <Filter>(metaproject files)</Filter>
+        </None>
+        <None Include="..\..\..\..\..\..\..\ext\adobe\dvacore\project\dvaincludes.mp">
+            <Filter>(metaproject files)\MP.include</Filter>
+        </None>
+        <None Include="..\..\..\..\..\..\..\ext\adobe\dvacore\project\dvabase.mp">
+            <Filter>(metaproject files)\MP.include</Filter>
+        </None>
+        <None Include="..\..\..\..\..\..\..\ext\adobe\dvacore\project\dvaproduct.mp">
+            <Filter>(metaproject files)\MP.include</Filter>
+        </None>
+        <None Include="..\..\..\..\..\..\..\ext\adobe\metaproject\config\Flash\product_options.py">
+            <Filter>(metaproject files)\MP.include</Filter>
+        </None>
+        <None Include="..\..\..\..\..\..\..\ext\adobe\dvacore\project\icuincludes.mp">
+            <Filter>(metaproject files)\MP.include</Filter>
+        </None>
+        <None Include="..\..\..\..\..\..\Flash\project\Flashbase.mp">
+            <Filter>(metaproject files)\MP.include</Filter>
+        </None>
+        <ResourceCompile Include="SampleCreateJSPlugin_version_64.rc">
+            <Filter>SampleCreateJSPlugin\project/win</Filter>
+        </ResourceCompile>
+        <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONWorker.cpp">
+            <Filter>Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source</Filter>
+        </ClCompile>
+        <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONValidator.cpp">
+            <Filter>Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source</Filter>
+        </ClCompile>
+        <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\libjson.cpp">
+            <Filter>Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source</Filter>
+        </ClCompile>
+        <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONChildren.cpp">
+            <Filter>Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source</Filter>
+        </ClCompile>
+        <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONWriter.cpp">
+            <Filter>Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source</Filter>
+        </ClCompile>
+        <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONAllocator.cpp">
+            <Filter>Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source</Filter>
+        </ClCompile>
+        <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONStream.cpp">
+            <Filter>Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source</Filter>
+        </ClCompile>
+        <ClCompile Include="..\..\src\DocType.cpp">
+            <Filter>SampleCreateJSPlugin\src</Filter>
+        </ClCompile>
+        <ClCompile Include="..\..\src\OutputWriter.cpp">
+            <Filter>SampleCreateJSPlugin\src</Filter>
+        </ClCompile>
+        <ClCompile Include="..\..\src\Publisher.cpp">
+            <Filter>SampleCreateJSPlugin\src</Filter>
+        </ClCompile>
+        <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONNode.cpp">
+            <Filter>Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source</Filter>
+        </ClCompile>
+        <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONNode_Mutex.cpp">
+            <Filter>Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source</Filter>
+        </ClCompile>
+        <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\internalJSONNode.cpp">
+            <Filter>Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source</Filter>
+        </ClCompile>
+        <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONPreparse.cpp">
+            <Filter>Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source</Filter>
+        </ClCompile>
+        <ClCompile Include="..\..\src\MyXmlParser.cpp">
+            <Filter>SampleCreateJSPlugin\src</Filter>
+        </ClCompile>
+        <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONMemory.cpp">
+            <Filter>Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source</Filter>
+        </ClCompile>
+        <ClCompile Include="..\..\src\Main.cpp">
+            <Filter>SampleCreateJSPlugin\src</Filter>
+        </ClCompile>
+        <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONIterators.cpp">
+            <Filter>Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source</Filter>
+        </ClCompile>
+        <ClCompile Include="SampleCreateJSPlugin_mp_precomp_64.cpp">
+            <Filter>SampleCreateJSPlugin\project/win</Filter>
+        </ClCompile>
+        <ClCompile Include="..\..\src\Utils.cpp">
+            <Filter>SampleCreateJSPlugin\src</Filter>
+        </ClCompile>
+        <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONDebug.cpp">
+            <Filter>Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source</Filter>
+        </ClCompile>
+        <CustomBuild Include="post_build.64.py">
+            <Filter>SampleCreateJSPlugin\project/win</Filter>
+        </CustomBuild>
+    </ItemGroup>
+</Project>

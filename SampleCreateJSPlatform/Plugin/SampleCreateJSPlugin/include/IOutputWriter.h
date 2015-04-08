@@ -176,18 +176,18 @@ namespace CreateJS
             const std::string&  name,
             DOM::LibraryItem::PIMediaItem pMediaItem) = 0;
 
-		// Define a classic text
-		virtual FCM::Result DefineText(
-			FCM::U_Int32 resId, 
-			const std::string& name, 
-			const DOM::Utils::COLOR& color, 
-			const std::string& displayText, 
-			DOM::FrameElement::PIClassicText pTextItem) = 0;
+        // Define a classic text
+        virtual FCM::Result DefineText(
+            FCM::U_Int32 resId, 
+            const std::string& name, 
+            const DOM::Utils::COLOR& color, 
+            const std::string& displayText, 
+            DOM::FrameElement::PIClassicText pTextItem) = 0;
 
         // Define Sound
         virtual FCM::Result DefineSound(
             FCM::U_Int32 resId, 
-			const std::string& name, 
+            const std::string& name, 
             DOM::LibraryItem::PIMediaItem pMediaItem) = 0;
     };
 
@@ -215,6 +215,10 @@ namespace CreateJS
             FCM::U_Int32 objectId,
             FCM::U_Int32 placeAfterObjectId) = 0;
 
+        virtual FCM::Result UpdateMask(
+            FCM::U_Int32 objectId,
+            FCM::U_Int32 maskTillObjectId) = 0;
+ 
         virtual FCM::Result UpdateBlendMode(
             FCM::U_Int32 objectId,
             DOM::FrameElement::BlendMode blendMode) = 0;

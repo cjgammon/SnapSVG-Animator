@@ -53,6 +53,14 @@ namespace CreateJS
 }
 
  
+/* -------------------------------------------------- Enums */
+
+
+/* -------------------------------------------------- Macros / Constants */
+
+
+/* -------------------------------------------------- Structs / Unions */
+
 namespace CreateJS
 {
     typedef std::map<std::string, Value*> StrValueMap;
@@ -65,7 +73,7 @@ namespace CreateJS
 
 namespace CreateJS
 {
-	class CDocType : public DocType::IDocType, public FCM::FCMObjectBase
+    class CDocType : public DocType::IDocType, public FCM::FCMObjectBase
     {
         BEGIN_INTERFACE_MAP(CDocType, SAMPLE_PLUGIN_VERSION)
             INTERFACE_ENTRY(IDocType)    
