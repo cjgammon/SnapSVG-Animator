@@ -14,9 +14,11 @@ define(function (require) {
 					for(var j=0;j<resourceManager.m_data.DOMDocument.Shape[k].path.length;j++)
 					{
 						var clr,clrOpacity;
-						var shape1 = s.path();	
+						var shape1 = s.path();
+						var path = resourceManager.m_data.DOMDocument.Shape[k].path[j].d;	
 						shape1.attr({fill: 'transparent'});
-
+						shape1.attr({d: path});
+						
 						if(resourceManager.m_data.DOMDocument.Shape[k].path[j].pathType == "Fill")
 						{
 							if(resourceManager.m_data.DOMDocument.Shape[k].path[j].color)
@@ -32,36 +34,67 @@ define(function (require) {
 							}
 							if(resourceManager.m_data.DOMDocument.Shape[k].path[j].image)
 							{ 
+								/*
 								var patternArray = resourceManager.m_data.DOMDocument.Shape[k].path[j].image.patternTransform.split(",");						
 								var p =0;
 								var mat = new createjs.Matrix2D(patternArray[p],patternArray[p+1],patternArray[p+1],patternArray[p+3],patternArray[p+4],patternArray[p+5]);
 								var image = new Image();
 								image.src = resourceManager.m_data.DOMDocument.Shape[k].path[j].image.bitmapPath;						
-								shape1.graphics.beginBitmapFill(image,"no-repeat",mat).beginStroke();						
+								//shape1.graphics.beginBitmapFill(image,"no-repeat",mat).beginStroke();	
+								*/					
 							}
 							if(resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient)
-							{					
-								var stopArray = new Array();
-								var offSetArray = new Array();					
-								for(var s=0;s<resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.stop.length;s++)
+							{							
+								var _x = parseFloat(resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.x1);
+								var _y = parseFloat(resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.y1);
+								var _x2 = parseFloat(resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.x2);
+								var _y2 = parseFloat(resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.y2);
+								
+								var gradientString = "L(";
+								gradientString += _x + ", ";
+								gradientString += _y + ", ";
+								gradientString += _x2 + ", ";
+								gradientString += _y2 + ")";
+								
+								for(var i=0; i<resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.stop.length; i++)
 								{								
-									stopArray[s] = resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.stop[s].stopColor;
-									offSetArray[s] = resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.stop[s].offset/100
-								}							
-								shape1.graphics.lf(stopArray ,offSetArray,resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.x1,resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.y1,resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.x2,resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.y2);
+									gradientString += resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.stop[i].stopColor;
+									gradientString += ":";
+									gradientString += resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.stop[i].offset;
+									if (i !== resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.stop.length-1) {
+										gradientString += "-";
+									}		
+								}
+								var g = s.gradient(gradientString);
+								shape1.attr({fill: g});
 							}
 
 							if(resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient)
-							{						
-								var stopsArray = new Array();
-								var offSetsArray = new Array();					
-								for(var s=0;s<resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient.stop.length;s++)
+							{	
+								var _x = (shape1.getBBox().x + shape1.getBBox().width / 2) + resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient.cx;
+								var _y = (shape1.getBBox().y + shape1.getBBox().height / 2) + resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient.cy;
+								var _fx = (shape1.getBBox().x + shape1.getBBox().width / 2) + parseFloat(resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient.fx);
+								var _fy = (shape1.getBBox().y + shape1.getBBox().height / 2) + parseFloat(resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient.fy);
+								
+								var gradientString = "R("; 
+								gradientString += _x + ", ";
+								gradientString += _y + ", ";
+								gradientString += resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient.r + ", ";
+								gradientString += _fx + ", ";
+								gradientString += _fy + ")";
+								
+								for(var i=0; i<resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient.stop.length; i++)
 								{								
-									stopsArray[s] = resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient.stop[s].stopColor;
-									offSetsArray[s] = resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient.stop[s].offset/100;							
+									gradientString += resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient.stop[i].stopColor;
+									gradientString += ":";
+									gradientString += resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient.stop[i].offset;
+									if (i !== resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient.stop.length-1) {
+										gradientString += "-";
+									}		
 								}
-								shape1.graphics.rf(stopsArray,offSetsArray,resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient.cx,resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient.cy,0,resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient.fx,resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient.fy,resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient.r);
-
+								
+								var g = s.gradient(gradientString);
+								shape1.attr({fill: g});
 							}
 						}
 						else if(resourceManager.m_data.DOMDocument.Shape[k].path[j].pathType == "Stroke")
@@ -99,8 +132,8 @@ define(function (require) {
 								shape1.graphics.ls(stopArray,offSetArray,resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.x1,resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.y1,resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.x2,resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.y2).setStrokeStyle(resourceManager.m_data.DOMDocument.Shape[k].path[j].strokeWidth,resourceManager.m_data.DOMDocument.Shape[k].path[j].strokeLinecap,resourceManager.m_data.DOMDocument.Shape[k].path[j].strokeLinejoin);;
 							}
 						}
-						var path = resourceManager.m_data.DOMDocument.Shape[k].path[j].d;
-						shape1.attr({d: path});
+						//var path = resourceManager.m_data.DOMDocument.Shape[k].path[j].d;
+						//shape1.attr({d: path});
 						pathContainer.add(shape1);
 					}
 				}
@@ -214,6 +247,7 @@ define(function (require) {
 						fontStyle: fontStyle
 					});
 					
+					console.log(resourceManager.m_data.DOMDocument.Text[b]);
 					textContainer.add(textOutput);
 				}
 			}
