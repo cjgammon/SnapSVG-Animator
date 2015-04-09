@@ -921,9 +921,6 @@ namespace CreateJS
         FCM::U_Int32 objectId,
         FCM::U_Int32 maskTillObjectId)
     {
-        // Commenting out the function since the runtime
-        // does not support masking
-        /*
         JSONNode commandElement(JSON_NODE);
 
         commandElement.push_back(JSONNode("cmdType", "UpdateMask"));
@@ -931,7 +928,6 @@ namespace CreateJS
         commandElement.push_back(JSONNode("maskTill", CreateJS::Utils::ToString(maskTillObjectId)));
 
         m_pCommandArray->push_back(commandElement);
-        */
         
         return FCM_SUCCESS;
     }
