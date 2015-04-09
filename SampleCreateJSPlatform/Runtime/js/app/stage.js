@@ -39,7 +39,7 @@ define(function (require) {
 	}
 	
 	MovieClip.prototype.clear = function () {
-		var items = this.el.selectAll('*'),
+		var items = this.el.selectAll('g'),
 			i;
 		
 		for (i = 0; i < items.length; i += 1) {
@@ -114,10 +114,9 @@ define(function (require) {
 	//Execute function for PlaceObjectCommand
 	PlaceObjectCommand.prototype.execute = function(stage, resourceManager)
 	{
-		console.log('Place command execute');
 		
 		var shape = resourceManager.getShape(this.m_charID),
-			//bitmap = resourceManager.getBitmap(this.m_charID),
+			bitmap = resourceManager.getBitmap(this.m_charID),
 			text = resourceManager.getText(this.m_charID),
 			parentMC = stage.el,
 			movieclipTimeline,
@@ -131,12 +130,10 @@ define(function (require) {
 		{
 			Utils.CreateShape(parentMC, resourceManager, this.m_charID, this.m_objectID, this.m_placeAfter, this.m_transform);
 		} 
-		/*
 		else if(bitmap !== null && bitmap !== undefined)
 		{
-			CreateBitmap(parentMC, resourceManager, this.m_charID, this.m_objectID, this.m_placeAfter, this.m_transform);
+			Utils.CreateBitmap(parentMC, resourceManager, this.m_charID, this.m_objectID, this.m_placeAfter, this.m_transform);
 		}
-		*/
 		else if (text !== null && text !== undefined) 
 		{
 			Utils.CreateText(parentMC, resourceManager, this.m_charID, this.m_objectID, this.m_placeAfter, this.m_transform);
@@ -198,7 +195,6 @@ define(function (require) {
 			children,
 			i;
 			
-		console.log("Move command execute");
 		parentMC = stage.el;
 		transform =  this.m_transform;
 		transformArray = transform.split(",");
@@ -227,7 +223,6 @@ define(function (require) {
 	//Execute function for UpdateObjectCommand
 	UpdateObjectCommand.prototype.execute = function(timelineAnimator, resourceManager)
 	{
-		console.log("Update command execute");
 		
 		/*
 		var parentMC = timelineAnimator.s;
@@ -294,7 +289,6 @@ define(function (require) {
 	//Execute function for UpdateVisbilityCommand
 	UpdateVisibilityCommand.prototype.execute = function(timelineAnimator, resourceManager)
 	{
-		console.log("UpdateVisbilityCommand execute");
 		var parentMC = timelineAnimator.m_targetMC;
 		if(parentMC != undefined)
 		{
