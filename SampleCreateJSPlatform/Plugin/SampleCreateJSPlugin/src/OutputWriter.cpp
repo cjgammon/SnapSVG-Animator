@@ -1598,7 +1598,16 @@ namespace CreateJS
         FCM::U_Int32 objectId,
         const DOM::Utils::COLOR_MATRIX& colorMatrix)
     {
-		// add code to write the color transform 
+        JSONNode commandElement(JSON_NODE);
+        std::string colorMat;
+
+        commandElement.push_back(JSONNode("cmdType", "UpdateColorTransform"));
+        commandElement.push_back(JSONNode("objectId", CreateJS::Utils::ToString(objectId)));
+        colorMat = CreateJS::Utils::ToString(colorMatrix);
+        commandElement.push_back(JSONNode("colorMatrix", colorMat.c_str()));
+
+        m_pCommandArray->push_back(commandElement);
+
         return FCM_SUCCESS;
     }
 

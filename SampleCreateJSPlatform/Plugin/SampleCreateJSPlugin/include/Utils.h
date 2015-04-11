@@ -86,6 +86,8 @@ namespace CreateJS
 
         static std::string ToString(const DOM::Utils::MATRIX2D& matrix);
 
+        static std::string ToString(const DOM::Utils::COLOR_MATRIX& colorMatrix);
+
         static std::string ToString(const DOM::Utils::CapType& capType);
 
         static std::string ToString(const DOM::Utils::JoinType& joinType);

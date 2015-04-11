@@ -232,6 +232,24 @@ namespace CreateJS
         return matrixString;
     }
 
+    std::string Utils::ToString(const DOM::Utils::COLOR_MATRIX& colorMatrix)
+    {
+        std::string matrixString = "";
+
+        for (FCM::U_Int32 i = 0; i < 4; i++)
+        {
+            // Multiplicative factor
+            matrixString.append(ToString(colorMatrix.matrix[i][i]));
+            matrixString.append(comma);
+
+            // Additive factor
+            matrixString.append(ToString(colorMatrix.matrix[i][4]));
+            matrixString.append(comma);
+        }
+
+        return matrixString;
+    }
+
     std::string Utils::ToString(const DOM::Utils::CapType& capType)
     {
         std::string str;
