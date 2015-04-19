@@ -1047,6 +1047,20 @@ namespace CreateJS
         FCM::U_Int32 objectId,
         FCM::U_Int32 maskTillObjectId)
     {
+        MaskInfo info;
+
+        info.maskTillObjectId = maskTillObjectId;
+        info.objectId = objectId;
+
+        maskInfoList.push_back(info);
+
+        return FCM_SUCCESS;
+    }
+
+    FCM::Result JSONTimelineWriter::DeferUpdateMask(
+        FCM::U_Int32 objectId,
+        FCM::U_Int32 maskTillObjectId)
+    {
         JSONNode commandElement(JSON_NODE);
 
         commandElement.push_back(JSONNode("cmdType", "UpdateMask"));
@@ -1055,6 +1069,21 @@ namespace CreateJS
 
         m_pCommandArray->push_back(commandElement);
         
+        return FCM_SUCCESS;
+    }
+
+    FCM::Result JSONTimelineWriter::DeferUpdateMasks()
+    {
+        JSONNode commandElement(JSON_NODE);
+
+        for (FCM::U_Int32 i = 0; i < maskInfoList.size(); i++)
+        {
+            MaskInfo& info = maskInfoList.at(i);
+            DeferUpdateMask(info.objectId, info.maskTillObjectId);
+        }
+        
+        maskInfoList.clear();
+
         return FCM_SUCCESS;
     }
 
@@ -1740,6 +1769,7 @@ namespace CreateJS
 
     FCM::Result JSONTimelineWriter::ShowFrame(FCM::U_Int32 frameNum)
     {
+        DeferUpdateMasks();
         m_pFrameElement->push_back(JSONNode(("num"), CreateJS::Utils::ToString(frameNum)));
         m_pFrameElement->push_back(*m_pCommandArray);
         m_pFrameArray->push_back(*m_pFrameElement);

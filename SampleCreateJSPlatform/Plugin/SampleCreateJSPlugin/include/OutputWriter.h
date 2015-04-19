@@ -27,6 +27,7 @@
 
 #include "IOutputWriter.h"
 #include <string>
+#include <vector>
 
 /* -------------------------------------------------- Forward Decl */
 
@@ -76,6 +77,12 @@ namespace CreateJS
         {
             SOLID_STROKE_STYLE solidStrokeStyle;
         };
+    };
+
+    struct MaskInfo
+    {
+        FCM::U_Int32 objectId;
+        FCM::U_Int32 maskTillObjectId;
     };
 }
 
@@ -293,6 +300,7 @@ namespace CreateJS
         std::string m_outputImageFolder;
 
         std::string m_outputSoundFolder;
+
         char* m_HTMLOutput;
 
         FCM::PIFCMCallback m_pCallback;
@@ -361,6 +369,16 @@ namespace CreateJS
 
         void Finish(FCM::U_Int32 resId, FCM::StringRep16 pName);
 
+
+    private:
+
+        FCM::Result DeferUpdateMasks();
+
+        FCM::Result DeferUpdateMask(
+            FCM::U_Int32 objectId,
+            FCM::U_Int32 maskTillObjectId);
+
+
     private:
 
         JSONNode* m_pCommandArray;
@@ -370,6 +388,8 @@ namespace CreateJS
         JSONNode* m_pTimelineElement;
 
         JSONNode* m_pFrameElement;
+
+        std::vector<MaskInfo> maskInfoList;
 
         FCM::PIFCMCallback m_pCallback;
     };
