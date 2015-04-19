@@ -427,7 +427,7 @@ namespace CreateJS
                 Utils::GetFileExtension(filePath, ext);
                 
                 // Convert the extension to lower case and then compare
-				std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+                std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
                 if (ext.compare("xfl") == 0)
                 {
                     std::string immParent;
@@ -795,71 +795,116 @@ namespace CreateJS
 
     FCM::Result ResourcePalette::AddClassicText(FCM::U_Int32 resourceId, DOM::FrameElement::PIClassicText pClassicText)
     {
-        DOM::AutoPtr<DOM::FrameElement::IClassicText> pTextItem;
-        FCMListPtr pParagraphsList;
-        FCM::StringRep16 textDisplay;
-        FCM::U_Int32 count = 0;
-        FCM::U_Int16 fontSize;
-        std::string fName; 
-        std::string displayText; 
-        DOM::Utils::COLOR fontColor;
         FCM::Result res;
-     
-        LOG(("[DefineClassicText] ResId: %d\n", resourceId));
+        DOM::AutoPtr<DOM::FrameElement::IClassicText> pTextItem;
+        FCM::StringRep16 textDisplay;
+        std::string displayText;
+        TEXT_BEHAVIOUR textBehaviour;
+        FCMListPtr pParagraphsList;
+        DOM::AutoPtr<DOM::FrameElement::ITextBehaviour> pTextBehaviour;
+        DOM::FrameElement::AA_MODE_PROP aaModeProp;
+        FCM::U_Int32 paraCount;
 
-        m_resourceList.push_back(resourceId);
+        ASSERT(pClassicText);
 
         pTextItem = pClassicText;
-        AutoPtr<DOM::FrameElement::ITextBehaviour> textBehaviour;
-        pTextItem->GetTextBehaviour(textBehaviour.m_Ptr);
-        AutoPtr<DOM::FrameElement::IDynamicTextBehaviour> dynamicTextBehaviour = textBehaviour.m_Ptr;
 
-        if(dynamicTextBehaviour)
-        {
-            pTextItem->GetParagraphs(pParagraphsList.m_Ptr);
-            res = pParagraphsList->Count(count);
-            ASSERT(FCM_SUCCESS_CODE(res));
+        res = pTextItem->GetText(&textDisplay);
+        ASSERT(FCM_SUCCESS_CODE(res));
+        displayText = Utils::ToString(textDisplay, GetCallback());
 
-            res = pTextItem->GetText(&textDisplay);
-            ASSERT(FCM_SUCCESS_CODE(res));
-            displayText = Utils::ToString(textDisplay, GetCallback());
-        }
-    
-        for (FCM::U_Int32 pIndex = 0; pIndex < count; pIndex++)
+        res = pTextItem->GetAntiAliasModeProp(aaModeProp);
+        ASSERT(FCM_SUCCESS_CODE(res));
+
+        res = pTextItem->GetTextBehaviour(pTextBehaviour.m_Ptr);
+        ASSERT(FCM_SUCCESS_CODE(res));
+
+        res = GetTextBehaviour(pTextBehaviour, textBehaviour);
+        ASSERT(FCM_SUCCESS_CODE(res));
+
+        // Start define text
+        res = m_pOutputWriter->StartDefineClassicText(resourceId, aaModeProp, displayText, textBehaviour);
+        ASSERT(FCM_SUCCESS_CODE(res));
+
+        res = pTextItem->GetParagraphs(pParagraphsList.m_Ptr);
+        ASSERT(FCM_SUCCESS_CODE(res));
+
+        res = pParagraphsList->Count(paraCount);
+        ASSERT(FCM_SUCCESS_CODE(res));
+
+        for (FCM::U_Int32 para = 0; para < paraCount; para++)
         {
-            AutoPtr<DOM::FrameElement::IParagraph> pParagraph = pParagraphsList[pIndex];
+            AutoPtr<DOM::FrameElement::IParagraph> pParagraph = pParagraphsList[para];
 
             if (pParagraph)
             {
                 FCMListPtr pTextRunList;
-                pParagraph->GetTextRuns(pTextRunList.m_Ptr);
+                FCM::U_Int32 runCount;
+                FCM::U_Int32 paraStartIndex;
+                FCM::U_Int32 paraLength;
+                DOM::FrameElement::PARAGRAPH_STYLE paragraphStyle;
 
-                FCM::U_Int32 trCount;
-                pTextRunList->Count(trCount);
+                // Start Paragraph - startIndex, length, paragraphStyle
+                res = pParagraph->GetStartIndex(paraStartIndex);
+                ASSERT(FCM_SUCCESS_CODE(res));
 
-                for (FCM::U_Int32 trIndex = 0; trIndex < trCount; trIndex++)
+                res = pParagraph->GetLength(paraLength);
+                ASSERT(FCM_SUCCESS_CODE(res));
+
+                paragraphStyle.structSize = sizeof(DOM::FrameElement::PARAGRAPH_STYLE);
+                res = pParagraph->GetParagraphStyle(paragraphStyle);
+                ASSERT(FCM_SUCCESS_CODE(res));
+
+                res = m_pOutputWriter->StartDefineParagraph(paraStartIndex, paraLength, paragraphStyle);
+                ASSERT(FCM_SUCCESS_CODE(res));
+
+                res = pParagraph->GetTextRuns(pTextRunList.m_Ptr);
+                ASSERT(FCM_SUCCESS_CODE(res));
+
+                res = pTextRunList->Count(runCount);
+                ASSERT(FCM_SUCCESS_CODE(res));
+
+                for (FCM::U_Int32 trIndex = 0; trIndex < runCount; trIndex++)
                 {
+                    FCM::U_Int32 runStartIndex;
+                    FCM::U_Int32 runLength;
                     AutoPtr<DOM::FrameElement::ITextRun> pTextRun = pTextRunList[trIndex];
-                    AutoPtr<DOM::FrameElement::ITextStyle> trStyle;
+                    AutoPtr<DOM::FrameElement::ITextStyle> runStyle;
+                    TEXT_STYLE textStyle;
 
-                    pTextRun->GetTextStyle(trStyle.m_Ptr);
-                    
-                    res = trStyle->GetFontSize(fontSize);
+                    // Start text run - startIndex, length, textStyle
+                    res = pTextRun->GetStartIndex(runStartIndex);
                     ASSERT(FCM_SUCCESS_CODE(res));
 
-                    res = trStyle->GetFontColor(fontColor);
+                    res = pTextRun->GetLength(runLength);
                     ASSERT(FCM_SUCCESS_CODE(res));
 
-                    // Form font info in required format
-                    GetFontInfo(trStyle, fName, fontSize);
+                    res = pTextRun->GetTextStyle(runStyle.m_Ptr);
+                    ASSERT(FCM_SUCCESS_CODE(res));
+
+                    // Extract text style 
+                    res = GetTextStyle(runStyle, textStyle);
+                    ASSERT(FCM_SUCCESS_CODE(res));
+
+                    res = m_pOutputWriter->StartDefineTextRun(runStartIndex, runLength, textStyle);
+                    ASSERT(FCM_SUCCESS_CODE(res));
+
+                    // End text run
+                    res = m_pOutputWriter->EndDefineTextRun();
+                    ASSERT(FCM_SUCCESS_CODE(res));
                 }
+
+                // End Paragraph
+                res = m_pOutputWriter->EndDefineParagraph();
+                ASSERT(FCM_SUCCESS_CODE(res));
             }
         }
-    
-        //Define Text Element
-        res = m_pOutputWriter->DefineText(resourceId, fName, fontColor,displayText,pTextItem);
 
-        return FCM_SUCCESS;
+        // End define text
+        res = m_pOutputWriter->EndDefineClassicText();
+        ASSERT(FCM_SUCCESS_CODE(res));
+
+        return res;
     }
 
 
@@ -1579,43 +1624,153 @@ namespace CreateJS
         return res;
     }
 
-    FCM::Result ResourcePalette::GetFontInfo(DOM::FrameElement::ITextStyle* pTextStyleItem, std::string& name, FCM::U_Int16 fontSize)
+    FCM::Result ResourcePalette::GetTextStyle(DOM::FrameElement::ITextStyle* pTextStyleItem, TEXT_STYLE& textStyle)
     {
         FCM::StringRep16 pFontName;
+        FCM::StringRep16 pLink;
+        FCM::StringRep16 pLinkTarget;
         FCM::StringRep8 pFontStyle;
         FCM::Result res;
-        std::string str;
-        std::string sizeStr;
-        std::string styleStr;
+
+        res = pTextStyleItem->GetBaseLineShiftStyle(textStyle.baseLineShiftStyle);
+        ASSERT(FCM_SUCCESS_CODE(res));
+
+        res = pTextStyleItem->GetFontColor(textStyle.fontColor);
+        ASSERT(FCM_SUCCESS_CODE(res));
 
         res = pTextStyleItem->GetFontName(&pFontName);
+        ASSERT(FCM_SUCCESS_CODE(res));
+        textStyle.fontName = Utils::ToString(pFontName, GetCallback());
+
+        res = pTextStyleItem->GetFontSize(textStyle.fontSize);
         ASSERT(FCM_SUCCESS_CODE(res));
 
         res = pTextStyleItem->GetFontStyle(&pFontStyle);
         ASSERT(FCM_SUCCESS_CODE(res));
+        textStyle.fontStyle = Utils::ToString(pFontStyle);
 
-        styleStr = pFontStyle;
-        if(styleStr == "BoldItalicStyle")
-            styleStr = "italic bold";
-        else if(styleStr == "BoldStyle")
-            styleStr = "bold";
-        else if(styleStr == "ItalicStyle")
-            styleStr = "italic";
-        else if(styleStr == "RegularStyle")
-            styleStr = "";
+        res = pTextStyleItem->GetLetterSpacing(textStyle.letterSpacing);
+        ASSERT(FCM_SUCCESS_CODE(res));
 
-        sizeStr = Utils::ToString(fontSize);
-        str = Utils::ToString(pFontName,GetCallback());
-        name = styleStr+" "+sizeStr + "px" + " " + "'" + str + "'" ;
+        res = pTextStyleItem->GetLink(&pLink);
+        ASSERT(FCM_SUCCESS_CODE(res));
+        textStyle.link = Utils::ToString(pLink, GetCallback());
 
-        // Free the name
+        res = pTextStyleItem->GetLinkTarget(&pLinkTarget);
+        ASSERT(FCM_SUCCESS_CODE(res));
+        textStyle.linkTarget = Utils::ToString(pLinkTarget, GetCallback());
+
+        res = pTextStyleItem->IsAutoKernEnabled(textStyle.autoKern);
+        ASSERT(FCM_SUCCESS_CODE(res));
+
+        res = pTextStyleItem->IsRotated(textStyle.rotated);
+        ASSERT(FCM_SUCCESS_CODE(res));
+
+        // Cleanup
         FCM::AutoPtr<FCM::IFCMUnknown> pUnkCalloc;
         res = GetCallback()->GetService(SRVCID_Core_Memory, pUnkCalloc.m_Ptr);
         AutoPtr<FCM::IFCMCalloc> callocService  = pUnkCalloc;
 
         callocService->Free((FCM::PVoid)pFontName);
-
+        callocService->Free((FCM::PVoid)pFontStyle);
+        callocService->Free((FCM::PVoid)pLink);
+        callocService->Free((FCM::PVoid)pLinkTarget);
+        
         return res;
+    }
+
+
+    FCM::Result ResourcePalette::GetTextBehaviour(DOM::FrameElement::ITextBehaviour* pTextBehaviour, TEXT_BEHAVIOUR& textBehaviour)
+    {
+        FCM::Result res;
+        FCM::AutoPtr<DOM::FrameElement::IStaticTextBehaviour> staticTextBehaviour;
+        FCM::AutoPtr<DOM::FrameElement::IModifiableTextBehaviour> modifiableTextBehaviour;
+        FCM::AutoPtr<DOM::FrameElement::IDynamicTextBehaviour> dynamicTextBehaviour;
+        FCM::AutoPtr<DOM::FrameElement::IInputTextBehaviour> inputTextBehaviour;
+
+        ASSERT(pTextBehaviour);
+
+        res = pTextBehaviour->IsSelectable(textBehaviour.selectable);
+        ASSERT(FCM_SUCCESS_CODE(res));
+
+        staticTextBehaviour = pTextBehaviour;
+        if (staticTextBehaviour)
+        {
+            // Static text
+            textBehaviour.type = 0;
+
+            res = staticTextBehaviour->GetFlow(textBehaviour.u.staticText.flow);
+            ASSERT(FCM_SUCCESS_CODE(res));
+
+            res = staticTextBehaviour->GetOrientationMode(textBehaviour.u.staticText.orientationMode);
+            ASSERT(FCM_SUCCESS_CODE(res));
+
+            textBehaviour.name = "";
+        }
+        else
+        {
+            modifiableTextBehaviour = pTextBehaviour;
+            if (modifiableTextBehaviour)
+            {
+                FCM::StringRep16 pInstanceName;
+                DOM::FrameElement::LineMode lineMode;
+                FCM::Boolean renderAsHTML;
+                FCM::Boolean borderDrawn;
+                FCM::Boolean scrollable;
+
+                res = modifiableTextBehaviour->GetInstanceName(&pInstanceName);
+                ASSERT(FCM_SUCCESS_CODE(res));
+                textBehaviour.name = Utils::ToString(pInstanceName, GetCallback());
+
+                res = modifiableTextBehaviour->GetLineMode(lineMode);
+                ASSERT(FCM_SUCCESS_CODE(res));
+
+                res = modifiableTextBehaviour->GetRenderAsHtml(renderAsHTML);
+                ASSERT(FCM_SUCCESS_CODE(res));
+
+                res = modifiableTextBehaviour->IsBorderDrawn(borderDrawn);
+                ASSERT(FCM_SUCCESS_CODE(res));
+
+                res = modifiableTextBehaviour->IsScrollable(scrollable);
+                ASSERT(FCM_SUCCESS_CODE(res));
+
+                dynamicTextBehaviour = pTextBehaviour;
+                if (dynamicTextBehaviour)
+                {
+                    textBehaviour.type = 1;
+
+                    textBehaviour.u.dynamicText.borderDrawn = borderDrawn;
+                    textBehaviour.u.dynamicText.lineMode = lineMode;
+                    textBehaviour.u.dynamicText.renderAsHtml = renderAsHTML;
+                    textBehaviour.u.dynamicText.scrollable = scrollable;
+                }
+                else
+                {
+                    inputTextBehaviour = pTextBehaviour;
+                    if (inputTextBehaviour)
+                    {
+                        textBehaviour.type = 2;
+                    
+                        textBehaviour.u.inputText.borderDrawn = borderDrawn;
+                        textBehaviour.u.inputText.lineMode = lineMode;
+                        textBehaviour.u.inputText.renderAsHtml = renderAsHTML;
+                        textBehaviour.u.inputText.scrollable = scrollable;
+                        
+                        res = inputTextBehaviour->IsLineModePassword(textBehaviour.u.inputText.password);
+                        ASSERT(FCM_SUCCESS_CODE(res));
+                    }
+                }
+
+                // Cleanup
+                FCM::AutoPtr<FCM::IFCMUnknown> pUnkCalloc;
+                res = GetCallback()->GetService(SRVCID_Core_Memory, pUnkCalloc.m_Ptr);
+                AutoPtr<FCM::IFCMCalloc> callocService  = pUnkCalloc;
+
+                callocService->Free((FCM::PVoid)pInstanceName);
+            }
+        }
+
+        return FCM_SUCCESS;
     }
 
 

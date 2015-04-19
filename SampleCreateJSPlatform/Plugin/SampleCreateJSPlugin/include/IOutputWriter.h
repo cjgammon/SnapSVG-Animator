@@ -32,6 +32,10 @@
 #include "LIbraryItem/IMediaItem.h"
 #include "FrameElement/IClassicText.h"
 #include "FrameElement/IMovieClip.h"
+#include "FrameElement/ITextBehaviour.h"
+#include "FrameElement/ITextRun.h"
+#include "FrameElement/IParagraph.h"
+#include "FrameElement/ITextStyle.h"
 #include "StrokeStyle/ISolidStrokeStyle.h"
 #include "FillStyle/IGradientFillStyle.h"
 #include "IFrame.h"
@@ -50,6 +54,54 @@ namespace CreateJS
 
 
 /* -------------------------------------------------- Structs / Unions */
+
+namespace CreateJS
+{
+    struct STATIC_TEXT_INFO
+    {
+        ::DOM::FrameElement::OrientationMode orientationMode;
+        ::DOM::FrameElement::TextFlow flow;
+    };
+
+    struct DYNAMIC_TEXT_INFO
+    {
+        ::DOM::FrameElement::LineMode lineMode;
+        ::FCM::Boolean scrollable;
+        ::FCM::Boolean borderDrawn;
+        ::FCM::Boolean renderAsHtml;
+    };
+
+    struct INPUT_TEXT_INFO : public DYNAMIC_TEXT_INFO
+    {
+        ::FCM::Boolean password;
+    };
+
+    struct TEXT_BEHAVIOUR
+    {
+        int type;
+        ::FCM::Boolean selectable;
+        ::std::string name;
+        union         {
+            STATIC_TEXT_INFO staticText;
+            DYNAMIC_TEXT_INFO dynamicText;
+            INPUT_TEXT_INFO inputText;
+        } u;
+    };
+
+    struct TEXT_STYLE
+    {
+        std::string fontStyle;
+        FCM::S_Int16 letterSpacing;
+        FCM::U_Int16 fontSize;
+        std::string fontName;
+        FCM::Boolean autoKern;
+        DOM::Utils::COLOR fontColor;
+        DOM::FrameElement::BaseLineShiftStyle baseLineShiftStyle;
+        FCM::Boolean rotated;
+        std::string link;
+        std::string linkTarget;
+    };
+}
 
 
 /* -------------------------------------------------- Class Decl */
@@ -176,13 +228,33 @@ namespace CreateJS
             const std::string&  name,
             DOM::LibraryItem::PIMediaItem pMediaItem) = 0;
 
-        // Define a classic text
-        virtual FCM::Result DefineText(
+        // Start of a classic text definition
+        virtual FCM::Result StartDefineClassicText(
             FCM::U_Int32 resId, 
-            const std::string& name, 
-            const DOM::Utils::COLOR& color, 
-            const std::string& displayText, 
-            DOM::FrameElement::PIClassicText pTextItem) = 0;
+            const DOM::FrameElement::AA_MODE_PROP& aaModeProp,
+            const std::string& displayText,
+            const TEXT_BEHAVIOUR& textBehaviour) = 0;
+
+        // Start paragraph
+        virtual FCM::Result StartDefineParagraph(
+            FCM::U_Int32 startIndex,
+            FCM::U_Int32 length,
+            const DOM::FrameElement::PARAGRAPH_STYLE& paragraphStyle) = 0;
+
+        // Start text run
+        virtual FCM::Result StartDefineTextRun(
+            FCM::U_Int32 startIndex,
+            FCM::U_Int32 length,
+            const TEXT_STYLE& textStyle) = 0;
+
+        // End of a text run
+        virtual FCM::Result EndDefineTextRun() = 0;
+
+        // End of a paragraph
+        virtual FCM::Result EndDefineParagraph() = 0;
+
+        // End of a classic text definition
+        virtual FCM::Result EndDefineClassicText() = 0;
 
         // Define Sound
         virtual FCM::Result DefineSound(

@@ -666,42 +666,168 @@ namespace CreateJS
         return FCM_SUCCESS;
     }
 
-    FCM::Result JSONOutputWriter::DefineText(
-            FCM::U_Int32 resId, 
-            const std::string& name, 
-            const DOM::Utils::COLOR& color, 
-            const std::string& displayText, 
-            DOM::FrameElement::PIClassicText pTextItem)
+
+    FCM::Result JSONOutputWriter::StartDefineClassicText(
+        FCM::U_Int32 resId, 
+        const DOM::FrameElement::AA_MODE_PROP& aaModeProp,
+        const std::string& displayText,
+        const TEXT_BEHAVIOUR& textBehaviour)
     {
-        std::string txt = displayText;
-        std::string colorStr = Utils::ToString(color);
-        std::string find = "\r";
-        std::string replace = "\\r";
-        std::string::size_type i =0;
-        JSONNode textElem(JSON_NODE);
+        JSONNode aaMode(JSON_NODE);
+        JSONNode behaviour(JSON_NODE);
 
-        while (true) {
-            /* Locate the substring to replace. */
-            i = txt.find(find, i);
-           
-            if (i == std::string::npos) break;
-            /* Make the replacement. */
-            txt.replace(i, find.length(), replace);
+        m_pTextElem = new JSONNode(JSON_NODE);
+        ASSERT(m_pTextElem != NULL);
 
-            /* Advance index forward so the next iteration doesn't pick it up as well. */
-            i += replace.length();
+        m_pTextElem->set_name("text");
+        m_pTextElem->push_back(JSONNode(("charid"), CreateJS::Utils::ToString(resId)));
+
+        aaMode.set_name("aaMode");
+        aaMode.push_back(JSONNode(("mode"), CreateJS::Utils::ToString(aaModeProp.aaMode)));
+        if (aaModeProp.aaMode == DOM::FrameElement::ANTI_ALIAS_MODE_CUSTOM)
+        {
+            aaMode.push_back(JSONNode(("thickness"), CreateJS::Utils::ToString(aaModeProp.customAAModeProp.aaThickness)));
+            aaMode.push_back(JSONNode(("sharpness"), CreateJS::Utils::ToString(aaModeProp.customAAModeProp.aaSharpness)));
+        }
+        m_pTextElem->push_back(aaMode);
+        
+        m_pTextElem->push_back(JSONNode(("txt"), displayText));
+
+        behaviour.set_name("behaviour");
+
+        if (textBehaviour.type == 0)
+        {
+            // Static Text
+            behaviour.push_back(JSONNode(("type"), "Static"));
+            behaviour.push_back(JSONNode(("flow"), CreateJS::Utils::ToString(textBehaviour.u.staticText.flow)));
+            behaviour.push_back(JSONNode(("orientation"), CreateJS::Utils::ToString(textBehaviour.u.staticText.orientationMode)));
+        }
+        else if (textBehaviour.type == 1)
+        {
+            // Dynamic text
+            behaviour.push_back(JSONNode(("type"), "Dynamic"));
+            behaviour.push_back(JSONNode(("name"), textBehaviour.name));
+            behaviour.push_back(JSONNode(("isBorderDrawn"), CreateJS::Utils::ToString(textBehaviour.u.dynamicText.borderDrawn)));
+            behaviour.push_back(JSONNode(("lineMode"), CreateJS::Utils::ToString(textBehaviour.u.dynamicText.lineMode)));
+            behaviour.push_back(JSONNode(("isRenderAsHTML"), CreateJS::Utils::ToString(textBehaviour.u.dynamicText.renderAsHtml)));
+            behaviour.push_back(JSONNode(("isScrollable"), CreateJS::Utils::ToString(textBehaviour.u.dynamicText.scrollable)));
+        }
+        else
+        {
+            // Input text
+            behaviour.push_back(JSONNode(("type"), "Input"));
+            behaviour.push_back(JSONNode(("name"), textBehaviour.name));
+            behaviour.push_back(JSONNode(("isBorderDrawn"), CreateJS::Utils::ToString(textBehaviour.u.inputText.borderDrawn)));
+            behaviour.push_back(JSONNode(("lineMode"), CreateJS::Utils::ToString(textBehaviour.u.inputText.lineMode)));
+            behaviour.push_back(JSONNode(("isRenderAsHTML"), CreateJS::Utils::ToString(textBehaviour.u.inputText.renderAsHtml)));
+            behaviour.push_back(JSONNode(("isScrollable"), CreateJS::Utils::ToString(textBehaviour.u.inputText.scrollable)));
+            behaviour.push_back(JSONNode(("isPassword"), CreateJS::Utils::ToString(textBehaviour.u.inputText.password)));
         }
 
-        
-        textElem.push_back(JSONNode(("charid"), CreateJS::Utils::ToString(resId)));
-        textElem.push_back(JSONNode(("displayText"),txt ));
-        textElem.push_back(JSONNode(("font"),name));
-        textElem.push_back(JSONNode("color", colorStr.c_str()));
+        behaviour.push_back(JSONNode(("isSelectable"), CreateJS::Utils::ToString(textBehaviour.selectable)));
 
-        m_pTextArray->push_back(textElem);
+        m_pTextElem->push_back(behaviour);
+
+        // Start a paragraph array
+        m_pTextParaArray = new JSONNode(JSON_ARRAY);
+        ASSERT(m_pTextParaArray != NULL);
+
+        m_pTextParaArray->set_name("paras");
 
         return FCM_SUCCESS;
     }
+
+
+    FCM::Result JSONOutputWriter::StartDefineParagraph(
+        FCM::U_Int32 startIndex,
+        FCM::U_Int32 length,
+        const DOM::FrameElement::PARAGRAPH_STYLE& paragraphStyle)
+    {
+        m_pTextPara = new JSONNode(JSON_NODE);
+        ASSERT(m_pTextPara != NULL);
+
+        m_pTextPara->push_back(JSONNode(("startIndex"), CreateJS::Utils::ToString(startIndex)));
+        m_pTextPara->push_back(JSONNode(("length"), CreateJS::Utils::ToString(length)));
+        m_pTextPara->push_back(JSONNode(("indent"), CreateJS::Utils::ToString(paragraphStyle.indent)));
+        m_pTextPara->push_back(JSONNode(("leftMargin"), CreateJS::Utils::ToString(paragraphStyle.leftMargin)));
+        m_pTextPara->push_back(JSONNode(("rightMargin"), CreateJS::Utils::ToString(paragraphStyle.rightMargin)));
+        m_pTextPara->push_back(JSONNode(("linespacing"), CreateJS::Utils::ToString(paragraphStyle.lineSpacing)));
+        m_pTextPara->push_back(JSONNode(("alignment"), CreateJS::Utils::ToString(paragraphStyle.alignment)));
+
+        m_pTextRunArray = new JSONNode(JSON_ARRAY);
+        ASSERT(m_pTextRunArray != NULL);
+
+        m_pTextRunArray->set_name("textRun");
+
+        return FCM_SUCCESS;
+    }
+
+
+    FCM::Result JSONOutputWriter::StartDefineTextRun(
+        FCM::U_Int32 startIndex,
+        FCM::U_Int32 length,
+        const TEXT_STYLE& textStyle)
+    {
+        JSONNode textRun(JSON_NODE);
+        JSONNode style(JSON_NODE);
+
+        textRun.push_back(JSONNode(("startIndex"), CreateJS::Utils::ToString(startIndex)));
+        textRun.push_back(JSONNode(("length"), CreateJS::Utils::ToString(length)));
+
+        style.set_name("style");
+        style.push_back(JSONNode("fontName", textStyle.fontName));
+        style.push_back(JSONNode("fontSize", CreateJS::Utils::ToString(textStyle.fontSize)));
+        style.push_back(JSONNode("fontColor", CreateJS::Utils::ToString(textStyle.fontColor)));
+        style.push_back(JSONNode("fontStyle", textStyle.fontStyle));
+        style.push_back(JSONNode("letterSpacing", CreateJS::Utils::ToString(textStyle.letterSpacing)));
+        style.push_back(JSONNode("isRotated", CreateJS::Utils::ToString(textStyle.rotated)));
+        style.push_back(JSONNode("isAutoKern", CreateJS::Utils::ToString(textStyle.autoKern)));
+        style.push_back(JSONNode("baseLineShiftStyle", CreateJS::Utils::ToString(textStyle.baseLineShiftStyle)));
+        style.push_back(JSONNode("link", textStyle.link));
+        style.push_back(JSONNode("linkTarget", textStyle.linkTarget));
+
+        textRun.push_back(style);
+        m_pTextRunArray->push_back(textRun);
+
+        return FCM_SUCCESS;
+    }
+
+
+    FCM::Result JSONOutputWriter::EndDefineTextRun()
+    {
+        return FCM_SUCCESS;
+    }
+
+
+    FCM::Result JSONOutputWriter::EndDefineParagraph()
+    {
+        m_pTextPara->push_back(*m_pTextRunArray);
+        delete m_pTextRunArray;
+        m_pTextRunArray = NULL;
+
+        m_pTextParaArray->push_back(*m_pTextPara);
+        delete m_pTextPara;
+        m_pTextPara = NULL;
+
+        return FCM_SUCCESS;
+    }
+
+
+    FCM::Result JSONOutputWriter::EndDefineClassicText()
+    {
+        m_pTextElem->push_back(*m_pTextParaArray);
+
+        delete m_pTextParaArray;
+        m_pTextParaArray = NULL;
+
+        m_pTextArray->push_back(*m_pTextElem);
+
+        delete m_pTextElem;
+        m_pTextElem = NULL;
+
+        return FCM_SUCCESS;
+    }
+
 
     FCM::Result JSONOutputWriter::DefineSound(
             FCM::U_Int32 resId, 
@@ -1688,7 +1814,7 @@ namespace CreateJS
         return FCM_SUCCESS;
     }
 
-	
+
     JSONTimelineWriter::JSONTimelineWriter(FCM::PIFCMCallback pCallback) :
         m_pCallback(pCallback)
     {

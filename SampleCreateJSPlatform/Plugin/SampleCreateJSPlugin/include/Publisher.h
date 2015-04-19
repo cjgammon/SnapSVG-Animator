@@ -239,13 +239,15 @@ namespace CreateJS
 
         FCM::Result CreateSoundFileName(DOM::ILibraryItem* pLibItem, std::string& name);
 
-        FCM::Result GetFontInfo(DOM::FrameElement::ITextStyle* pTextStyleItem, std::string& name,FCM::U_Int16 fontSize);
+        FCM::Result GetTextStyle(DOM::FrameElement::ITextStyle* pTextStyleItem, TEXT_STYLE& textStyle);
 
         FCM::Result HasFancyStrokes(DOM::FrameElement::PIShape pShape, FCM::Boolean& hasFancy); 
 
         FCM::Result ConvertStrokeToFill(
             DOM::FrameElement::PIShape pShape,
             DOM::FrameElement::PIShape& pNewShape);
+
+        FCM::Result GetTextBehaviour(DOM::FrameElement::ITextBehaviour* pTextBehaviour, TEXT_BEHAVIOUR& textBehaviour);
 
     private:
 

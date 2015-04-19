@@ -294,7 +294,164 @@ namespace CreateJS
         return str;
     }
 
+    std::string Utils::ToString(const DOM::FrameElement::AAMode& aaMode)
+    {
+        std::string str;
+
+        switch (aaMode)
+        {
+            case DOM::FrameElement::ANTI_ALIAS_MODE_DEVICE:
+                str = "device";
+                break;
+
+            case DOM::FrameElement::ANTI_ALIAS_MODE_BITMAP:
+                str = "bitmap";
+                break;
+           
+            case DOM::FrameElement::ANTI_ALIAS_MODE_STANDARD:
+                str = "standard";
+                break;
+           
+            case DOM::FrameElement::ANTI_ALIAS_MODE_ADVANCED:
+                str = "advanced";
+                break;
+
+            case DOM::FrameElement::ANTI_ALIAS_MODE_CUSTOM:
+                str = "custom";
+                break;
+
+            default:
+                ASSERT(0);
+                break;
+        }
+        return str;
+    }
+
+
+    std::string Utils::ToString(const DOM::FrameElement::OrientationMode& mode)
+    {
+        std::string str;
+
+        switch (mode)
+        {
+            case DOM::FrameElement::ORIENTATION_MODE_HORIZONTAL:
+                str = "horizontal";
+                break;
+
+            case DOM::FrameElement::ORIENTATION_MODE_VERTICAL:
+                str = "vertical";
+                break;
+           
+            default:
+                ASSERT(0);
+                break;
+        }
+        return str;
+    }
+
+    std::string Utils::ToString(const DOM::FrameElement::TextFlow& flow)
+    {
+        std::string str;
+
+        switch (flow)
+        {
+            case DOM::FrameElement::TEXT_FLOW_LEFT_TO_RIGHT:
+                str = "leftToRight";
+                break;
+
+            case DOM::FrameElement::TEXT_FLOW_RIGHT_TO_LEFT:
+                str = "rightToLeft";
+                break;
+
+            default:
+                ASSERT(0);
+                break;
+        }
+        return str;
+    }
+
+    std::string Utils::ToString(const DOM::FrameElement::LineMode& mode)
+    {
+        std::string str;
+
+        switch (mode)
+        {
+            case DOM::FrameElement::LINE_MODE_SINGLE:
+                str = "single";
+                break;
+
+            case DOM::FrameElement::LINE_MODE_MULTI:
+                str = "multi";
+                break;
+           
+            case DOM::FrameElement::LINE_MODE_MULTI_NO_WRAP:
+                str = "multiNoWrap";
+                break;
+           
+            default:
+                ASSERT(0);
+                break;
+        }
+        return str;
+    }
     
+
+    std::string Utils::ToString(const DOM::FrameElement::AlignMode& mode)
+    {
+        std::string str;
+
+        switch (mode)
+        {
+             case DOM::FrameElement::ALIGN_MODE_LEFT:
+                 str = "left";
+                 break;
+
+             case DOM::FrameElement::ALIGN_MODE_RIGHT:
+                 str = "right";
+                 break;
+
+             case DOM::FrameElement::ALIGN_MODE_CENTER:
+                 str = "center";
+                 break;
+
+             case DOM::FrameElement::ALIGN_MODE_JUSTIFY:
+                 str = "justify";
+                 break;
+
+             default:
+                 ASSERT(0);
+                 break;
+        }
+
+        return str;
+    }
+
+    std::string Utils::ToString(const DOM::FrameElement::BaseLineShiftStyle& lineShiftStyle)
+    {
+        std::string str;
+
+        switch (lineShiftStyle)
+        {
+             case DOM::FrameElement::BASE_LINE_SHIFT_STYLE_NORMAL:
+                 str = "normal";
+                 break;
+
+             case DOM::FrameElement::BASE_LINE_SHIFT_STYLE_SUPERSCRIPT:
+                 str = "superscript";
+                 break;
+
+             case DOM::FrameElement::BASE_LINE_SHIFT_STYLE_SUBSCRIPT:
+                 str = "subscript";
+                 break;
+
+             default:
+                 ASSERT(0);
+                 break;
+        }
+
+        return str;
+    }
+
     FCM::StringRep16 Utils::ToString16(const std::string& str, FCM::PIFCMCallback pCallback)
     {
         FCM::StringRep16 pStrFeatureName = NULL;

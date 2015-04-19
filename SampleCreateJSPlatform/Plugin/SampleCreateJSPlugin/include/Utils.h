@@ -30,6 +30,10 @@
 #include "Utils/DOMTypes.h"
 #include <string>
 #include "FillStyle/IGradientFillStyle.h"
+#include "FrameElement/IClassicText.h"
+#include "FrameElement/IParagraph.h"
+#include "FrameElement/ITextStyle.h"
+#include "FrameElement/ITextBehaviour.h"
 #include "IFCMStringUtils.h"
 #include <iostream>
 #include <fstream>
@@ -63,6 +67,7 @@
 #else
 #define LOG(x) 
 #endif
+
 /* -------------------------------------------------- Structs / Unions */
 
 
@@ -91,6 +96,18 @@ namespace CreateJS
         static std::string ToString(const DOM::Utils::CapType& capType);
 
         static std::string ToString(const DOM::Utils::JoinType& joinType);
+
+        static std::string ToString(const DOM::FrameElement::AAMode& aaMode);
+
+        static std::string ToString(const DOM::FrameElement::OrientationMode& mode);
+
+        static std::string ToString(const DOM::FrameElement::TextFlow& flow);
+
+        static std::string ToString(const DOM::FrameElement::LineMode& mode);
+
+        static std::string ToString(const DOM::FrameElement::AlignMode& mode);
+
+        static std::string ToString(const DOM::FrameElement::BaseLineShiftStyle& lineShiftStyle);
         
         static std::string ToString(FCM::CStringRep16 pStr16, FCM::PIFCMCallback pCallback);
 

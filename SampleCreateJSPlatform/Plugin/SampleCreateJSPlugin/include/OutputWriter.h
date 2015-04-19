@@ -204,13 +204,33 @@ namespace CreateJS
             const std::string& name,
             DOM::LibraryItem::PIMediaItem pMediaItem);
 
-        // Define text
-        virtual FCM::Result DefineText(
+        // Start of a classic text definition
+        virtual FCM::Result StartDefineClassicText(
             FCM::U_Int32 resId, 
-            const std::string& name, 
-            const DOM::Utils::COLOR& color,
-            const std::string& displayText, 
-            DOM::FrameElement::PIClassicText pTextItem);
+            const DOM::FrameElement::AA_MODE_PROP& aaModeProp,
+            const std::string& displayText,
+            const TEXT_BEHAVIOUR& textBehaviour);
+
+        // Start paragraph
+        virtual FCM::Result StartDefineParagraph(
+            FCM::U_Int32 startIndex,
+            FCM::U_Int32 length,
+            const DOM::FrameElement::PARAGRAPH_STYLE& paragraphStyle);
+
+        // Start text run
+        virtual FCM::Result StartDefineTextRun(
+            FCM::U_Int32 startIndex,
+            FCM::U_Int32 length,
+            const TEXT_STYLE& textStyle);
+
+        // End of a text run
+        virtual FCM::Result EndDefineTextRun();
+
+        // End of a paragraph
+        virtual FCM::Result EndDefineParagraph();
+
+        // End of a classic text definition
+        virtual FCM::Result EndDefineClassicText();
 
         virtual FCM::Result DefineSound(
             FCM::U_Int32 resId, 
@@ -235,6 +255,7 @@ namespace CreateJS
         JSONNode* m_pTimelineArray;
 
         JSONNode* m_pBitmapArray;
+
         JSONNode* m_pSoundArray;
 
         JSONNode* m_pTextArray;
@@ -244,6 +265,14 @@ namespace CreateJS
         JSONNode*   m_pathArray;
 
         JSONNode*   m_pathElem;
+
+        JSONNode*  m_pTextElem;
+
+        JSONNode*  m_pTextParaArray;
+
+        JSONNode*  m_pTextPara;
+
+        JSONNode*  m_pTextRunArray;
 
         JSONNode*   m_gradientColor;
 
