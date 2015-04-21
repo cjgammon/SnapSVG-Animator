@@ -90,6 +90,10 @@ define(function (require) {
 				case "UpdateVisibility":
 					command = new UpdateVisibilityCommand(cmdData.objectId , cmdData.visibility);
 				break;
+
+				case "UpdateMask":
+					command = new UpdateMaskCommand(cmdData.objectId , cmdData.maskTill);
+				break;
 			}
 
 			if(command !== undefined) {
@@ -108,7 +112,8 @@ define(function (require) {
 		this.m_charID = charID;
 		this.m_objectID = objectID;
 		this.m_placeAfter = placeAfter;
-		this.m_transform = transform;	
+		this.m_transform = transform;
+		console.log(this);
 	}
 
 	//Execute function for PlaceObjectCommand
@@ -166,7 +171,7 @@ define(function (require) {
 
 				//Create a corresponding TimelineAnimator
 				if(movieclipTimeline)
-				{					
+				{
 					movieclip = new MovieClip(childMC, movieclipTimeline, resourceManager, this.m_transform);
 					stage.m_children.push(movieclip);
 					
@@ -175,6 +180,8 @@ define(function (require) {
 				}
 			}
 		}
+
+		//TODO::??mask logic??
 	}
 
 	//MoveObjectCommand Class
@@ -289,6 +296,7 @@ define(function (require) {
 	//Execute function for UpdateVisbilityCommand
 	UpdateVisibilityCommand.prototype.execute = function(timelineAnimator, resourceManager)
 	{
+		/*
 		var parentMC = timelineAnimator.m_targetMC;
 		if(parentMC != undefined)
 		{
@@ -307,9 +315,47 @@ define(function (require) {
 
 				}				
 			}		
-		}	
+		}
+		*/	
 	}
 	
+	var UpdateMaskCommand = function (objectID,maskTill) 
+	{
+		this.m_objectID = objectID;
+		this.m_maskTill = maskTill;
+	}
+
+	UpdateMaskCommand.prototype.execute = function (stage, resourceManager) 
+	{
+		var parentMC = stage.el,
+			mask,
+			masked,
+			i;
+
+		if(parentMC != undefined)
+		{
+			baseMask = parentMC.select('[token="' + this.m_objectID + '"]');
+
+			for (i = parseInt(this.m_maskTill); i > 1; i -= 1) {
+
+				mask = baseMask.clone();
+				masked = parentMC.select('[token="' + i + '"]');
+
+				oldID = masked.attr('mask').replace('url(', '').replace(')', '');
+				oldMask = parentMC.select(oldID);
+				if (oldMask) {
+					oldMask.remove();
+				}
+
+				masked.attr({
+					mask: mask
+				});
+			}
+
+			baseMask.remove();
+		}	
+	}
+
 	return MovieClip;
 	
 });
