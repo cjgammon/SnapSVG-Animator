@@ -7,13 +7,14 @@ define(function (require) {
 	
 	require('tweenmax');
 	
-	
-	MovieClip = function (el, commandTimeline, resourceManager, transform) {
+	MovieClip = function (root, el, commandTimeline, resourceManager, transform) {
 		var i,
 			transformMat;
 		
+		this.root = root;
     	this.el = el;
 		this.m_transform = transform;
+
 		//Timeline is a collection of frames
 		//Frame is a collection of Command Objects
 		this.m_ctimeline = commandTimeline;
@@ -24,6 +25,7 @@ define(function (require) {
 			onUpdate: this.runCommands.bind(this), 
 			onUpdateParams: [resourceManager]});
 		this.m_currentFrameNo = this.m_timeline.time();
+
 		this.m_frameCount = this.m_ctimeline.Frame.length;
 		this.m_children = [];
 		if(this.m_transform !== undefined) 
@@ -40,10 +42,16 @@ define(function (require) {
 	
 	MovieClip.prototype.clear = function () {
 		var items = this.el.selectAll('g'),
+			defs,
 			i;
 		
 		for (i = 0; i < items.length; i += 1) {
 			items[i].remove();
+		}
+
+		defs = this.el.select('defs');
+		if (defs) {
+			defs.remove();
 		}
 	}
 	
@@ -113,7 +121,6 @@ define(function (require) {
 		this.m_objectID = objectID;
 		this.m_placeAfter = placeAfter;
 		this.m_transform = transform;
-		console.log(this);
 	}
 
 	//Execute function for PlaceObjectCommand
@@ -124,6 +131,7 @@ define(function (require) {
 			bitmap = resourceManager.getBitmap(this.m_charID),
 			text = resourceManager.getText(this.m_charID),
 			parentMC = stage.el,
+			root = stage.root,
 			movieclipTimeline,
 			movieclip,
 			children,
@@ -133,15 +141,15 @@ define(function (require) {
 		
 		if(shape !== null && shape !== undefined)
 		{
-			Utils.CreateShape(parentMC, resourceManager, this.m_charID, this.m_objectID, this.m_placeAfter, this.m_transform);
+			Utils.CreateShape(root, parentMC, resourceManager, this.m_charID, this.m_objectID, this.m_placeAfter, this.m_transform);
 		} 
 		else if(bitmap !== null && bitmap !== undefined)
 		{
-			Utils.CreateBitmap(parentMC, resourceManager, this.m_charID, this.m_objectID, this.m_placeAfter, this.m_transform);
+			Utils.CreateBitmap(root, parentMC, resourceManager, this.m_charID, this.m_objectID, this.m_placeAfter, this.m_transform);
 		}
 		else if (text !== null && text !== undefined) 
 		{
-			Utils.CreateText(parentMC, resourceManager, this.m_charID, this.m_objectID, this.m_placeAfter, this.m_transform);
+			Utils.CreateText(root, parentMC, resourceManager, this.m_charID, this.m_objectID, this.m_placeAfter, this.m_transform);
 		}
 		else
 		{
@@ -172,7 +180,7 @@ define(function (require) {
 				//Create a corresponding TimelineAnimator
 				if(movieclipTimeline)
 				{
-					movieclip = new MovieClip(childMC, movieclipTimeline, resourceManager, this.m_transform);
+					movieclip = new MovieClip(root, childMC, movieclipTimeline, resourceManager, this.m_transform);
 					stage.m_children.push(movieclip);
 					
 					var tl = movieclip.getTimeline();
@@ -331,6 +339,9 @@ define(function (require) {
 			mask,
 			masked,
 			i;
+
+		console.log('till', this.m_maskTill);
+		console.log('mask', this.m_objectID);
 
 		if(parentMC != undefined)
 		{

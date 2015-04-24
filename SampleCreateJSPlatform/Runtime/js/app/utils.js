@@ -2,7 +2,7 @@ define(function (require) {
 	
 	var Utils = {
 		
-		CreateShape: function (s,resourceManager,charId,ObjectId,placeAfter,transform)
+		CreateShape: function (root, s, resourceManager,charId,ObjectId,placeAfter,transform)
 		{
 			var pathContainer = s.g();
 			pathContainer.attr({token: parseInt(ObjectId)});
@@ -61,8 +61,8 @@ define(function (require) {
 										gradientString += "-";
 									}		
 								}
-								var g = s.gradient(gradientString);
-								shape1.attr({fill: g});
+								var _g = root.gradient(gradientString);
+								shape1.attr({fill: _g});
 							}
 
 							if(resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient)
@@ -89,9 +89,8 @@ define(function (require) {
 									}		
 								}
 								
-								console.log(gradientString);
-								var g = s.gradient(gradientString);
-								shape1.attr({fill: g});
+								var _g = root.gradient(gradientString);
+								shape1.attr({fill: _g});
 							}
 						}
 						else if(resourceManager.m_data.DOMDocument.Shape[k].path[j].pathType == "Stroke")
@@ -161,7 +160,7 @@ define(function (require) {
 			}
 		},
 
-		CreateBitmap: function(s,resourceManager,charId,ObjectId,placeAfter,transform)
+		CreateBitmap: function(root, s,resourceManager,charId,ObjectId,placeAfter,transform)
 		{
 
 		var bmContainer = s.g();
@@ -216,7 +215,7 @@ define(function (require) {
 			*/
 		},
 
-		CreateText: function (s,resourceManager,charId,ObjectId,placeAfter,transform)
+		CreateText: function (root, s,resourceManager,charId,ObjectId,placeAfter,transform)
 		{
 			var textContainer = s.g();
 			textContainer.attr({token: parseInt(ObjectId)});

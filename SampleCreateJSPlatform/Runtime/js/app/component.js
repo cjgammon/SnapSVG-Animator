@@ -14,6 +14,8 @@ define(function (require) {
 
 		instance.resourceManager = new ResourceManager(data);
 		
+		console.log('hi');
+		console.log(w, h);
 		instance.s = new Snap(w, h);
 		create(instance.s);
     
@@ -40,7 +42,7 @@ define(function (require) {
 			maintimelineIndex = instance.resourceManager.m_data.DOMDocument.Timeline.length - 1;
 			mainTimeline = instance.resourceManager.m_data.DOMDocument.Timeline[maintimelineIndex];
 			
-			instance.movieclip = new MovieClip(instance.s, mainTimeline, instance.resourceManager);
+			instance.movieclip = new MovieClip(instance.s, instance.s, mainTimeline, instance.resourceManager);
 		}
 	};
 
