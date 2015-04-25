@@ -707,24 +707,24 @@ namespace CreateJS
             // Dynamic text
             behaviour.push_back(JSONNode(("type"), "Dynamic"));
             behaviour.push_back(JSONNode(("name"), textBehaviour.name));
-            behaviour.push_back(JSONNode(("isBorderDrawn"), CreateJS::Utils::ToString(textBehaviour.u.dynamicText.borderDrawn)));
+            behaviour.push_back(JSONNode(("isBorderDrawn"), textBehaviour.u.dynamicText.borderDrawn ? "true" : "false"));
             behaviour.push_back(JSONNode(("lineMode"), CreateJS::Utils::ToString(textBehaviour.u.dynamicText.lineMode)));
-            behaviour.push_back(JSONNode(("isRenderAsHTML"), CreateJS::Utils::ToString(textBehaviour.u.dynamicText.renderAsHtml)));
-            behaviour.push_back(JSONNode(("isScrollable"), CreateJS::Utils::ToString(textBehaviour.u.dynamicText.scrollable)));
+            behaviour.push_back(JSONNode(("isRenderAsHTML"), textBehaviour.u.dynamicText.renderAsHtml ? "true" : "false"));
+            behaviour.push_back(JSONNode(("isScrollable"), textBehaviour.u.dynamicText.scrollable ? "true" : "false"));
         }
         else
         {
             // Input text
             behaviour.push_back(JSONNode(("type"), "Input"));
             behaviour.push_back(JSONNode(("name"), textBehaviour.name));
-            behaviour.push_back(JSONNode(("isBorderDrawn"), CreateJS::Utils::ToString(textBehaviour.u.inputText.borderDrawn)));
+            behaviour.push_back(JSONNode(("isBorderDrawn"), textBehaviour.u.inputText.borderDrawn ? "true" : "false"));
             behaviour.push_back(JSONNode(("lineMode"), CreateJS::Utils::ToString(textBehaviour.u.inputText.lineMode)));
-            behaviour.push_back(JSONNode(("isRenderAsHTML"), CreateJS::Utils::ToString(textBehaviour.u.inputText.renderAsHtml)));
-            behaviour.push_back(JSONNode(("isScrollable"), CreateJS::Utils::ToString(textBehaviour.u.inputText.scrollable)));
-            behaviour.push_back(JSONNode(("isPassword"), CreateJS::Utils::ToString(textBehaviour.u.inputText.password)));
+            behaviour.push_back(JSONNode(("isRenderAsHTML"), textBehaviour.u.inputText.renderAsHtml ? "true" : "false"));
+            behaviour.push_back(JSONNode(("isScrollable"), textBehaviour.u.inputText.scrollable ? "true" : "false"));
+            behaviour.push_back(JSONNode(("isPassword"), textBehaviour.u.inputText.password ? "true" : "false"));
         }
 
-        behaviour.push_back(JSONNode(("isSelectable"), CreateJS::Utils::ToString(textBehaviour.selectable)));
+        behaviour.push_back(JSONNode(("isSelectable"), textBehaviour.selectable  ? "true" : "false"));
 
         m_pTextElem->push_back(behaviour);
 
@@ -780,8 +780,8 @@ namespace CreateJS
         style.push_back(JSONNode("fontColor", CreateJS::Utils::ToString(textStyle.fontColor)));
         style.push_back(JSONNode("fontStyle", textStyle.fontStyle));
         style.push_back(JSONNode("letterSpacing", CreateJS::Utils::ToString(textStyle.letterSpacing)));
-        style.push_back(JSONNode("isRotated", CreateJS::Utils::ToString(textStyle.rotated)));
-        style.push_back(JSONNode("isAutoKern", CreateJS::Utils::ToString(textStyle.autoKern)));
+        style.push_back(JSONNode("isRotated", textStyle.rotated ? "true" : "false"));
+        style.push_back(JSONNode("isAutoKern", textStyle.autoKern ? "true" : "false"));
         style.push_back(JSONNode("baseLineShiftStyle", CreateJS::Utils::ToString(textStyle.baseLineShiftStyle)));
         style.push_back(JSONNode("link", textStyle.link));
         style.push_back(JSONNode("linkTarget", textStyle.linkTarget));
@@ -977,7 +977,7 @@ namespace CreateJS
             commandElement.push_back(JSONNode("transformMatrix", Utils::ToString(*pMatrix).c_str()));
         }
 
-        commandElement.push_back(JSONNode("loop", CreateJS::Utils::ToString(loop ? "true" : "false")));
+        commandElement.push_back(JSONNode("loop", loop ? "true" : "false"));
         m_pCommandArray->push_back(commandElement);
 
         return FCM_SUCCESS;
