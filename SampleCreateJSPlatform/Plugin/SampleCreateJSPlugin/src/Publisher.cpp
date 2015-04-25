@@ -1849,6 +1849,7 @@ namespace CreateJS
             objectId, 
             pMovieClipInfo->placeAfterObjectId, 
             &pMovieClipInfo->matrix,
+            true,
             pUnknown);
 
         return res;
@@ -1868,7 +1869,9 @@ namespace CreateJS
             pGraphicInfo->resourceId, 
             objectId, 
             pGraphicInfo->placeAfterObjectId, 
-            &pGraphicInfo->matrix);
+            &pGraphicInfo->matrix,
+            false,
+            NULL);
 
         return res;
     }

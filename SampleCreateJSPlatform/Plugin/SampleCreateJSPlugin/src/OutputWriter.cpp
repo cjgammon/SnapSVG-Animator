@@ -937,8 +937,7 @@ namespace CreateJS
         FCM::U_Int32 resId,
         FCM::U_Int32 objectId,
         FCM::U_Int32 placeAfterObjectId,
-        const DOM::Utils::MATRIX2D* pMatrix,
-        FCM::PIFCMUnknown pUnknown /* = NULL*/)
+        const DOM::Utils::MATRIX2D* pMatrix)
     {
         JSONNode commandElement(JSON_NODE);
 
@@ -952,6 +951,33 @@ namespace CreateJS
             commandElement.push_back(JSONNode("transformMatrix", Utils::ToString(*pMatrix).c_str()));
         }
 
+        m_pCommandArray->push_back(commandElement);
+
+        return FCM_SUCCESS;
+    }
+
+
+    FCM::Result JSONTimelineWriter::PlaceObject(
+        FCM::U_Int32 resId,
+        FCM::U_Int32 objectId,
+        FCM::U_Int32 placeAfterObjectId,
+        const DOM::Utils::MATRIX2D* pMatrix,
+        FCM::Boolean loop,
+        FCM::PIFCMUnknown pUnknown)
+    {
+        JSONNode commandElement(JSON_NODE);
+
+        commandElement.push_back(JSONNode("cmdType", "Place"));
+        commandElement.push_back(JSONNode("charid", CreateJS::Utils::ToString(resId)));
+        commandElement.push_back(JSONNode("objectId", CreateJS::Utils::ToString(objectId)));
+        commandElement.push_back(JSONNode("placeAfter", CreateJS::Utils::ToString(placeAfterObjectId)));
+
+        if (pMatrix)
+        {
+            commandElement.push_back(JSONNode("transformMatrix", Utils::ToString(*pMatrix).c_str()));
+        }
+
+        commandElement.push_back(JSONNode("loop", CreateJS::Utils::ToString(loop ? "true" : "false")));
         m_pCommandArray->push_back(commandElement);
 
         return FCM_SUCCESS;
