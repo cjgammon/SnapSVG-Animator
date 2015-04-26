@@ -40,6 +40,10 @@ define(function (require) {
 		this.m_timeline.add(function () {}, this.m_frameCount + 1);
 	}
 	
+	MovieClip.prototype.repeat = function () {
+		
+	}
+	
 	MovieClip.prototype.clear = function () {
 		var items = this.el.selectAll('g'),
 			defs,
@@ -48,11 +52,15 @@ define(function (require) {
 		for (i = 0; i < items.length; i += 1) {
 			items[i].remove();
 		}
-
-		defs = this.el.select('defs');
+		
+		defs = this.el.selectAll('defs *'); //TODO:: only if clearing, instead should check if def is used and then remove unused
 		if (defs) {
-			defs.remove();
+			for (i = 0; i < defs.length; i += 1) {
+				defs[i].remove();
+			}
 		}
+
+		
 	}
 	
 	MovieClip.prototype.runCommands = function (resourceManager) {

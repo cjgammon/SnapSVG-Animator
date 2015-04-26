@@ -19,14 +19,12 @@ define(function (require) {
 			this.m_shapes[id] = shapeData;
 		}
 
-		/*
 		for(var bitmapIndex =0; bitmapIndex < this.m_data.DOMDocument.Bitmaps.length; bitmapIndex++)
 		{
 			var id = this.m_data.DOMDocument.Bitmaps[bitmapIndex].charid;
 			var bitmapData = this.m_data.DOMDocument.Bitmaps[bitmapIndex];
 			this.m_bitmaps[id] = bitmapData;
 		}
-		*/
 
 		for(var textIndex =0; textIndex < this.m_data.DOMDocument.Text.length; textIndex++)
 		{
@@ -44,6 +42,8 @@ define(function (require) {
 				this.m_movieClips[id] = movieClipData;
 			}
 		}
+
+		console.log(this.m_data.DOMDocument);
 	};
 	
 	//Member functions
@@ -54,11 +54,11 @@ define(function (require) {
 	ResourceManager.prototype.getMovieClip = function(id) {
 		return this.m_movieClips[id];
 	}
-/*
+
 	ResourceManager.prototype.getBitmap = function(id) {
 		return this.m_bitmaps[id];
 	}
-*/
+
 	ResourceManager.prototype.getText = function(id) {
 		return this.m_text[id];
 	}
