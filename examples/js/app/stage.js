@@ -21,9 +21,10 @@ define(function (require) {
 		this.m_timeline = new TimelineMax({
 			useFrames: true, 
 			paused: true,
-			onRepeat: this.clear.bind(this), 
+			//onRepeat: this.repeat.bind(this), 
 			onUpdate: this.runCommands.bind(this), 
-			onUpdateParams: [resourceManager]});
+			onUpdateParams: [resourceManager]
+			});
 		this.m_currentFrameNo = this.m_timeline.time();
 
 		this.m_frameCount = this.m_ctimeline.Frame.length;
@@ -34,15 +35,15 @@ define(function (require) {
 			var transformData =  this.m_transform;
 			var transformArray = transformData.split(",");
 			transformMat = new Snap.Matrix(transformArray[0],transformArray[1],transformArray[2],transformArray[3],transformArray[4],transformArray[5]);
+			console.log('matrix', transformMat, transformMat.toTransformString());
 			this.el.transform(transformMat.toTransformString());
 		}
 		
 		this.m_timeline.add(function () {}, this.m_frameCount + 1);
 	}
 	
-	MovieClip.prototype.repeat = function () {
-		
-	}
+	//TODO:: should remove associated defs upon removing elements
+	//TODO:: should also check if asset/def exists when adding new one to reuse instead of adding/removing
 	
 	MovieClip.prototype.clear = function () {
 		var items = this.el.selectAll('g'),
@@ -53,14 +54,12 @@ define(function (require) {
 			items[i].remove();
 		}
 		
-		defs = this.el.selectAll('defs *'); //TODO:: only if clearing, instead should check if def is used and then remove unused
+		defs = this.el.selectAll('defs *');
 		if (defs) {
 			for (i = 0; i < defs.length; i += 1) {
 				defs[i].remove();
 			}
 		}
-
-		
 	}
 	
 	MovieClip.prototype.runCommands = function (resourceManager) {
@@ -79,6 +78,7 @@ define(function (require) {
 		}
 		
 		commands = frame.Command;	
+
 		
 		for (c = 0; c < commands.length; c += 1) {
 			cmdData = commands[c];
@@ -166,6 +166,11 @@ define(function (require) {
 						
 			if(parentMC != undefined)
 			{
+				//if already exists do not add
+				if (parentMC.select('[token="' + this.m_objectID + '"]')) {
+					return;
+				}
+				
 				//Create a  MC
 				childMC = parentMC.g();
 				childMC.attr({class: 'movieclip', token: this.m_objectID});
@@ -197,7 +202,6 @@ define(function (require) {
 			}
 		}
 
-		//TODO::??mask logic??
 	}
 
 	//MoveObjectCommand Class
