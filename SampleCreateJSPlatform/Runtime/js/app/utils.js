@@ -35,10 +35,27 @@ define(function (require) {
 								var patternArray = resourceManager.m_data.DOMDocument.Shape[k].path[j].image.patternTransform.split(",");						
 								var p = 0;
 								var mat = new Snap.Matrix(patternArray[p],patternArray[p+1],patternArray[p+1],patternArray[p+3],patternArray[p+4],patternArray[p+5]);
-								var image = s.image(resourceManager.m_data.DOMDocument.Shape[k].path[j].image.bitmapPath);
-								var pattern = image.pattern(0, 0, resourceManager.m_data.DOMDocument.Shape[k].path[j].image.width, resourceManager.m_data.DOMDocument.Shape[k].path[j].image.height);
-								pattern.attr({x: mat.e, y: mat.f});
-								shape1.attr({fill: pattern});
+								var src = resourceManager.m_data.DOMDocument.Shape[k].path[j].image.bitmapPath;
+								
+								function newPattern() {
+									var image = s.image(src);
+									var pattern = image.pattern(0, 0, resourceManager.m_data.DOMDocument.Shape[k].path[j].image.width, resourceManager.m_data.DOMDocument.Shape[k].path[j].image.height);
+									pattern.attr({x: mat.e, y: mat.f});
+									shape1.attr({fill: pattern});
+								}
+								
+								var exists = root.select('defs pattern image');
+								
+								if (exists) {
+									if (exists.attr('href') == src) {	//check if image href matches as well as other props
+										shape1.attr({fill: exists.parent()});
+									} else {
+										newPattern();
+									}
+								} else {
+									newPattern();
+								}
+
 							}
 							if(resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient)
 							{							
@@ -107,15 +124,18 @@ define(function (require) {
 
 								shape1.attr({stroke: colStr, strokeWidth: resourceManager.m_data.DOMDocument.Shape[k].path[j].strokeWidth});
 							}
+							/*
 							if(resourceManager.m_data.DOMDocument.Shape[k].path[j].image)
 							{ 
 								var patternArray = resourceManager.m_data.DOMDocument.Shape[k].path[j].image.patternTransform.split(",");
-								var p =0;
+								var p = 0;
 								var mat = new createjs.Matrix2D(patternArray[p],patternArray[p+1],patternArray[p+1],patternArray[p+3],patternArray[p+4],patternArray[p+5]);
 								var image = new Image();
 								image.src = resourceManager.m_data.DOMDocument.Shape[k].path[j].image.bitmapPath;
 								shape1.graphics.beginBitmapStroke(image,"no-repeat").beginStroke().setStrokeStyle(data.DOMDocument.Shape[k].path[j].strokeWidth,resourceManager.m_data.DOMDocument.Shape[k].path[j].strokeLinecap,resourceManager.m_data.DOMDocument.Shape[k].path[j].strokeLinejoin);
-							}						
+							}
+							*/
+							/*		
 							if(resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient)
 							{
 								var stopArray = new Array();
@@ -127,6 +147,7 @@ define(function (require) {
 								}
 								shape1.graphics.ls(stopArray,offSetArray,resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.x1,resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.y1,resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.x2,resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.y2).setStrokeStyle(resourceManager.m_data.DOMDocument.Shape[k].path[j].strokeWidth,resourceManager.m_data.DOMDocument.Shape[k].path[j].strokeLinecap,resourceManager.m_data.DOMDocument.Shape[k].path[j].strokeLinejoin);;
 							}
+							*/
 						}
 						//var path = resourceManager.m_data.DOMDocument.Shape[k].path[j].d;
 						//shape1.attr({d: path});
