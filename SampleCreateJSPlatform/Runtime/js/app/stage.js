@@ -21,7 +21,7 @@ define(function (require) {
 		this.m_timeline = new TimelineMax({
 			useFrames: true, 
 			paused: true,
-			//onRepeat: this.repeat.bind(this), 
+			onRepeat: this.repeat.bind(this), 
 			onUpdate: this.runCommands.bind(this), 
 			onUpdateParams: [resourceManager]
 			});
@@ -44,6 +44,14 @@ define(function (require) {
 	
 	//TODO:: should remove associated defs upon removing elements
 	//TODO:: should also check if asset/def exists when adding new one to reuse instead of adding/removing
+	
+	MovieClip.prototype.repeat = function () {
+		this.repeatFlag = true;
+	}
+	
+	MovieClip.prototype.cleanup = function (commands) {
+		//TODO:: clean up unused things on first frame leftover from last frame
+	}
 	
 	MovieClip.prototype.clear = function () {
 		var items = this.el.selectAll('g'),
@@ -78,7 +86,6 @@ define(function (require) {
 		}
 		
 		commands = frame.Command;	
-
 		
 		for (c = 0; c < commands.length; c += 1) {
 			cmdData = commands[c];
@@ -115,6 +122,11 @@ define(function (require) {
 			if(command !== undefined) {
 				command.execute(this, resourceManager);
 			}
+		}
+		
+		if (this.repeatFlag !== false) {
+			this.cleanup(commands);
+			this.repeatFlag = false;
 		}
 	}
 	
@@ -353,33 +365,21 @@ define(function (require) {
 		var parentMC = stage.el,
 			mask,
 			masked,
-			i;
-
-		console.log('till', this.m_maskTill);
-		console.log('mask', this.m_objectID);
-
+			i,
+			def,
+			clone;
+		
 		if(parentMC != undefined)
 		{
 			baseMask = parentMC.select('[token="' + this.m_objectID + '"]');
-
-			for (i = parseInt(this.m_maskTill); i > 1; i -= 1) {
-
-				mask = baseMask.clone();
+			def = baseMask.toDefs();
+			
+			for (i = parseInt(this.m_maskTill); i > parseInt(this.m_objectID); i -= 1) {
+				clone = def.clone(); //issue with reusing def ??
 				masked = parentMC.select('[token="' + i + '"]');
-
-				oldID = masked.attr('mask').replace('url(', '').replace(')', '');
-				oldMask = parentMC.select(oldID);
-				if (oldMask) {
-					oldMask.remove();
-				}
-
-				masked.attr({
-					mask: mask
-				});
+				masked.attr({mask: clone});
 			}
-
-			baseMask.remove();
-		}	
+		}
 	}
 
 	return MovieClip;
