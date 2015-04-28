@@ -245,24 +245,20 @@ define(function (require) {
 			{
 				if(resourceManager.m_data.DOMDocument.Text[b].charid == charId)
 				{
-					var displayString = resourceManager.m_data.DOMDocument.Text[b].displayText;
+					var displayString = resourceManager.m_data.DOMDocument.Text[b].txt;
 					var txt = displayString.replace(/\\r/g,"\r");
-					var font = resourceManager.m_data.DOMDocument.Text[b].font;
-					var fontArray = font.split(' ', 2);
-					var fontStyle = fontArray[0];
-					var fontSize = fontArray[1];
-					var fontFamily = /\'(.*?)\'/.exec(font)[1];
-					var fontColor = resourceManager.m_data.DOMDocument.Text[b].color;
+					var fontFamily = resourceManager.m_data.DOMDocument.Text[b].paras[0].textRun[0].style.fontName;
+					var fontStyle = resourceManager.m_data.DOMDocument.Text[b].paras[0].textRun[0].style.fontStyle;
+					var fontSize = resourceManager.m_data.DOMDocument.Text[b].paras[0].textRun[0].style.fontSize;
+					var fontColor = resourceManager.m_data.DOMDocument.Text[b].paras[0].textRun[0].style.fontColor;
 					var textOutput = s.text(0, 0, txt);
 					textOutput.attr({
 						fill: fontColor, 
-						fontFamily: 
-						fontFamily, 
+						fontFamily: fontFamily, 
 						fontSize: fontSize, 
 						fontStyle: fontStyle
 					});
 					
-					console.log(resourceManager.m_data.DOMDocument.Text[b]);
 					textContainer.add(textOutput);
 				}
 			}
