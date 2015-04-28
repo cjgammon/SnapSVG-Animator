@@ -49,20 +49,113 @@ define(function (require) {
 		this.repeatFlag = true;
 	}
 	
-	MovieClip.prototype.cleanup = function (commands) {
-		//TODO:: clean up unused things on first frame leftover from last frame
+	/*
+	* remove all non-movieclips
+	* also remove movieclips that are on last frame but not first frame
+	*/
+	MovieClip.prototype.cleanup = function (commands, resourceManager) {
+		
+		var objects = this.root.selectAll('g'),
+			j,
+			i,
+			id,
+			shape,
+			bitmap,
+			text,
+			count;
+		
+		for (j = 0; j < objects.length; j += 1) {
+			count = 0;
+			id = objects[j].attr('token');
+			shape = resourceManager.getShape(id);
+			bitmap = resourceManager.getBitmap(id);
+			text = resourceManager.getText(id);
+			
+			for (i = 0; i < commands.length; i += 1) {
+				if (commands[i].objectId !== id) {
+					count += 1;
+				}
+			}
+
+			if((shape !== null && shape !== undefined) ||
+			   (bitmap !== null && bitmap !== undefined) ||
+			   (text !== null && text !== undefined) ||
+			   (count == commands.length))
+			{
+				objects[j].remove();
+			}
+		}
+	}
+	
+	/**
+	* clean up unused defs
+	**/
+	MovieClip.prototype.cleanupUnusedDefs = function () {
+		var that = this,
+			defs = this.el.selectAll('defs>*'),
+			j,
+			i,
+			id,
+			toRemove;
+		
+		//iterate all objects
+		function loopObjects(_id) {
+			var objects = that.el.selectAll('*'),
+				count = 0,
+				mask,
+				fill;
+						
+			for (i = 0; i < objects.length; i += 1) {
+				mask = objects[i].attr('mask').replace('url(#', '').replace(')', '');
+				fill = objects[i].attr('fill');
+								
+				if (fill.indexOf('#') > -1) {
+					fill = fill.replace('url(#', '').replace(')', '');
+				} else {
+					fill = '';
+				}
+				
+				if (mask !== _id && fill !== _id) {
+					count += 1;
+				}
+			}
+			
+			return count == objects.length;
+		}
+		
+		//loop through defs
+		for (j = 0; j < defs.length; j += 1) {
+			id = defs[j].attr('id');
+
+			if (!id) {
+				continue;
+			}
+						
+			toRemove = loopObjects(id);
+			
+			if (toRemove) {
+				defs[j].remove();
+			}
+		}
+
+		//clear all groups moved to defs
+		defGroups = this.el.selectAll('defs>g');
+		for (i = 0; i < defGroups.length; i += 1) {
+			defGroups[i].remove();
+		}
 	}
 	
 	MovieClip.prototype.clear = function () {
 		var items = this.el.selectAll('g'),
 			defs,
+			defGroups,
 			i;
 		
 		for (i = 0; i < items.length; i += 1) {
 			items[i].remove();
 		}
 		
-		defs = this.el.selectAll('defs *');
+		defs = this.el.selectAll('defs mask, defs radialGradient, defs linearGradient');
 		if (defs) {
 			for (i = 0; i < defs.length; i += 1) {
 				defs[i].remove();
@@ -86,6 +179,11 @@ define(function (require) {
 		}
 		
 		commands = frame.Command;	
+		
+		if (this.repeatFlag === true) {
+			this.cleanup(commands, resourceManager);
+			this.repeatFlag = false;
+		}
 		
 		for (c = 0; c < commands.length; c += 1) {
 			cmdData = commands[c];
@@ -124,10 +222,7 @@ define(function (require) {
 			}
 		}
 		
-		if (this.repeatFlag !== false) {
-			this.cleanup(commands);
-			this.repeatFlag = false;
-		}
+		this.cleanupUnusedDefs();
 	}
 	
 	MovieClip.prototype.getTimeline = function () {
@@ -183,6 +278,7 @@ define(function (require) {
 					//run move in case different
 					var command = new MoveObjectCommand(this.m_objectID, this.m_transform);
 					command.execute(stage, resourceManager);
+					//TODO::update z index
 					return;
 				}
 				
