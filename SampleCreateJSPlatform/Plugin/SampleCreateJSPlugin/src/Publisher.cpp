@@ -705,10 +705,10 @@ namespace CreateJS
     FCM::Result ResourcePalette::AddSound(FCM::U_Int32 resourceId, DOM::LibraryItem::PIMediaItem pMediaItem)
     {
         FCM::Result res;
-        std::string name;
         DOM::AutoPtr<DOM::ILibraryItem> pLibItem;
         FCM::AutoPtr<FCM::IFCMUnknown> pUnknown;
         FCM::StringRep16 pName;
+        std::string libName;
 
         LOG(("[DefineSound] ResId: %d\n", resourceId));
 
@@ -719,7 +719,8 @@ namespace CreateJS
 
         res = pLibItem->GetName(&pName);
         ASSERT(FCM_SUCCESS_CODE(res));
-        m_resourceNames.push_back(Utils::ToString(pName, GetCallback()));
+        libName = Utils::ToString(pName, GetCallback());
+        m_resourceNames.push_back(libName);
 
         res = pMediaItem->GetMediaInfo(pUnknown.m_Ptr);
         ASSERT(FCM_SUCCESS_CODE(res));
@@ -727,9 +728,7 @@ namespace CreateJS
         AutoPtr<DOM::MediaInfo::ISoundInfo> pSoundInfo = pUnknown;
         ASSERT(pSoundInfo);
         
-        CreateSoundFileName(pLibItem, name);
-        
-        m_pOutputWriter->DefineSound(resourceId, name, pMediaItem);
+        m_pOutputWriter->DefineSound(resourceId, libName, pMediaItem);
 
         // Free the name
         FCM::AutoPtr<FCM::IFCMUnknown> pUnkCalloc;
@@ -745,7 +744,6 @@ namespace CreateJS
     FCM::Result ResourcePalette::AddBitmap(FCM::U_Int32 resourceId, DOM::LibraryItem::PIMediaItem pMediaItem)
     {
         DOM::AutoPtr<DOM::ILibraryItem> pLibItem;
-        std::string name;
         FCM::Result res;
         FCM::StringRep16 pName;
 
@@ -758,7 +756,8 @@ namespace CreateJS
         // Store the resource name
         res = pLibItem->GetName(&pName);
         ASSERT(FCM_SUCCESS_CODE(res));
-        m_resourceNames.push_back(Utils::ToString(pName, GetCallback()));
+        std::string libItemName = Utils::ToString(pName, GetCallback());
+        m_resourceNames.push_back(libItemName);
 
         AutoPtr<FCM::IFCMUnknown> medInfo;
         pMediaItem->GetMediaInfo(medInfo.m_Ptr);
@@ -776,11 +775,8 @@ namespace CreateJS
         res = bitsInfo->GetWidth(width);
         ASSERT(FCM_SUCCESS_CODE(res));
 
-        // Form an image name
-        CreateImageFileName(pLibItem, name);
-
         // Dump the definition of a bitmap
-        res = m_pOutputWriter->DefineBitmap(resourceId, height, width, name, pMediaItem);
+        res = m_pOutputWriter->DefineBitmap(resourceId, height, width, libItemName, pMediaItem);
 
         // Free the name
         FCM::AutoPtr<FCM::IFCMUnknown> pUnkCalloc;
@@ -943,8 +939,6 @@ namespace CreateJS
     void ResourcePalette::Init(IOutputWriter* pOutputWriter)
     {
         m_pOutputWriter = pOutputWriter;
-        m_imageFileNameLabel = 0;
-        m_soundFileNameLabel = 0;
     }
 
     void ResourcePalette::Clear()
@@ -1478,6 +1472,7 @@ namespace CreateJS
         FCM::Boolean isClipped;
         DOM::Utils::MATRIX2D matrix;
         std::string name;
+        FCM::StringRep16 pName;
 
         // IsClipped ?
         res = pBitmapFillStyle->IsClipped(isClipped);
@@ -1504,13 +1499,16 @@ namespace CreateJS
         res = bitsInfo->GetHeight(height);
         ASSERT(FCM_SUCCESS_CODE(res));
 
+        // Store the resource name
+        res = pLibItem->GetName(&pName);
+        ASSERT(FCM_SUCCESS_CODE(res));
+        std::string libItemName = Utils::ToString(pName, GetCallback());
+        m_resourceNames.push_back(libItemName);
+
         // Get image width
         FCM::S_Int32 width;
         res = bitsInfo->GetWidth(width);
         ASSERT(FCM_SUCCESS_CODE(res));
-
-        // Form an image name
-        CreateImageFileName(pLibItem, name);
 
         // Dump the definition of a bitmap fill style
         res = m_pOutputWriter->DefineBitmapFillStyle(
@@ -1518,111 +1516,20 @@ namespace CreateJS
             matrix, 
             height, 
             width, 
-            name, 
+            libItemName, 
             pMediaItem);
         ASSERT(FCM_SUCCESS_CODE(res));
 
-        return res;
-    }
-
-
-    FCM::Result ResourcePalette::CreateImageFileName(DOM::ILibraryItem* pLibItem, std::string& name)
-    {
-        FCM::StringRep16 pLibName;
-        FCM::Result res;
-        std::string str;
-        std::size_t pos;
-        std::string fileLabel;
-
-        res = pLibItem->GetName(&pLibName);
-        ASSERT(FCM_SUCCESS_CODE(res));
-
-        str = Utils::ToString(pLibName, GetCallback());
-
-        fileLabel = Utils::ToString(m_imageFileNameLabel);
-        name = "Image" + fileLabel;
-        m_imageFileNameLabel++;
-
-        // DOM APIs do not provide a way to get the compression of the image.
-        // For time being, we will use the extension of the library item name.
-        pos = str.rfind(".");
-        if (pos != std::string::npos)
-        {
-            if (str.substr(pos + 1) == "jpg")
-            {
-                name += ".jpg";
-            }
-            else if (str.substr(pos + 1) == "png")
-            {
-                name += ".png";
-            }
-            else
-            {
-                name += ".png";
-            }
-        }
-        else
-        {
-            name += ".png";
-        }
-
-         // Free the name
+        // Free the name
         FCM::AutoPtr<FCM::IFCMUnknown> pUnkCalloc;
         res = GetCallback()->GetService(SRVCID_Core_Memory, pUnkCalloc.m_Ptr);
         AutoPtr<FCM::IFCMCalloc> callocService  = pUnkCalloc;
 
-        callocService->Free((FCM::PVoid)pLibName);
+        callocService->Free((FCM::PVoid)pName);
 
         return res;
     }
 
-    FCM::Result ResourcePalette::CreateSoundFileName(DOM::ILibraryItem* pLibItem, std::string& name)
-    {
-        FCM::StringRep16 pLibName;
-        FCM::Result res;
-        std::string str;
-        std::string fileLabel;
-        std::size_t pos;
-
-        res = pLibItem->GetName(&pLibName);
-        ASSERT(FCM_SUCCESS_CODE(res));
-        
-        str = Utils::ToString(pLibName, GetCallback());
-        fileLabel = Utils::ToString(m_soundFileNameLabel);
-        
-        name = "Sound" + fileLabel;
-        m_soundFileNameLabel++;
-
-
-        // DOM APIs do not provide a way to get the compression of the sound.
-        // For time being, we will use the extension of the library item name.
-        pos = str.rfind(".");
-        if (pos != std::string::npos)
-        {
-            if (str.substr(pos + 1) == "wav")
-            {
-                name += ".WAV";
-            }
-            else if (str.substr(pos + 1) == "mp3")
-            {
-                name += ".MP3";
-            }
-            else
-            {
-                name += ".MP3";
-            }
-        }
-        else
-        {
-            name += ".MP3";
-        }
-        
-        FCM::AutoPtr<FCM::IFCMUnknown> pUnkCalloc;
-        res = GetCallback()->GetService(SRVCID_Core_Memory, pUnkCalloc.m_Ptr);
-        AutoPtr<FCM::IFCMCalloc> callocService  = pUnkCalloc;
-        callocService->Free((FCM::PVoid)pLibName);
-        return res;
-    }
 
     FCM::Result ResourcePalette::GetTextStyle(DOM::FrameElement::ITextStyle* pTextStyleItem, TEXT_STYLE& textStyle)
     {

@@ -28,6 +28,7 @@
 #include "IOutputWriter.h"
 #include <string>
 #include <vector>
+#include <map>
 
 /* -------------------------------------------------- Forward Decl */
 
@@ -135,7 +136,7 @@ namespace CreateJS
             const DOM::Utils::MATRIX2D& matrix,
             FCM::S_Int32 height, 
             FCM::S_Int32 width,
-            std::string& name,
+            const std::string& libPathName,
             DOM::LibraryItem::PIMediaItem pMediaItem);
 
         // Start Linear Gradient fill style definition
@@ -208,7 +209,7 @@ namespace CreateJS
             FCM::U_Int32 resId,
             FCM::S_Int32 height, 
             FCM::S_Int32 width,
-            const std::string& name,
+            const std::string& libPathName,
             DOM::LibraryItem::PIMediaItem pMediaItem);
 
         // Start of a classic text definition
@@ -241,8 +242,9 @@ namespace CreateJS
 
         virtual FCM::Result DefineSound(
             FCM::U_Int32 resId, 
-            const std::string& name, 
+            const std::string& libPathName,
             DOM::LibraryItem::PIMediaItem pMediaItem);
+
         JSONOutputWriter(FCM::PIFCMCallback pCallback);
 
         virtual ~JSONOutputWriter();
@@ -252,6 +254,16 @@ namespace CreateJS
 
         // End of a path 
         virtual FCM::Result EndDefinePath();
+
+    private:
+        
+        FCM::Result CreateImageFileName(const std::string& libPathName, std::string& name);
+
+        FCM::Result CreateSoundFileName(const std::string& libPathName, std::string& name);
+
+        FCM::Boolean GetImageExportFileName(const std::string& libPathName, std::string& name);
+
+        void SetImageExportFileName(const std::string& libPathName, const std::string& name);
 
     private:
 
@@ -304,6 +316,12 @@ namespace CreateJS
         char* m_HTMLOutput;
 
         FCM::PIFCMCallback m_pCallback;
+
+        FCM::U_Int32 m_imageFileNameLabel;
+
+        FCM::U_Int32 m_soundFileNameLabel;
+
+        std::map<std::string, std::string> m_imageMap;
     };
 
 

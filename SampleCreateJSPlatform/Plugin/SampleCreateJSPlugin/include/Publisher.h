@@ -235,10 +235,6 @@ namespace CreateJS
         FCM::Result ExportBitmapFillStyle(
             DOM::FillStyle::IBitmapFillStyle* pBitmapFillStyle);
 
-        FCM::Result CreateImageFileName(DOM::ILibraryItem* pLibItem, std::string& name);
-
-        FCM::Result CreateSoundFileName(DOM::ILibraryItem* pLibItem, std::string& name);
-
         FCM::Result GetTextStyle(DOM::FrameElement::ITextStyle* pTextStyleItem, TEXT_STYLE& textStyle);
 
         FCM::Result HasFancyStrokes(DOM::FrameElement::PIShape pShape, FCM::Boolean& hasFancy); 
@@ -254,10 +250,6 @@ namespace CreateJS
         IOutputWriter* m_pOutputWriter;
 
         std::vector<FCM::U_Int32> m_resourceList;
-
-        FCM::U_Int32 m_imageFileNameLabel;
-
-        FCM::U_Int32 m_soundFileNameLabel;
 
         std::vector<std::string> m_resourceNames;
     };

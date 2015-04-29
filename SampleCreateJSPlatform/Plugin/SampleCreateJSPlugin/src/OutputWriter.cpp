@@ -233,10 +233,11 @@ namespace CreateJS
         const DOM::Utils::MATRIX2D& matrix,
         FCM::S_Int32 height, 
         FCM::S_Int32 width,
-        std::string& name,
+        const std::string& libPathName,
         DOM::LibraryItem::PIMediaItem pMediaItem)
     {
         FCM::Result res;
+        std::string name;
         JSONNode bitmapElem(JSON_NODE);
         std::string bitmapPath;
         std::string bitmapName;
@@ -250,16 +251,19 @@ namespace CreateJS
         std::string bitmapRelPath;
         std::string bitmapExportPath = m_outputImageFolder + "/";
             
+        FCM::Boolean alreadyExported = GetImageExportFileName(libPathName, name);
+        if (!alreadyExported)
+        {
+            CreateImageFileName(libPathName, name);
+            SetImageExportFileName(libPathName, name);
+        }
+
         bitmapExportPath += name;
             
         bitmapRelPath = "./";
         bitmapRelPath += IMAGE_FOLDER;
         bitmapRelPath += "/";
         bitmapRelPath += name;
-
-        res = m_pCallback->GetService(DOM::FLA_BITMAP_SERVICE, pUnk.m_Ptr);
-        ASSERT(FCM_SUCCESS_CODE(res));
-
 
         res = m_pCallback->GetService(DOM::FLA_BITMAP_SERVICE, pUnk.m_Ptr);
         ASSERT(FCM_SUCCESS_CODE(res));
@@ -617,13 +621,14 @@ namespace CreateJS
         FCM::U_Int32 resId,
         FCM::S_Int32 height, 
         FCM::S_Int32 width,
-        const std::string& name,
+        const std::string& libPathName,
         DOM::LibraryItem::PIMediaItem pMediaItem)
     {
         FCM::Result res;
         JSONNode bitmapElem(JSON_NODE);
         std::string bitmapPath;
         std::string bitmapName;
+        std::string name;
 
         bitmapElem.set_name("image");
         
@@ -635,6 +640,13 @@ namespace CreateJS
         std::string bitmapRelPath;
         std::string bitmapExportPath = m_outputImageFolder + "/";
             
+        FCM::Boolean alreadyExported = GetImageExportFileName(libPathName, name);
+        if (!alreadyExported)
+        {
+            CreateImageFileName(libPathName, name);
+            SetImageExportFileName(libPathName, name);
+        }
+        
         bitmapExportPath += name;
             
         bitmapRelPath = "./";
@@ -831,23 +843,30 @@ namespace CreateJS
 
     FCM::Result JSONOutputWriter::DefineSound(
             FCM::U_Int32 resId, 
-            const std::string& name, 
+            const std::string& libPathName,
             DOM::LibraryItem::PIMediaItem pMediaItem)
     {
         FCM::Result res;
         JSONNode soundElem(JSON_NODE);
         std::string soundPath;
         std::string soundName;
+        std::string name;
+
         soundElem.set_name("sound");
         soundElem.push_back(JSONNode(("charid"), CreateJS::Utils::ToString(resId)));
+        
         FCM::AutoPtr<FCM::IFCMUnknown> pUnk;
         std::string soundRelPath;
         std::string soundExportPath = m_outputSoundFolder + "/";
+
+        CreateSoundFileName(libPathName, name);
         soundExportPath += name;
+
         soundRelPath = "./";
         soundRelPath += SOUND_FOLDER;
         soundRelPath += "/";
         soundRelPath += name;
+
         res = m_pCallback->GetService(DOM::FLA_SOUND_SERVICE, pUnk.m_Ptr);
         ASSERT(FCM_SUCCESS_CODE(res));
         FCM::AutoPtr<DOM::Service::Sound::ISoundExportService> soundExportService = pUnk;
@@ -861,8 +880,10 @@ namespace CreateJS
             ASSERT(pCalloc.m_Ptr != NULL);
             pCalloc->Free(pFilePath);
         }
+        
         soundElem.push_back(JSONNode(("soundPath"), soundRelPath)); 
         m_pSoundArray->push_back(soundElem);
+        
         return FCM_SUCCESS;
     }
 
@@ -872,7 +893,9 @@ namespace CreateJS
           m_pathArray(NULL),
           m_pathElem(NULL),
           m_firstSegment(false),
-          m_HTMLOutput(NULL)
+          m_HTMLOutput(NULL),
+          m_imageFileNameLabel(0),
+          m_soundFileNameLabel(0)
     {
         m_pRootNode = new JSONNode(JSON_NODE);
         ASSERT(m_pRootNode);
@@ -929,6 +952,107 @@ namespace CreateJS
     {
         // No need to do anything
         return FCM_SUCCESS;
+    }
+
+    FCM::Result JSONOutputWriter::CreateImageFileName(const std::string& libPathName, std::string& name)
+    {
+        std::string str;
+        size_t pos;
+        std::string fileLabel;
+
+        fileLabel = Utils::ToString(m_imageFileNameLabel);
+        name = "Image" + fileLabel;
+        m_imageFileNameLabel++;
+
+        str = libPathName;
+
+        // DOM APIs do not provide a way to get the compression of the image.
+        // For time being, we will use the extension of the library item name.
+        pos = str.rfind(".");
+        if (pos != std::string::npos)
+        {
+            if (str.substr(pos + 1) == "jpg")
+            {
+                name += ".jpg";
+            }
+            else if (str.substr(pos + 1) == "png")
+            {
+                name += ".png";
+            }
+            else
+            {
+                name += ".png";
+            }
+        }
+        else
+        {
+            name += ".png";
+        }
+
+        return FCM_SUCCESS;
+    }
+
+
+    FCM::Result JSONOutputWriter::CreateSoundFileName(const std::string& libPathName, std::string& name)
+    {
+        std::string str;
+        size_t pos;
+        std::string fileLabel;
+
+        fileLabel = Utils::ToString(m_soundFileNameLabel);
+        name = "Image" + fileLabel;
+        m_soundFileNameLabel++;
+
+        // DOM APIs do not provide a way to get the compression of the sound.
+        // For time being, we will use the extension of the library item name.
+        pos = str.rfind(".");
+        if (pos != std::string::npos)
+        {
+            if (str.substr(pos + 1) == "wav")
+            {
+                name += ".WAV";
+            }
+            else if (str.substr(pos + 1) == "mp3")
+            {
+                name += ".MP3";
+            }
+            else
+            {
+                name += ".MP3";
+            }
+        }
+        else
+        {
+            name += ".MP3";
+        }
+
+        return FCM_SUCCESS;
+    }
+
+
+    FCM::Boolean JSONOutputWriter::GetImageExportFileName(const std::string& libPathName, std::string& name)
+    {
+        std::map<std::string, std::string>::iterator it = m_imageMap.find(libPathName);
+
+        name = "";
+
+        if (it != m_imageMap.end())
+        {
+            // Image already exported
+            name = it->second;
+            return true;
+        }
+
+        return false;
+    }
+
+
+    void JSONOutputWriter::SetImageExportFileName(const std::string& libPathName, const std::string& name)
+    {
+        // Assumption: Name is not already present in the map
+        ASSERT(m_imageMap.find(libPathName) == m_imageMap.end());
+
+        m_imageMap.insert(std::pair<std::string, std::string>(libPathName, name));
     }
 
     /* -------------------------------------------------- JSONTimelineWriter */
@@ -1039,6 +1163,8 @@ namespace CreateJS
 
         return res;
     }
+
+
     FCM::Result JSONTimelineWriter::RemoveObject(
         FCM::U_Int32 objectId)
     {
