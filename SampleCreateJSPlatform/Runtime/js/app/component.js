@@ -13,9 +13,6 @@ define(function (require) {
 			timeline;
 
 		instance.resourceManager = new ResourceManager(data);
-		
-		console.log('hi');
-		console.log(w, h);
 		instance.s = new Snap(w, h);
 		create(instance.s);
     

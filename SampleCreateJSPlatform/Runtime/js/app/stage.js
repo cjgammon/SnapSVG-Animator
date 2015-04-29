@@ -21,9 +21,10 @@ define(function (require) {
 		this.m_timeline = new TimelineMax({
 			useFrames: true, 
 			paused: true,
-			onRepeat: this.clear.bind(this), 
+			onRepeat: this.repeat.bind(this), 
 			onUpdate: this.runCommands.bind(this), 
-			onUpdateParams: [resourceManager]});
+			onUpdateParams: [resourceManager]
+			});
 		this.m_currentFrameNo = this.m_timeline.time();
 
 		this.m_frameCount = this.m_ctimeline.Frame.length;
@@ -34,24 +35,131 @@ define(function (require) {
 			var transformData =  this.m_transform;
 			var transformArray = transformData.split(",");
 			transformMat = new Snap.Matrix(transformArray[0],transformArray[1],transformArray[2],transformArray[3],transformArray[4],transformArray[5]);
+			console.log('matrix', transformMat, transformMat.toTransformString());
 			this.el.transform(transformMat.toTransformString());
 		}
 		
 		this.m_timeline.add(function () {}, this.m_frameCount + 1);
 	}
 	
+	//TODO:: should remove associated defs upon removing elements
+	//TODO:: should also check if asset/def exists when adding new one to reuse instead of adding/removing
+	
+	MovieClip.prototype.repeat = function () {
+		this.repeatFlag = true;
+	}
+	
+	/*
+	* remove all non-movieclips
+	* also remove movieclips that are on last frame but not first frame
+	*/
+	MovieClip.prototype.cleanup = function (commands, resourceManager) {
+		
+		var objects = this.root.selectAll('g'),
+			j,
+			i,
+			id,
+			shape,
+			bitmap,
+			text,
+			count;
+		
+		for (j = 0; j < objects.length; j += 1) {
+			count = 0;
+			id = objects[j].attr('token');
+			shape = resourceManager.getShape(id);
+			bitmap = resourceManager.getBitmap(id);
+			text = resourceManager.getText(id);
+			
+			for (i = 0; i < commands.length; i += 1) {
+				if (commands[i].objectId !== id) {
+					count += 1;
+				}
+			}
+
+			if((shape !== null && shape !== undefined) ||
+			   (bitmap !== null && bitmap !== undefined) ||
+			   (text !== null && text !== undefined) ||
+			   (count == commands.length))
+			{
+				objects[j].remove();
+			}
+		}
+	}
+	
+	/**
+	* clean up unused defs
+	**/
+	MovieClip.prototype.cleanupUnusedDefs = function () {
+		var that = this,
+			defs = this.el.selectAll('defs>*'),
+			j,
+			i,
+			id,
+			toRemove;
+		
+		//iterate all objects
+		function loopObjects(_id) {
+			var objects = that.el.selectAll('*'),
+				count = 0,
+				mask,
+				fill;
+						
+			for (i = 0; i < objects.length; i += 1) {
+				mask = objects[i].attr('mask').replace('url(#', '').replace(')', '');
+				fill = objects[i].attr('fill');
+								
+				if (fill.indexOf('#') > -1) {
+					fill = fill.replace('url(#', '').replace(')', '');
+				} else {
+					fill = '';
+				}
+				
+				if (mask !== _id && fill !== _id) {
+					count += 1;
+				}
+			}
+			
+			return count == objects.length;
+		}
+		
+		//loop through defs
+		for (j = 0; j < defs.length; j += 1) {
+			id = defs[j].attr('id');
+
+			if (!id) {
+				continue;
+			}
+						
+			toRemove = loopObjects(id);
+			
+			if (toRemove) {
+				defs[j].remove();
+			}
+		}
+
+		//clear all groups moved to defs
+		defGroups = this.el.selectAll('defs>g');
+		for (i = 0; i < defGroups.length; i += 1) {
+			defGroups[i].remove();
+		}
+	}
+	
 	MovieClip.prototype.clear = function () {
 		var items = this.el.selectAll('g'),
 			defs,
+			defGroups,
 			i;
 		
 		for (i = 0; i < items.length; i += 1) {
 			items[i].remove();
 		}
-
-		defs = this.el.select('defs');
+		
+		defs = this.el.selectAll('defs mask, defs radialGradient, defs linearGradient');
 		if (defs) {
-			defs.remove();
+			for (i = 0; i < defs.length; i += 1) {
+				defs[i].remove();
+			}
 		}
 	}
 	
@@ -71,6 +179,11 @@ define(function (require) {
 		}
 		
 		commands = frame.Command;	
+		
+		if (this.repeatFlag === true) {
+			this.cleanup(commands, resourceManager);
+			this.repeatFlag = false;
+		}
 		
 		for (c = 0; c < commands.length; c += 1) {
 			cmdData = commands[c];
@@ -108,6 +221,8 @@ define(function (require) {
 				command.execute(this, resourceManager);
 			}
 		}
+		
+		this.cleanupUnusedDefs();
 	}
 	
 	MovieClip.prototype.getTimeline = function () {
@@ -158,6 +273,15 @@ define(function (require) {
 						
 			if(parentMC != undefined)
 			{
+				//if already exists do not add
+				if (parentMC.select('[token="' + this.m_objectID + '"]')) {
+					//run move in case different
+					var command = new MoveObjectCommand(this.m_objectID, this.m_transform);
+					command.execute(stage, resourceManager);
+					//TODO::update z index
+					return;
+				}
+				
 				//Create a  MC
 				childMC = parentMC.g();
 				childMC.attr({class: 'movieclip', token: this.m_objectID});
@@ -189,7 +313,6 @@ define(function (require) {
 			}
 		}
 
-		//TODO::??mask logic??
 	}
 
 	//MoveObjectCommand Class
@@ -338,33 +461,21 @@ define(function (require) {
 		var parentMC = stage.el,
 			mask,
 			masked,
-			i;
-
-		console.log('till', this.m_maskTill);
-		console.log('mask', this.m_objectID);
-
+			i,
+			def,
+			clone;
+		
 		if(parentMC != undefined)
 		{
 			baseMask = parentMC.select('[token="' + this.m_objectID + '"]');
-
-			for (i = parseInt(this.m_maskTill); i > 1; i -= 1) {
-
-				mask = baseMask.clone();
+			def = baseMask.toDefs();
+			
+			for (i = parseInt(this.m_maskTill); i > parseInt(this.m_objectID); i -= 1) {
+				clone = def.clone(); //issue with reusing def ??
 				masked = parentMC.select('[token="' + i + '"]');
-
-				oldID = masked.attr('mask').replace('url(', '').replace(')', '');
-				oldMask = parentMC.select(oldID);
-				if (oldMask) {
-					oldMask.remove();
-				}
-
-				masked.attr({
-					mask: mask
-				});
+				masked.attr({mask: clone});
 			}
-
-			baseMask.remove();
-		}	
+		}
 	}
 
 	return MovieClip;
