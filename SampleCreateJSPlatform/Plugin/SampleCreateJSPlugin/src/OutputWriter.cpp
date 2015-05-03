@@ -80,6 +80,7 @@ namespace CreateJS
 
     FCM::Result JSONOutputWriter::StartOutput(std::string& outputFileName)
     {
+        FCM::Result res;
         std::string parent;
         std::string jsonFile;
 
@@ -91,6 +92,22 @@ namespace CreateJS
         m_outputImageFolder = parent + IMAGE_FOLDER;
         m_outputSoundFolder = parent + SOUND_FOLDER;
 
+        res = Utils::CreateDir(m_outputImageFolder, m_pCallback);
+        if (!(FCM_SUCCESS_CODE(res)))
+        {
+            Utils::Trace(m_pCallback, "Output image folder (%s) could not be created\n", m_outputImageFolder.c_str());
+            return res;
+        }
+
+#if 0
+        // Enable it when we add support for sound folder
+        res = Utils::CreateDir(m_outputSoundFolder, m_pCallback);
+        if (!(FCM_SUCCESS_CODE(res)))
+        {
+            Utils::Trace(m_pCallback, "Output sound folder (%s) could not be created\n", m_outputSoundFolder.c_str());
+            return res;
+        }
+#endif
         return FCM_SUCCESS;
     }
 
