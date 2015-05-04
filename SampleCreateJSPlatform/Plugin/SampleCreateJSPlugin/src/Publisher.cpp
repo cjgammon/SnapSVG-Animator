@@ -395,62 +395,67 @@ namespace CreateJS
         if (outFile.empty())
         {
             FCM::StringRep16 path;
+            std::string filePath;
+            std::string parent;
+            std::string ext;
 
             res = pFlaDocument->GetPath(&path);
             ASSERT(FCM_SUCCESS_CODE(res));
 
             if (path)
             {
-                std::string parent;
-                std::string ext;
-                std::string filePath = Utils::ToString(path, GetCallback());
-
+                filePath = Utils::ToString(path, GetCallback());
                 Utils::GetFileNameWithoutExtension(filePath, outFile);
-
-                if (pTimeline)
-                {
-                    FCM::StringRep16 pSceneName;
-                    std::string sceneName;
-
-                    res = pTimeline->GetName(&pSceneName);
-                    ASSERT(FCM_SUCCESS_CODE(res));
-
-                    sceneName = Utils::ToString(pSceneName, GetCallback());
-
-                    outFile += "_";
-                    outFile += sceneName;
-                }
-
-                outFile += ".";
-                outFile += OUTPUT_FILE_EXTENSION;
-
-                Utils::GetFileExtension(filePath, ext);
-                
-                // Convert the extension to lower case and then compare
-                std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
-                if (ext.compare("xfl") == 0)
-                {
-                    std::string immParent;
-                    Utils::GetParent(filePath, immParent);
-                    Utils::GetParent(immParent, parent);
-                }
-                else
-                {
-                    // FLA
-                    Utils::GetParent(filePath, parent);
-                }
-
-                // Extract the extension and append output file extension.
-                outFile = parent + outFile;
-
-                pCalloc->Free(path);
-
-                res = FCM_SUCCESS;
             }
             else
             {
-                res = FCM_INVALID_PARAM;
+                res = Utils::GetAppTempDir(GetCallback(), filePath);
+                if (!FCM_SUCCESS_CODE(res))
+                {
+                    return FCM_INVALID_PARAM;
+                }
+                outFile = "Untitled";
+                filePath += "Untitled.fla";
             }
+
+            if (pTimeline)
+            {
+                FCM::StringRep16 pSceneName;
+                std::string sceneName;
+
+                res = pTimeline->GetName(&pSceneName);
+                ASSERT(FCM_SUCCESS_CODE(res));
+
+                sceneName = Utils::ToString(pSceneName, GetCallback());
+
+                outFile += "_";
+                outFile += sceneName;
+            }
+
+            outFile += ".";
+            outFile += OUTPUT_FILE_EXTENSION;
+
+            Utils::GetFileExtension(filePath, ext);
+                
+            // Convert the extension to lower case and then compare
+            std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+            if (ext.compare("xfl") == 0)
+            {
+                std::string immParent;
+                Utils::GetParent(filePath, immParent);
+                Utils::GetParent(immParent, parent);
+            }
+            else
+            {
+                // FLA
+                Utils::GetParent(filePath, parent);
+            }
+
+            // Extract the extension and append output file extension.
+            outFile = parent + outFile;
+
+            pCalloc->Free(path);
+
         }
 
         return res;

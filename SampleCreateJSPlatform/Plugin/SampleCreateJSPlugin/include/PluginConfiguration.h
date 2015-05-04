@@ -26,6 +26,8 @@
 #ifndef _PLUGIN_CONFIGURATION_H_
 #define _PLUGIN_CONFIGURATION_H_
 
+#include "FCMTypes.h"
+
 #define PUBLISHER_NAME						"SnapPlugin"
 #define PUBLISHER_UNIVERSAL_NAME			"com.example.SnapPluginPublisher"
 

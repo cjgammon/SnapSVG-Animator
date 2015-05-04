@@ -134,6 +134,10 @@ namespace CreateJS
 
         static void GetModuleFilePath(std::string& path, FCM::PIFCMCallback pCallback);
         
+        static FCM::Result CreateDir(const std::string& path, FCM::PIFCMCallback pCallback);
+
+        static FCM::Result GetAppTempDir(FCM::PIFCMCallback pCallback, std::string& path);
+
         static FCM::AutoPtr<FCM::IFCMCalloc> GetCallocService(FCM::PIFCMCallback pCallback);
         
         static FCM::AutoPtr<FCM::IFCMStringUtils> GetStringUtilsService(FCM::PIFCMCallback pCallback);

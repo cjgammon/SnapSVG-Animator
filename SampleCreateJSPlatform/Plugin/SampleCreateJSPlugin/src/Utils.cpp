@@ -16,16 +16,20 @@
 * from Adobe Systems Incorporated.
 **************************************************************************/
 
+#include "PluginConfiguration.h"
 #include "Utils.h"
 
 #ifdef _WINDOWS
 #include "Windows.h"
 #include "ShellApi.h"
+#include "ShlObj.h"
 #endif
 
 #ifdef __APPLE__
 #include "CoreFoundation/CoreFoundation.h"
 #include <dlfcn.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #endif
 
 #include <iomanip>
@@ -588,6 +592,76 @@ namespace CreateJS
         else{
             ASSERT(0);
         }
+#endif
+    }
+
+
+    // Creates a directory. If the directory already exists or is successfully created, success
+    // is returned; otherwise an error code is returned.
+    FCM::Result Utils::CreateDir(const std::string& path, FCM::PIFCMCallback pCallback)
+    {
+#ifdef _WINDOWS
+
+        FCM::Result res = FCM_SUCCESS;
+        BOOL ret;
+        FCM::StringRep16 pFullPath;
+
+        pFullPath = Utils::ToString16(path, pCallback);
+        ASSERT(pFullPath);
+
+        ret = ::CreateDirectory(pFullPath, NULL);
+        if (ret == FALSE)
+        {
+            DWORD err = GetLastError();
+            if (err != ERROR_ALREADY_EXISTS)
+            {
+                res = FCM_GENERAL_ERROR;
+            }
+        }
+
+        FCM::AutoPtr<FCM::IFCMCalloc> pCalloc = Utils::GetCallocService(pCallback);
+        ASSERT(pCalloc.m_Ptr != NULL);  
+        pCalloc->Free(pFullPath);
+
+        return res;
+
+#else
+        // TODO: Compile and test it
+        int err = mkdir(path.c_str(), 0777);
+        if (err == EEXIST)
+        {
+            return FCM_SUCCESS;
+        }
+        return FCM_GENERAL_ERROR;
+#endif
+    }
+
+    FCM::Result Utils::GetAppTempDir(FCM::PIFCMCallback pCallback, std::string& path)
+    {
+#ifdef _WINDOWS
+
+        PWSTR pPath;
+        FCM::Result ret;
+
+        if (::SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &pPath) == S_OK) 
+        {
+            path = Utils::ToString((FCM::CStringRep16)pPath, pCallback);
+            path += "\\Temp\\";
+            path += PUBLISHER_NAME;
+            path += "\\";
+            ret = CreateDir(path, pCallback);
+		}
+        else
+        {
+            ret = FCM_GENERAL_ERROR;
+        }
+
+        return ret;
+
+#else
+        // TODO: Implement this.
+        return FCM_GENERAL_ERROR;
+
 #endif
     }
 
