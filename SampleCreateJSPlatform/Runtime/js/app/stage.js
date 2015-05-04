@@ -35,7 +35,6 @@ define(function (require) {
 			var transformData =  this.m_transform;
 			var transformArray = transformData.split(",");
 			transformMat = new Snap.Matrix(transformArray[0],transformArray[1],transformArray[2],transformArray[3],transformArray[4],transformArray[5]);
-			console.log('matrix', transformMat, transformMat.toTransformString());
 			this.el.transform(transformMat.toTransformString());
 		}
 		
@@ -71,19 +70,22 @@ define(function (require) {
 			bitmap = resourceManager.getBitmap(id);
 			text = resourceManager.getText(id);
 			
+			//loop through commands
 			for (i = 0; i < commands.length; i += 1) {
-				if (commands[i].objectId !== id) {
+				if (commands[i].objectId !== id) {    //already exists
 					count += 1;
 				}
 			}
-
+			
 			if((shape !== null && shape !== undefined) ||
 			   (bitmap !== null && bitmap !== undefined) ||
 			   (text !== null && text !== undefined) ||
 			   (count == commands.length))
 			{
+				//console.log('remove', objects[j]);
 				objects[j].remove();
 			}
+			
 		}
 	}
 	
@@ -214,6 +216,9 @@ define(function (require) {
 
 				case "UpdateMask":
 					command = new UpdateMaskCommand(cmdData.objectId , cmdData.maskTill);
+				break;
+				case "UpdateColorTransform":
+					command = new UpdateColorTransform(cmdData.objectId, cmdData.colorMatrix);
 				break;
 			}
 
@@ -361,7 +366,6 @@ define(function (require) {
 	//Execute function for UpdateObjectCommand
 	UpdateObjectCommand.prototype.execute = function(timelineAnimator, resourceManager)
 	{
-		
 		/*
 		var parentMC = timelineAnimator.s;
 
@@ -475,6 +479,24 @@ define(function (require) {
 				masked = parentMC.select('[token="' + i + '"]');
 				masked.attr({mask: clone});
 			}
+		}
+	}
+
+	var UpdateColorTransform = function (objectID, colorMatrix)
+	{
+		this.m_objectID = objectID;
+		this.m_colorMatrix = colorMatrix;
+	}
+
+	UpdateColorTransform.prototype.execute = function (stage, resourceManager) 
+	{
+		var parentMC = stage.el,
+			object;
+
+		if (parentMC != undefined) {
+			object = parentMC.select('[token="' + this.m_objectID + '"]');
+			matrix = this.m_colorMatrix.split(',', 7);
+			object.attr({opacity: parseFloat(matrix[6])}); //currently only alpha
 		}
 	}
 

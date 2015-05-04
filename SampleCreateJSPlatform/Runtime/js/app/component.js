@@ -14,6 +14,7 @@ define(function (require) {
 
 		instance.resourceManager = new ResourceManager(data);
 		instance.s = new Snap(w, h);
+		instance.s.attr('id', instance.s.id);
 		create(instance.s);
     
 		timeline = instance.movieclip.getTimeline();
