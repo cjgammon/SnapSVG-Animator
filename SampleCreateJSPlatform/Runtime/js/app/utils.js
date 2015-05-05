@@ -183,18 +183,18 @@ define(function (require) {
 
 		CreateBitmap: function(root, s,resourceManager,charId,ObjectId,placeAfter,transform)
 		{
+			var bmContainer = s.g();
+			bmContainer.attr({token: parseInt(ObjectId)});
 
-		var bmContainer = s.g();
-		bmContainer.attr({token: parseInt(ObjectId)});
-
-		for(var b =0;b<resourceManager.m_data.DOMDocument.Bitmaps.length;b++)
+			for(var b =0;b<resourceManager.m_data.DOMDocument.Bitmaps.length;b++)
 			{
+				console.log('hmm');
 				if(resourceManager.m_data.DOMDocument.Bitmaps[b].charid == charId)
 				{
 					var path = resourceManager.m_data.DOMDocument.Bitmaps[b].bitmapPath;
 					var bitmap = s.image(path);
+					bmContainer.add(bitmap);
 				}
-				bmContainer.add(bitmap);
 			}
 
 			var transformArray = transform.split(",");

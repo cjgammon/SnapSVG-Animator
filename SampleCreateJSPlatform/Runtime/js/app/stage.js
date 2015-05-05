@@ -54,7 +54,7 @@ define(function (require) {
 	*/
 	MovieClip.prototype.cleanup = function (commands, resourceManager) {
 		
-		var objects = this.el.selectAll('g'),
+		var objects = this.el.selectAll('g[token]'),
 			j,
 			i,
 			id,
@@ -66,64 +66,16 @@ define(function (require) {
 
 		console.log('cleanup');
 
-		/*
-		//TODO:: select immediate children of MC
-		//if not movieclip remove
-		for (j = 0; j < objects.length; j += 1) {
+		for (i = 0; i < objects.length; i += 1) {
 
-			if (objects[j].parent() == this.el) {
-				children += 1;
-				count = 0;
-				id = objects[j].attr('token');
-				shape = resourceManager.getShape(id);
-				bitmap = resourceManager.getBitmap(id);
-				text = resourceManager.getText(id);
-				
-				for (i = 0; i < commands.length; i += 1) {
-					if (commands[i].objectId !== id) {    //already exists
-						count += 1;
-					}
-				}
-
-				if((shape !== null && shape !== undefined) ||
-			 	  (bitmap !== null && bitmap !== undefined) ||
-				  (text !== null && text !== undefined))
-				{
-					console.log('remove', objects[j], shape, bitmap, text);
-					objects[j].remove();
-				}
-
+			if (objects[i].parent() !== this.el) {
+				continue;
 			}
 
+			if (!objects[i].hasClass('movieclip')) {
+				objects[i].remove();
+			}
 		}
-		*/
-
-		
-		for (j = 0; j < objects.length; j += 1) {
-			count = 0;
-			id = objects[j].attr('token');
-			shape = resourceManager.getShape(id);
-			bitmap = resourceManager.getBitmap(id);
-			text = resourceManager.getText(id);
-			
-			//loop through commands
-			for (i = 0; i < commands.length; i += 1) {
-				if (commands[i].objectId !== id) {    //already exists
-					count += 1;
-				}
-			}
-			
-			if((shape !== null && shape !== undefined) ||
-			   (bitmap !== null && bitmap !== undefined) ||
-			   (text !== null && text !== undefined) ||
-			   (count == commands.length))
-			{
-				console.log('remove', objects[j]);
-				objects[j].remove();
-			}
-			
-		}
-		
 	}
 	
 	/**
@@ -212,7 +164,7 @@ define(function (require) {
 			time;
 		
 		time = Math.round(this.m_timeline.time()) - 1;
-		console.log(this.el.attr('token'), time);
+		
 		frame = this.m_ctimeline.Frame[time];
 		if (!frame) {
 			return;
@@ -316,7 +268,7 @@ define(function (require) {
 						
 			if(parentMC != undefined)
 			{
-				
+
 				//if already exists do not add
 				if (parentMC.select('[token="' + this.m_objectID + '"]')) {
 					
@@ -324,10 +276,11 @@ define(function (require) {
 					command.execute(stage, resourceManager);
 					//TODO::update z index
 
+					//replay timeline
 					for (i = 0; i < stage.m_children.length; i += 1) {
 						if (stage.m_children[i].el.attr('token') == this.m_objectID) {
 							var tl = stage.m_children[i].getTimeline();
-							tl.gotoAndPlay(0);
+							tl.restart();
 						}
 					}
 
