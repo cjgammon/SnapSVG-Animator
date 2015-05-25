@@ -162,11 +162,12 @@ define(function (require) {
 		//Increment the current frame no
 		this.m_currentFrameNo++;
 
-		//this.cleanupUnusedDefs();
+		this.cleanupUnusedDefs(); //fixes issue  with masks looping
 	}
 	
 	/**
 	* clean up unused defs
+	* TODO:: perf hit, optimize
 	**/
 	MovieClip.prototype.cleanupUnusedDefs = function () {
 		var that = this,
