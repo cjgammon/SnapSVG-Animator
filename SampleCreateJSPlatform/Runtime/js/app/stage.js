@@ -11,25 +11,13 @@ define(function (require) {
 		var i,
 			transformMat;
 
-		this.trace(el, '');
-
 		this.root = root;
     	this.el = el;
 		this.m_transform = transform;
 
-		//Timeline is a collection of frames
-		//Frame is a collection of Command Objects
-		this.m_ctimeline = commandTimeline;
-		this.m_timeline = new TimelineMax({
-			useFrames: true, 
-			paused: true,
-			onRepeat: this.repeat.bind(this), 
-			onUpdate: this.runCommands.bind(this), 
-			onUpdateParams: [resourceManager]
-			});
-
-		this.m_currentFrameNo = this.m_timeline.time();
-		this.m_frameCount = this.m_ctimeline.Frame.length;
+		this.m_timeline = commandTimeline;
+		this.m_currentFrameNo = 0;
+		this.m_frameCount = this.m_timeline.Frame.length;
 		this.m_children = [];
 
 		if(this.m_transform !== undefined) 
@@ -41,56 +29,131 @@ define(function (require) {
 			this.el.transform(transformMat.toTransformString());
 		}
 		
-		this.m_timeline.add(function () {}, this.m_frameCount);  //adds a tween for each frame
 	}
 
-	MovieClip.prototype.trace = function (el, word) {
-		var str = 'MC-'
-		if (el.parent().parent().parent().parent() !== null) {
-			str += el.parent().parent().parent().parent().attr('token') || '';
+	MovieClip.prototype.play = function (resourceManager) {
+		var children = this.m_children;
+    	var commandList = [];
+
+		for(var i=0; i<children.length; ++i)
+		{
+			children[i].play(resourceManager);
 		}
-		str += ':';
-		if (el.parent().parent().parent() !== null) {
-			str += el.parent().parent().parent().attr('token') || '';
+
+		// Handle Looping
+		if(this.m_currentFrameNo == this.m_frameCount) {
+			this.m_currentFrameNo = 0;
+
+	    	var frame = this.m_timeline.Frame[this.m_currentFrameNo];	
+
+	    	if (!frame) {
+	    		return;
+	    	}
+
+	    	//Get the commands for the first frame
+	    	var commands = frame.Command;	
+
+	    	// Iterate through all the elements in the display list (maintained by CreateJS) and 
+		    // check if same instance exists in the first frame 
+
+		    var children = this.root.selectAll('*');
+
+		    for (var i = 0; i < children.length; i += 1) {
+		    	if (children[i].parent().id == this.el.id) {
+
+		    		var found = false;
+		        	var elementId = children[i].attr('token');
+
+		        	for (var c = 0; c < commands.length; ++c) {
+			            var cmdData = commands[c];
+			            var type = cmdData.cmdType;
+
+			            if (type == "Place") {
+			                if (parseInt(elementId) == parseInt(cmdData.objectId)) {
+			                    found = true;
+			                    break;
+			                }
+			            }
+			        }
+
+			        if (found == false) {
+			            command = new RemoveObjectCommand(elementId);
+			            commandList.push(command);
+			        }
+
+		    	}
+		    }
 		}
-		str += ':';
-		if (el.parent().parent() !== null) {
-			str += el.parent().parent().attr('token') || '';
+
+		//run commands
+		var frame = this.m_timeline.Frame[this.m_currentFrameNo];
+	  	if (!frame) {
+	  		return;
+    	}
+		var commands = frame.Command;
+
+		for(var c=0; c<commands.length; ++c)
+		{
+			var cmdData = commands[c];
+			var type = cmdData.cmdType;
+			var command = undefined;
+
+			switch(type)
+			{
+				case "Place":
+
+					var found = false;
+					var items = this.root.selectAll('[token="' + cmdData.objectId + '"]');
+					for (var i = 0; i < items.length; i += 1) {
+						if (items[i].parent() == this.el) {
+							found = true;
+						}
+					}
+
+			        if (!found) {
+			            command = new PlaceObjectCommand(cmdData.charid, cmdData.objectId, cmdData.placeAfter, cmdData.transformMatrix);
+			            commandList.push(command);
+			        } else {
+	                    // It is already present (Possible for looping case)
+			            command = new MoveObjectCommand(cmdData.objectId, cmdData.transformMatrix);
+			            commandList.push(command);
+			            command = new UpdateObjectCommand(cmdData.objectId, cmdData.placeAfter);
+			            commandList.push(command);
+			        }
+
+				break;
+				case "Move":
+					command = new MoveObjectCommand(cmdData.objectId, cmdData.transformMatrix);
+					commandList.push(command);
+				break;
+				case "Remove":
+					command = new RemoveObjectCommand(cmdData.objectId);
+					commandList.push(command);
+				break;
+				case "UpdateZOrder":
+					command = new UpdateObjectCommand(cmdData.objectId , cmdData.placeAfter);
+					commandList.push(command);
+				break;
+				case "UpdateVisibility":
+					command = new UpdateVisibilityCommand(cmdData.objectId , cmdData.visibility);
+					commandList.push(command);
+				break;
+			}
+
 		}
-		str += ':';
-		if (el.parent() !== null) {
-			str += el.parent().attr('token') || '';
-		}
-		str += ':';
-		str += el.attr('token');
-		console.log(word, str, el.id);
-	}
 	
-	//TODO:: should remove associated defs upon removing elements
-	//TODO:: should also check if asset/def exists when adding new one to reuse instead of adding/removing
-	
-	MovieClip.prototype.repeat = function () {
-		//this.trace(this.el, 'run');
-		console.log('repeat', this.el.id);
-
-		//this.repeatFlag = true;
-		/*
-		console.log(this.m_children);
-		var i;
-
-		for (i = 0; i < this.m_children.length; i += 1) {
-			console.log(this.m_children[i]);
+		for (var i = 0; i < commandList.length ; i++)
+		{
+	  		//Execute it
+			if (commandList[i] !== undefined) {
+			     commandList[i].execute(this, resourceManager);
+			}
 		}
-		*/
-	}
-	
-	/*
-	* remove all non-movieclips
-	* also remove movieclips that are on last frame but not first frame
-	*/
-	MovieClip.prototype.cleanup = function (commands, resourceManager) {
 
+		//Increment the current frame no
+		this.m_currentFrameNo++;
 
+		//this.cleanupUnusedDefs();
 	}
 	
 	/**
@@ -151,124 +214,7 @@ define(function (require) {
 		}
 	}
 	
-	/*
-	MovieClip.prototype.clear = function () {
-		var items = this.el.selectAll('g'),
-			defs,
-			defGroups,
-			i;
-		
-		for (i = 0; i < items.length; i += 1) {
-			items[i].remove();
-		}
-		
-		defs = this.el.selectAll('defs mask, defs radialGradient, defs linearGradient');
-		if (defs) {
-			for (i = 0; i < defs.length; i += 1) {
-				defs[i].remove();
-			}
-		}
-	}
-	*/
-	
-	MovieClip.prototype.runCommands = function (resourceManager) {
-		var frame,
-			commands,
-			c,
-			cmdData,
-			type,
-			command,
-			time;
-		
 
-		time = Math.floor(this.m_timeline.time()) - 1;
-		time = time > 0 ? time : 0;
-		
-		console.log('run', this.el.id, time, this.m_timeline.duration());
-
-		frame = this.m_ctimeline.Frame[time];
-		if (!frame) {
-			return;
-		}
-		
-		commands = frame.Command;	
-		
-		/*
-		if (this.repeatFlag === true) {
-			this.cleanup(commands, resourceManager);
-			this.repeatFlag = false;
-		}
-		*/
-		
-		for (c = 0; c < commands.length; c += 1) {
-			cmdData = commands[c];
-			type = cmdData.cmdType;
-			command = undefined;
-
-			switch(type)
-			{
-				case "Place":
-
-					/*
-					//check if already exists
-					var currentItem = this.el.select('[token="' + cmdData.objectId + '"]');
-
-					//if (currentItem && currentItem.hasClass('movieclip')) {
-						var command = new MoveObjectCommand(cmdData.objectId, cmdData.transformMatrix);//run move in case different
-						command.execute(this, resourceManager);
-						//TODO::update z index
-
-						//replay timeline
-						for (i = 0; i < this.m_children.length; i += 1) {
-							if (this.m_children[i].el.attr('token') == cmdData.objectId) {
-								var tl = this.m_children[i].getTimeline();
-								tl.restart();
-							}
-						}
-
-						break;
-					}
-					*/
-
-					command = new PlaceObjectCommand(cmdData.charid, cmdData.objectId, cmdData.placeAfter, cmdData.transformMatrix);
-				break;
-
-				case "Move":
-					command = new MoveObjectCommand(cmdData.objectId, cmdData.transformMatrix);
-				break;
-
-				case "Remove":
-					command = new RemoveObjectCommand(cmdData.objectId);
-				break;
-				
-				case "UpdateZOrder":
-					command = new UpdateObjectCommand(cmdData.objectId , cmdData.placeAfter);
-				break;
-
-				case "UpdateVisibility":
-					command = new UpdateVisibilityCommand(cmdData.objectId , cmdData.visibility);
-				break;
-
-				case "UpdateMask":
-					command = new UpdateMaskCommand(cmdData.objectId , cmdData.maskTill);
-				break;
-				case "UpdateColorTransform":
-					command = new UpdateColorTransform(cmdData.objectId, cmdData.colorMatrix);
-				break;
-			}
-
-			if(command !== undefined) {
-				command.execute(this, resourceManager);
-			}
-		}
-		
-		this.cleanupUnusedDefs();
-	}
-	
-	MovieClip.prototype.getTimeline = function () {
-		return this.m_timeline;
-	}
-	
 	//PlaceObjectCommand Class
 	var PlaceObjectCommand = function(charID, objectID, placeAfter, transform) 
 	{
@@ -316,7 +262,7 @@ define(function (require) {
 
 				//TODO::add this to external method so as to apply to multiple
 
-				
+				/*
 				//if already exists do not add
 				if (parentMC.select('[token="' + this.m_objectID + '"]')) {
 					
@@ -334,7 +280,7 @@ define(function (require) {
 
 					return;
 				}
-				
+				*/
 				
 				//Create a  MC
 				childMC = parentMC.g();
@@ -361,9 +307,11 @@ define(function (require) {
 					movieclip = new MovieClip(root, childMC, movieclipTimeline, resourceManager, this.m_transform);
 					stage.m_children.push(movieclip);
 					
-					var tl = movieclip.getTimeline();
+					movieclip.play(resourceManager);
+
+					//var tl = movieclip.getTimeline();
 					//console.log(tl, movieclip.el.id);
-					tl.play();
+					//tl.play();
 				}
 			}
 		}
