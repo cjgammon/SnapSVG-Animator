@@ -10,7 +10,9 @@ define(function (require) {
 	MovieClip = function (root, el, commandTimeline, resourceManager, transform) {
 		var i,
 			transformMat;
-		
+
+		this.trace(el, '');
+
 		this.root = root;
     	this.el = el;
 		this.m_transform = transform;
@@ -25,10 +27,11 @@ define(function (require) {
 			onUpdate: this.runCommands.bind(this), 
 			onUpdateParams: [resourceManager]
 			});
-		this.m_currentFrameNo = this.m_timeline.time();
 
+		this.m_currentFrameNo = this.m_timeline.time();
 		this.m_frameCount = this.m_ctimeline.Frame.length;
 		this.m_children = [];
+
 		if(this.m_transform !== undefined) 
 		{
 			//Apply the transformation on the parent MC
@@ -38,14 +41,47 @@ define(function (require) {
 			this.el.transform(transformMat.toTransformString());
 		}
 		
-		this.m_timeline.add(function () {}, this.m_frameCount + 1);
+		this.m_timeline.add(function () {}, this.m_frameCount);  //adds a tween for each frame
+	}
+
+	MovieClip.prototype.trace = function (el, word) {
+		var str = 'MC-'
+		if (el.parent().parent().parent().parent() !== null) {
+			str += el.parent().parent().parent().parent().attr('token') || '';
+		}
+		str += ':';
+		if (el.parent().parent().parent() !== null) {
+			str += el.parent().parent().parent().attr('token') || '';
+		}
+		str += ':';
+		if (el.parent().parent() !== null) {
+			str += el.parent().parent().attr('token') || '';
+		}
+		str += ':';
+		if (el.parent() !== null) {
+			str += el.parent().attr('token') || '';
+		}
+		str += ':';
+		str += el.attr('token');
+		console.log(word, str, el.id);
 	}
 	
 	//TODO:: should remove associated defs upon removing elements
 	//TODO:: should also check if asset/def exists when adding new one to reuse instead of adding/removing
 	
 	MovieClip.prototype.repeat = function () {
-		this.repeatFlag = true;
+		//this.trace(this.el, 'run');
+		console.log('repeat', this.el.id);
+
+		//this.repeatFlag = true;
+		/*
+		console.log(this.m_children);
+		var i;
+
+		for (i = 0; i < this.m_children.length; i += 1) {
+			console.log(this.m_children[i]);
+		}
+		*/
 	}
 	
 	/*
@@ -53,29 +89,8 @@ define(function (require) {
 	* also remove movieclips that are on last frame but not first frame
 	*/
 	MovieClip.prototype.cleanup = function (commands, resourceManager) {
-		
-		var objects = this.el.selectAll('g[token]'),
-			j,
-			i,
-			id,
-			shape,
-			bitmap,
-			text,
-			count,
-			children = 0;
 
-		console.log('cleanup');
 
-		for (i = 0; i < objects.length; i += 1) {
-
-			if (objects[i].parent() !== this.el) {
-				continue;
-			}
-
-			if (!objects[i].hasClass('movieclip')) {
-				objects[i].remove();
-			}
-		}
 	}
 	
 	/**
@@ -136,6 +151,7 @@ define(function (require) {
 		}
 	}
 	
+	/*
 	MovieClip.prototype.clear = function () {
 		var items = this.el.selectAll('g'),
 			defs,
@@ -153,6 +169,7 @@ define(function (require) {
 			}
 		}
 	}
+	*/
 	
 	MovieClip.prototype.runCommands = function (resourceManager) {
 		var frame,
@@ -163,8 +180,12 @@ define(function (require) {
 			command,
 			time;
 		
-		time = Math.round(this.m_timeline.time()) - 1;
+
+		time = Math.floor(this.m_timeline.time()) - 1;
+		time = time > 0 ? time : 0;
 		
+		console.log('run', this.el.id, time, this.m_timeline.duration());
+
 		frame = this.m_ctimeline.Frame[time];
 		if (!frame) {
 			return;
@@ -172,10 +193,12 @@ define(function (require) {
 		
 		commands = frame.Command;	
 		
+		/*
 		if (this.repeatFlag === true) {
 			this.cleanup(commands, resourceManager);
 			this.repeatFlag = false;
 		}
+		*/
 		
 		for (c = 0; c < commands.length; c += 1) {
 			cmdData = commands[c];
@@ -185,6 +208,28 @@ define(function (require) {
 			switch(type)
 			{
 				case "Place":
+
+					/*
+					//check if already exists
+					var currentItem = this.el.select('[token="' + cmdData.objectId + '"]');
+
+					//if (currentItem && currentItem.hasClass('movieclip')) {
+						var command = new MoveObjectCommand(cmdData.objectId, cmdData.transformMatrix);//run move in case different
+						command.execute(this, resourceManager);
+						//TODO::update z index
+
+						//replay timeline
+						for (i = 0; i < this.m_children.length; i += 1) {
+							if (this.m_children[i].el.attr('token') == cmdData.objectId) {
+								var tl = this.m_children[i].getTimeline();
+								tl.restart();
+							}
+						}
+
+						break;
+					}
+					*/
+
 					command = new PlaceObjectCommand(cmdData.charid, cmdData.objectId, cmdData.placeAfter, cmdData.transformMatrix);
 				break;
 
@@ -269,6 +314,9 @@ define(function (require) {
 			if(parentMC != undefined)
 			{
 
+				//TODO::add this to external method so as to apply to multiple
+
+				
 				//if already exists do not add
 				if (parentMC.select('[token="' + this.m_objectID + '"]')) {
 					
@@ -286,6 +334,7 @@ define(function (require) {
 
 					return;
 				}
+				
 				
 				//Create a  MC
 				childMC = parentMC.g();
@@ -313,6 +362,7 @@ define(function (require) {
 					stage.m_children.push(movieclip);
 					
 					var tl = movieclip.getTimeline();
+					//console.log(tl, movieclip.el.id);
 					tl.play();
 				}
 			}

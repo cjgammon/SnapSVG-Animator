@@ -158,7 +158,6 @@ define(function (require) {
 
 			var transformArray = transform.split(",");
 			var TransformMat = new Snap.Matrix(transformArray[0],transformArray[1],transformArray[2],transformArray[3],transformArray[4],transformArray[5]);
-
 			pathContainer.transform(TransformMat.toTransformString());
 			
 			if(s != undefined)
