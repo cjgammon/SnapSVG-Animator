@@ -142,6 +142,11 @@ define(function (require) {
 					command = new UpdateColorTransformCommand(cmdData.objectId , cmdData.colorMatrix);
 					commandList.push(command);
 				break;
+				case "UpdateMask":
+					console.log('update mask');
+					command = new UpdateMaskCommand(cmdData.objectId , cmdData.maskTill);
+					commandList.push(command);
+				break;
 			}
 
 		}
