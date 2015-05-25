@@ -138,6 +138,10 @@ define(function (require) {
 					command = new UpdateVisibilityCommand(cmdData.objectId , cmdData.visibility);
 					commandList.push(command);
 				break;
+				case "UpdateColorTransform":
+					command = new UpdateColorTransformCommand(cmdData.objectId , cmdData.colorMatrix);
+					commandList.push(command);
+				break;
 			}
 
 		}
@@ -260,28 +264,6 @@ define(function (require) {
 			if(parentMC != undefined)
 			{
 
-				//TODO::add this to external method so as to apply to multiple
-
-				/*
-				//if already exists do not add
-				if (parentMC.select('[token="' + this.m_objectID + '"]')) {
-					
-					var command = new MoveObjectCommand(this.m_objectID, this.m_transform);//run move in case different
-					command.execute(stage, resourceManager);
-					//TODO::update z index
-
-					//replay timeline
-					for (i = 0; i < stage.m_children.length; i += 1) {
-						if (stage.m_children[i].el.attr('token') == this.m_objectID) {
-							var tl = stage.m_children[i].getTimeline();
-							tl.restart();
-						}
-					}
-
-					return;
-				}
-				*/
-				
 				//Create a  MC
 				childMC = parentMC.g();
 				childMC.attr({class: 'movieclip', token: this.m_objectID});
@@ -308,10 +290,6 @@ define(function (require) {
 					stage.m_children.push(movieclip);
 					
 					movieclip.play(resourceManager);
-
-					//var tl = movieclip.getTimeline();
-					//console.log(tl, movieclip.el.id);
-					//tl.play();
 				}
 			}
 		}
@@ -480,13 +458,13 @@ define(function (require) {
 		}
 	}
 
-	var UpdateColorTransform = function (objectID, colorMatrix)
+	var UpdateColorTransformCommand = function (objectID, colorMatrix)
 	{
 		this.m_objectID = objectID;
 		this.m_colorMatrix = colorMatrix;
 	}
 
-	UpdateColorTransform.prototype.execute = function (stage, resourceManager) 
+	UpdateColorTransformCommand.prototype.execute = function (stage, resourceManager) 
 	{
 		var parentMC = stage.el,
 			object;
