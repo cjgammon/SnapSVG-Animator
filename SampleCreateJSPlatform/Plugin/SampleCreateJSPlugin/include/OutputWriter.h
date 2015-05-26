@@ -322,6 +322,10 @@ namespace CreateJS
         FCM::U_Int32 m_soundFileNameLabel;
 
         std::map<std::string, std::string> m_imageMap;
+        
+        FCM::Boolean m_imageFolderCreated;
+        
+        FCM::Boolean m_soundFolderCreated;
     };
 
 

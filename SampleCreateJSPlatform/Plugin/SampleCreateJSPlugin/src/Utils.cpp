@@ -626,12 +626,21 @@ namespace CreateJS
         return res;
 
 #else
-        // TODO: Compile and test it
-        int err = mkdir(path.c_str(), 0777);
-        if (err == EEXIST)
+        struct stat sb;
+        
+        // Does the directory exist?
+        if (stat(path.c_str(), &sb) == 0 && S_ISDIR(sb.st_mode))
         {
             return FCM_SUCCESS;
         }
+        
+        int err = mkdir(path.c_str(), 0777);
+        if ((err == 0) || (err == EEXIST))
+        {
+
+            return FCM_SUCCESS;
+        }
+
         return FCM_GENERAL_ERROR;
 #endif
     }
@@ -650,7 +659,7 @@ namespace CreateJS
             path += PUBLISHER_NAME;
             path += "\\";
             ret = CreateDir(path, pCallback);
-		}
+        }
         else
         {
             ret = FCM_GENERAL_ERROR;
@@ -659,8 +668,23 @@ namespace CreateJS
         return ret;
 
 #else
-        // TODO: Implement this.
-        return FCM_GENERAL_ERROR;
+        FCM::Result ret = FCM_GENERAL_ERROR;
+        
+        // TODO: We are here using a deprecated function and will have to modernize it.
+        char* name = tempnam(NULL, NULL);
+        if (name)
+        {
+            std::string fullPath;
+            fullPath = name;
+            delete name;
+            Utils::GetParent(fullPath, path);
+            path += PUBLISHER_NAME;
+            path += "/";
+            ret = CreateDir(path, pCallback);
+            ret = FCM_SUCCESS;
+        }
+        
+        return ret;
 
 #endif
     }

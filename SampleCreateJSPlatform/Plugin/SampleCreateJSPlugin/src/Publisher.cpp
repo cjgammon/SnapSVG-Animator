@@ -415,6 +415,7 @@ namespace CreateJS
                     return FCM_INVALID_PARAM;
                 }
                 outFile = "Untitled";
+                outFile += Utils::ToString(rand() % 65536);
                 filePath += "Untitled.fla";
             }
 
