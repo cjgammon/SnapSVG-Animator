@@ -10,12 +10,12 @@ define(function (require) {
 			for(var k =0;k<resourceManager.m_data.DOMDocument.Shape.length;k++)
 			{
 				if(resourceManager.m_data.DOMDocument.Shape[k].charid == charId)
-				{	
+				{
 					for(var j=0;j<resourceManager.m_data.DOMDocument.Shape[k].path.length;j++)
 					{
 						var clr,clrOpacity;
 						var shape1 = s.path();
-						var path = resourceManager.m_data.DOMDocument.Shape[k].path[j].d;	
+						var path = resourceManager.m_data.DOMDocument.Shape[k].path[j].d;
 						shape1.attr({fill: 'transparent'});
 						shape1.attr({d: path});
 						
@@ -187,7 +187,6 @@ define(function (require) {
 
 			for(var b =0;b<resourceManager.m_data.DOMDocument.Bitmaps.length;b++)
 			{
-				console.log('hmm');
 				if(resourceManager.m_data.DOMDocument.Bitmaps[b].charid == charId)
 				{
 					var path = resourceManager.m_data.DOMDocument.Bitmaps[b].bitmapPath;

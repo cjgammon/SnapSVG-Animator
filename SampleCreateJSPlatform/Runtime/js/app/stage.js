@@ -294,7 +294,6 @@ define(function (require) {
 				{
 					movieclip = new MovieClip(root, childMC, movieclipTimeline, resourceManager, this.m_transform);
 					stage.m_children.push(movieclip);
-					
 					movieclip.play(resourceManager);
 				}
 			}
