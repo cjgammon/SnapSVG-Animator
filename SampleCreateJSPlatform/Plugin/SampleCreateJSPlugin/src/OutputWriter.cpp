@@ -68,7 +68,6 @@ namespace CreateJS
                     height = %d;\r\n\
                 \r\n\
                 function ready(c) {\r\n\
-                    c.timeline().repeat(-1);\r\n\
                     c.play();\r\n\
                 }\r\n\
             </script>\r\n\
