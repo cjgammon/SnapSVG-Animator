@@ -1,5 +1,15 @@
 define(function (require) {
 	
+
+	function hexToRgb(hex) {
+    	var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    	return result ? {
+        	r: parseInt(result[1], 16),
+        	g: parseInt(result[2], 16),
+        	b: parseInt(result[3], 16)
+    	} : null;
+	}
+
 	var Utils = {
 		
 		CreateShape: function (root, s, resourceManager,charId,ObjectId,placeAfter,transform)
@@ -70,8 +80,9 @@ define(function (require) {
 								gradientString += _y2 + ")";
 								
 								for(var i=0; i<resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.stop.length; i++)
-								{								
-									gradientString += resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.stop[i].stopColor;
+								{	
+									var rgb = hexToRgb(resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.stop[i].stopColor);
+									gradientString += 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',' + resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.stop[i].stopOpacity + ')';		
 									gradientString += ":";
 									gradientString += resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.stop[i].offset;
 									if (i !== resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.stop.length-1) {
@@ -97,8 +108,9 @@ define(function (require) {
 								gradientString += _fy + ")";
 								
 								for(var i=0; i<resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient.stop.length; i++)
-								{								
-									gradientString += resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient.stop[i].stopColor;
+								{	
+									var rgb = hexToRgb(resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient.stop[i].stopColor);
+									gradientString += 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',' + resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient.stop[i].stopOpacity + ')';
 									gradientString += ":";
 									gradientString += resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient.stop[i].offset;
 									if (i !== resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient.stop.length-1) {
