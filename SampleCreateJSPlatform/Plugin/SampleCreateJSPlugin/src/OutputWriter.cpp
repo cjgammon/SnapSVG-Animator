@@ -55,24 +55,29 @@ namespace CreateJS
     static const FCM::Float GRADIENT_VECTOR_CONSTANT = 16384.0;
 
     static const char* htmlOutput =
-        "<!DOCTYPE html>\r\n\
-        <html>\r\n\
-        <head>\r\n\
-        </head> \r\n\
-        \r\n\
-        <body> \r\n\
-            <script type=\"text/javascript\"> \r\n\
-                var jsonfile = \"%s\",\r\n\
-                    fps = %d,\r\n\
-                    width = %d,\r\n\
-                    height = %d;\r\n\
-                \r\n\
-                function ready(c) {\r\n\
-                    c.play();\r\n\
-                }\r\n\
-            </script>\r\n\
-            <script src=\"./js/vendor/requirejs/require.js\" data-main=\"js/main\"></script> \r\n\
-        </body>\r\n\
+        "<!DOCTYPE html>\n\
+        <html>\n\
+        <head>\n\
+        <style>\n\
+        #%s{\n\
+            background-color: #%02X%02X%02X;\n\
+        }\n\
+        </style>\n\
+        </head> \n\
+        \n\
+        <body> \n\
+            <script type=\"text/javascript\"> \n\
+                var jsonfile = \"%s\",\n\
+                    fps = %d,\n\
+                    width = %d,\n\
+                    height = %d;\n\
+                \n\
+                function ready(c) {\n\
+                    c.play();\n\
+                }\n\
+            </script>\n\
+            <script src=\"./js/vendor/requirejs/require.js\" data-main=\"js/main\"></script> \n\
+        </body>\n\
         </html>";
 
     /* -------------------------------------------------- JSONOutputWriter */
@@ -107,16 +112,24 @@ namespace CreateJS
         FCM::U_Int32 stageWidth,
         FCM::U_Int32 fps)
     {
-        FCM::U_Int32 backColor;
-
-        m_HTMLOutput = new char[strlen(htmlOutput) + FILENAME_MAX + 50];
+        m_HTMLOutput = new char[strlen(htmlOutput) + 2 * FILENAME_MAX + 50];
         if (m_HTMLOutput == NULL)
         {
             return FCM_MEM_NOT_AVAILABLE;
         }
 
-        backColor = (background.red << 16) | (background.green << 8) | (background.blue);
-        sprintf(m_HTMLOutput, htmlOutput, m_outputJSONFileName.c_str(), fps, stageWidth, stageHeight, backColor);
+        std::string outputFileName;
+        Utils::GetFileNameWithoutExtension(m_outputJSONFileName, outputFileName);
+        sprintf(m_HTMLOutput, 
+            htmlOutput, 
+            outputFileName.c_str(), 
+            background.red,
+            background.green,
+            background.blue,
+            m_outputJSONFileName.c_str(), 
+            fps, 
+            stageWidth, 
+            stageHeight);
 
         return FCM_SUCCESS;
     }
