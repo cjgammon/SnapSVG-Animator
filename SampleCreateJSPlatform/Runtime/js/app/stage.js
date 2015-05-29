@@ -105,7 +105,7 @@ define(function (require) {
 					var found = false;
 					var items = this.root.selectAll('[token="' + cmdData.objectId + '"]');
 					for (var i = 0; i < items.length; i += 1) {
-						if (items[i].parent() == this.el || items[i].parent().type == 'mask') { //this is sort of a hack, i think there should be a better way of managing masks
+						if (items[i].parent() == this.el || items[i].parent().type == 'mask') {
 							found = true;
 						}
 					}
