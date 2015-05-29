@@ -101,7 +101,7 @@
 			<Value name="None" supported="true"/>
 			<Value name="Brightness" supported="false"/>
 			<Value name="Tint" supported="false"/>
-			<Value name="Alpha" supported="false"/> 
+			<Value name="Alpha" supported="true"/> 
 			<Value name="Advanced" supported="false"/>
 		</Property>
 		<Property name="Render" default="Original" supported="true">
