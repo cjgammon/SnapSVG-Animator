@@ -105,7 +105,7 @@ define(function (require) {
 					var found = false;
 					var items = this.root.selectAll('[token="' + cmdData.objectId + '"]');
 					for (var i = 0; i < items.length; i += 1) {
-						if (items[i].parent() == this.el) {
+						if (items[i].parent() == this.el || items[i].parent().type == 'mask') { //this is sort of a hack, i think there should be a better way of managing masks
 							found = true;
 						}
 					}
@@ -183,7 +183,7 @@ define(function (require) {
 				count = 0,
 				mask,
 				fill;
-						
+							
 			for (i = 0; i < objects.length; i += 1) {
 				mask = objects[i].attr('mask').replace('url(#', '').replace(')', '');
 				fill = objects[i].attr('fill');
@@ -216,11 +216,20 @@ define(function (require) {
 				defs[j].remove();
 			}
 		}
+		
 
 		//clear all groups moved to defs
 		defGroups = this.el.selectAll('defs>g');
 		for (i = 0; i < defGroups.length; i += 1) {
 			defGroups[i].remove();
+		}
+
+		//clear all unused masks
+		masks = this.el.selectAll('defs>mask');
+		for (i = 0; i < masks.length; i += 1) {
+			if (!masks[i].attr('id')) {
+				masks[i].remove();
+			}
 		}
 	}
 	
@@ -444,7 +453,9 @@ define(function (require) {
 	UpdateMaskCommand.prototype.execute = function (stage, resourceManager) 
 	{
 		var parentMC = stage.el,
+			root = stage.root,
 			mask,
+			maskContent,
 			masked,
 			i,
 			def,
@@ -452,14 +463,19 @@ define(function (require) {
 		
 		if(parentMC != undefined)
 		{
-			baseMask = parentMC.select('[token="' + this.m_objectID + '"]');
-			def = baseMask.toDefs();
+			maskContent = parentMC.select('[token="' + this.m_objectID + '"]');
+			mask = root.mask();
+			mask.attr('mask-type', 'alpha');
+			mask.append(maskContent);
+
+			def = mask.toDefs();
 			
 			for (i = parseInt(this.m_maskTill); i > parseInt(this.m_objectID); i -= 1) {
-				clone = def.clone(); //issue with reusing def ??
+				//clone = def.clone(); //issue with reusing def ??
 				masked = parentMC.select('[token="' + i + '"]');
-				masked.attr({mask: clone});
+				masked.attr({mask: def});
 			}
+			
 		}
 	}
 
