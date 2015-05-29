@@ -8,26 +8,15 @@ define(function (require) {
 	
 	require('snap');
 
-    Component = function (data, w, h) {
+    Component = function (id, data, w, h) {
 		var instance = this,
 			timeline,
 			cbk = undefined;
 
 		instance.resourceManager = new ResourceManager(data);
 		instance.s = new Snap(w, h);
-		instance.s.attr('id', instance.s.id);
+		instance.s.attr('id', id);
 		create(instance.s);
-    
-		//timeline = instance.movieclip.getTimeline();
-		/*
-		this.play = function () {
-			instance.movieclip.play(instance.resourceManager);
-		}
-		
-		this.timeline = function () {
-			return timeline;
-		}
-		*/
 
 		function create(s) {
 			var maintimelineIndex,

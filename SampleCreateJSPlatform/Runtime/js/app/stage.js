@@ -162,7 +162,7 @@ define(function (require) {
 		//Increment the current frame no
 		this.m_currentFrameNo++;
 
-		this.cleanupUnusedDefs(); //fixes issue  with masks looping
+		this.cleanupUnusedDefs(); //perf hit
 	}
 	
 	/**
@@ -202,6 +202,7 @@ define(function (require) {
 			return count == objects.length;
 		}
 		
+
 		//loop through defs
 		for (j = 0; j < defs.length; j += 1) {
 			id = defs[j].attr('id');
@@ -216,7 +217,6 @@ define(function (require) {
 				defs[j].remove();
 			}
 		}
-		
 
 		//clear all groups moved to defs
 		defGroups = this.el.selectAll('defs>g');
