@@ -1987,6 +1987,8 @@ namespace CreateJS
 
     FCM::Result JSONTimelineWriter::AddFrameScript(FCM::CStringRep16 pScript, FCM::U_Int32 layerNum)
     {
+        // As frame script is not supported, let us disable it.
+#if 0
         std::string script = Utils::ToString(pScript, m_pCallback);
 
         std::string scriptWithLayerNumber = "script Layer" +  Utils::ToString(layerNum);
@@ -2012,6 +2014,7 @@ namespace CreateJS
         Utils::Trace(m_pCallback, "[AddFrameScript] (Layer: %d): %s\n", layerNum, script.c_str());
 
         m_pFrameElement->push_back(JSONNode(scriptWithLayerNumber,script));
+#endif
 
         return FCM_SUCCESS;
     }

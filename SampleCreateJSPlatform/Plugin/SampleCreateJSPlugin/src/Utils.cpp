@@ -741,7 +741,8 @@ namespace CreateJS
             char buffer[1024];
 
             va_start(args, fmt);
-            vsnprintf(buffer, 1024, fmt, args);
+            vsnprintf(buffer, 1023, fmt, args);
+            buffer[1023] = 0;
             va_end(args);
 
             FCM::AutoPtr<FCM::IFCMCalloc> pCalloc = CreateJS::Utils::GetCallocService(pCallback);
