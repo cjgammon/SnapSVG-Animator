@@ -26,7 +26,7 @@ define(function (require) {
 			var transformData =  this.m_transform;
 			var transformArray = transformData.split(",");
 			transformMat = new Snap.Matrix(transformArray[0],transformArray[1],transformArray[2],transformArray[3],transformArray[4],transformArray[5]);
-			this.el.transform(transformMat.toTransformString());
+			this.el.transform(transformMat);
 		}
 		
 	}
@@ -143,7 +143,6 @@ define(function (require) {
 					commandList.push(command);
 				break;
 				case "UpdateMask":
-					console.log('update mask');
 					command = new UpdateMaskCommand(cmdData.objectId , cmdData.maskTill);
 					commandList.push(command);
 				break;
@@ -339,7 +338,7 @@ define(function (require) {
 			
 			for (i = 0; i < children.length; i += 1) {
 				if (children[i].parent().id == parentMC.id) { //ensure child of current movie clip
-					children[i].transform(transformMat.toTransformString());
+					children[i].transform(transformMat);
 				}
 			}		
 		}

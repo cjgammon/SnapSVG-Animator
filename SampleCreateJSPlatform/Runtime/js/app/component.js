@@ -55,6 +55,7 @@ define(function (require) {
 
 		function loop() {
 			instance.movieclip.play(instance.resourceManager);
+			clearTimeout(cbk);
 			cbk = setTimeout(loop, 1000 / fps)
 		}
 
