@@ -257,7 +257,7 @@ define(function (require) {
 			i,
 			childMC,
 			index;
-		
+
 		if(shape !== null && shape !== undefined)
 		{
 			Utils.CreateShape(root, parentMC, resourceManager, this.m_charID, this.m_objectID, this.m_placeAfter, this.m_transform);

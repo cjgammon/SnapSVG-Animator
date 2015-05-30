@@ -147,19 +147,6 @@ define(function (require) {
 								shape1.graphics.beginBitmapStroke(image,"no-repeat").beginStroke().setStrokeStyle(data.DOMDocument.Shape[k].path[j].strokeWidth,resourceManager.m_data.DOMDocument.Shape[k].path[j].strokeLinecap,resourceManager.m_data.DOMDocument.Shape[k].path[j].strokeLinejoin);
 							}
 							*/
-							/*		
-							if(resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient)
-							{
-								var stopArray = new Array();
-								var offSetArray = new Array();
-								for(var s=0;s<resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.stop.length;s++)
-								{
-									stopArray[s] = resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.stop[s].stopColor;
-									offSetArray[s] = resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.stop[s].offset/100;							
-								}
-								shape1.graphics.ls(stopArray,offSetArray,resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.x1,resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.y1,resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.x2,resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient.y2).setStrokeStyle(resourceManager.m_data.DOMDocument.Shape[k].path[j].strokeWidth,resourceManager.m_data.DOMDocument.Shape[k].path[j].strokeLinecap,resourceManager.m_data.DOMDocument.Shape[k].path[j].strokeLinejoin);;
-							}
-							*/
 						}
 						//var path = resourceManager.m_data.DOMDocument.Shape[k].path[j].d;
 						//shape1.attr({d: path});
@@ -170,7 +157,7 @@ define(function (require) {
 
 			var transformArray = transform.split(",");
 			var TransformMat = new Snap.Matrix(transformArray[0],transformArray[1],transformArray[2],transformArray[3],transformArray[4],transformArray[5]);
-			pathContainer.transform(TransformMat.toTransformString());
+			pathContainer.transform(TransformMat);
 			
 			if(s != undefined)
 			{				
@@ -209,7 +196,7 @@ define(function (require) {
 
 			var transformArray = transform.split(",");
 			var TransformMat = new Snap.Matrix(transformArray[0],transformArray[1],transformArray[2],transformArray[3],transformArray[4],transformArray[5]);
-			bmContainer.transform(TransformMat.toTransformString());
+			bmContainer.transform(TransformMat);
 
 			if(s != undefined)
 			{				
@@ -275,7 +262,7 @@ define(function (require) {
 			
 			var transformArray = transform.split(",");
 			var TransformMat = new Snap.Matrix(transformArray[0],transformArray[1],transformArray[2],transformArray[3],transformArray[4],transformArray[5]);
-			textContainer.transform(TransformMat.toTransformString());
+			textContainer.transform(TransformMat);
 				
 			if(s != undefined)
 			{				
