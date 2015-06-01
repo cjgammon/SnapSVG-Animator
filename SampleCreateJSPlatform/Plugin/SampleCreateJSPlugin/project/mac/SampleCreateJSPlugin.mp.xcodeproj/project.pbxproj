@@ -299,6 +299,8 @@
 /* Begin PBXProject section */
 		F5D357240948E8C4008C36CA /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = F5D357250948E8C4008C36CA /* Build configuration list for PBXProject "SampleCreateJSPlugin.mp" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -446,6 +448,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F5977F0F09B7D4150058A43E /* project_debug.xcconfig */;
 			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					MAC_ENV,
+					_MAC,
+					"DEBUG=1",
+					_DEBUG,
+					JSON_ESCAPE_WRITES,
+				);
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				HEADER_SEARCH_PATHS = (
 					"../mac-xcode",
@@ -488,6 +497,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F5977F1109B7D41E0058A43E /* project_release.xcconfig */;
 			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					MAC_ENV,
+					_MAC,
+					NDEBUG,
+					"FEATURE_MAC_BUNDLED_JRE=1",
+					JSON_ESCAPE_WRITES,
+				);
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				HEADER_SEARCH_PATHS = (
 					"../mac-xcode",
