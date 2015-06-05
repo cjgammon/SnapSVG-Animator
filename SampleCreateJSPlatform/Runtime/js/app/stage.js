@@ -176,43 +176,19 @@ define(function (require) {
 			id,
 			toRemove;
 		
-		//iterate all objects
-		function loopObjects(_id) {
-			var objects = that.el.selectAll('*'),
-				count = 0,
-				mask,
-				fill;
-							
-			for (i = 0; i < objects.length; i += 1) {
-				mask = objects[i].attr('mask').replace('url(#', '').replace(')', '');
-				fill = objects[i].attr('fill');
-								
-				if (fill.indexOf('#') > -1) {
-					fill = fill.replace('url(#', '').replace(')', '');
-				} else {
-					fill = '';
-				}
-				
-				if (mask !== _id && fill !== _id) {
-					count += 1;
-				}
-			}
-			
-			return count == objects.length;
-		}
-		
-
-		//loop through defs
 		for (j = 0; j < defs.length; j += 1) {
 			id = defs[j].attr('id');
 
 			if (!id) {
 				continue;
 			}
-						
-			toRemove = loopObjects(id);
-			
-			if (toRemove) {
+
+			url = "url('#" + id + "')";
+			fill = that.el.select('[fill="' + url + '"]');
+			mask = that.el.select('[mask="' + url + '"]');
+
+			if (!fill && !mask) {
+				console.log('remove');
 				defs[j].remove();
 			}
 		}
@@ -230,6 +206,7 @@ define(function (require) {
 				masks[i].remove();
 			}
 		}
+
 	}
 	
 
