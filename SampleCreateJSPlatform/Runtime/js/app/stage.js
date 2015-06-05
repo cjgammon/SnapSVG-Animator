@@ -166,7 +166,6 @@ define(function (require) {
 	
 	/**
 	* clean up unused defs
-	* TODO:: perf hit, optimize
 	**/
 	MovieClip.prototype.cleanupUnusedDefs = function () {
 		var that = this,
