@@ -1,10 +1,74 @@
 <html>
 	<head>
+		<title>Snap SVG + Flash</title>
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,800,700' rel='stylesheet' type='text/css'>
+		<style>
+			body{
+				font-family: 'Open Sans', sans-serif;
+				margin: 0;
+			}
+
+			h2{
+				font-weight: 100;
+				font-size: 3.5rem;
+				margin-bottom: 0;
+			}
+
+			section{
+				width: 100%;
+				height: 100%;
+			}
+
+			p{
+				max-width: 600px;
+				padding: 0.5em 1em;
+				font-size: 1.2rem;
+			}
+
+			a{
+				color: #467F77;
+				font-weight: 600;
+				text-decoration: none;
+			}
+
+			a:hover{
+				text-decoration: underline;
+			}
+
+			.youtube{
+				margin: 2em;
+			}
+
+			#download-btn{
+				font-size: 1.5rem;
+				padding: 0.5em;
+				font-weight: 800;
+				text-transform: uppercase;
+				background-color: #09B39C;
+				border-radius: 0.4rem;
+				border-color: #09B39C;
+				color: white;
+				outline: none;
+			}
+
+			#main{
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				text-align: center;
+			}
+		</style>
 	</head>
 <body>
-	<h2>Snap SVG Plugin for Flash CC</h2>
-	<p>This is a Custom Platform Plugin for Flash CC exporting animated content to SVG using the Snap.svg javascript library to render content</p>
-	<button id="download-btn">Download</button>
+	<section id="main">
+		<h2>Snap.svg + Flash</h2>
+		<p>This is a Custom Platform Plugin for Flash CC exporting animated content to SVG using the <a href="http://snapsvg.io/">Snap.svg</a> javascript library to render content.</p>
+		<button id="download-btn">Download</button>
+		<iframe class="youtube" width="560" height="315" src="https://www.youtube.com/embed/RETNfk_odhQ?rel=0&start=2411" frameborder="0" allowfullscreen></iframe>
+	</section>
+
+	<a href="https://github.com/cjgammon/Flash-Plugin-SnapPlatform"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/567c3a48d796e2fc06ea80409cc9dd82bf714434/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png"></a>
 
 <script>
 var downloadBtn = document.getElementById('download-btn');
