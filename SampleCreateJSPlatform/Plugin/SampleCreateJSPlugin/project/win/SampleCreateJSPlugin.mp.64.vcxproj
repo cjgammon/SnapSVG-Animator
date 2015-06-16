@@ -78,8 +78,8 @@
     <ClCompile>
       <AdditionalOptions>/Zm300 %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.;..\..\..\..\..\CustomPlatformSupportDevelopmentKit\core\include\common;..\..\..\..\..\CustomPlatformSupportDevelopmentKit\core\include\interfaces;..\..\..\..\..\CustomPlatformSupportDevelopmentKit\app\include\common;..\..\..\..\..\CustomPlatformSupportDevelopmentKit\app\include\interfaces;..\..\..\..\..\CustomPlatformSupportDevelopmentKit\app\include\interfaces\DOM;..\..\..\Common\ThirdParty\libjson_7.6.1\libjson;..\..\..\Common\ThirdParty\xerces\win\xerces-c-3.1.1\src;..\..\..\..\..\CustomPlatformSupportDevelopmentKit\app\include\interfaces\Exporter;..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;BOOST_SYSTEM_NO_DEPRECATED;FLASHPRO_DVA_CUSTOM;BOOST_ALL_DYN_LINK;_WINDOWS;MSWindows;_WIN32_WINNT=0x600;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;DVA_MAJOR_DISPLAY_VERSION=2014;DVA_MINOR_DISPLAY_VERSION=0;DVA_PATCH_DISPLAY_VERSION=0;PRERELEASE;DVA_SUITE_VERSION=15;DVA_MAJOR_VERSION=15;DVA_MINOR_VERSION=0;DVA_PATCH_VERSION=0;DVA_PRODUCT_NAME=Adobe Flash CC;DVA_BUILD_YEAR=2015;WIN_ENV;_CRT_SECURE_NO_WARNINGS;DEBUG=1;_DEBUG;_ITERATOR_DEBUG_LEVEL=2;JSON_ESCAPE_WRITES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;..\..\..\..\..\CustomPlatformSupportDevelopmentKit\core\include\common;..\..\..\..\..\CustomPlatformSupportDevelopmentKit\core\include\interfaces;..\..\..\..\..\CustomPlatformSupportDevelopmentKit\app\include\common;..\..\..\..\..\CustomPlatformSupportDevelopmentKit\app\include\interfaces;..\..\..\..\..\CustomPlatformSupportDevelopmentKit\app\include\interfaces\DOM;..\..\..\Common\ThirdParty\mongoose;..\..\..\Common\ThirdParty\libjson_7.6.1\libjson;..\..\..\Common\ThirdParty\xerces\win\xerces-c-3.1.1\src;..\..\..\..\..\CustomPlatformSupportDevelopmentKit\app\include\interfaces\Exporter;..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WINDOWS;MSWindows;_WIN32_WINNT=0x600;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;WIN_ENV;_CRT_SECURE_NO_WARNINGS;DEBUG=1;_DEBUG;USE_HTTP_SERVER;USE_RUNTIME;JSON_ESCAPE_WRITES;_ITERATOR_DEBUG_LEVEL=2;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -161,8 +161,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
-      <AdditionalIncludeDirectories>.;..\..\..\..\..\CustomPlatformSupportDevelopmentKit\core\include\common;..\..\..\..\..\CustomPlatformSupportDevelopmentKit\core\include\interfaces;..\..\..\..\..\CustomPlatformSupportDevelopmentKit\app\include\common;..\..\..\..\..\CustomPlatformSupportDevelopmentKit\app\include\interfaces;..\..\..\..\..\CustomPlatformSupportDevelopmentKit\app\include\interfaces\DOM;..\..\..\Common\ThirdParty\libjson_7.6.1\libjson;..\..\..\Common\ThirdParty\xerces\win\xerces-c-3.1.1\src;..\..\..\..\..\CustomPlatformSupportDevelopmentKit\app\include\interfaces\Exporter;..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_WINDOWS;MSWindows;_WIN32_WINNT=0x600;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;WIN_ENV;_CRT_SECURE_NO_WARNINGS;NDEBUG;_ITERATOR_DEBUG_LEVEL=0;JSON_ESCAPE_WRITES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;..\..\..\..\..\CustomPlatformSupportDevelopmentKit\core\include\common;..\..\..\..\..\CustomPlatformSupportDevelopmentKit\core\include\interfaces;..\..\..\..\..\CustomPlatformSupportDevelopmentKit\app\include\common;..\..\..\..\..\CustomPlatformSupportDevelopmentKit\app\include\interfaces;..\..\..\..\..\CustomPlatformSupportDevelopmentKit\app\include\interfaces\DOM;..\..\..\Common\ThirdParty\mongoose;..\..\..\Common\ThirdParty\libjson_7.6.1\libjson;..\..\..\Common\ThirdParty\xerces\win\xerces-c-3.1.1\src;..\..\..\..\..\CustomPlatformSupportDevelopmentKit\app\include\interfaces\Exporter;..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WINDOWS;MSWindows;_WIN32_WINNT=0x600;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;WIN_ENV;_CRT_SECURE_NO_WARNINGS;NDEBUG;_ITERATOR_DEBUG_LEVEL=0;USE_HTTP_SERVER;USE_RUNTIME;JSON_ESCAPE_WRITES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -249,7 +249,12 @@
     <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONWriter.cpp" />
     <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONAllocator.cpp" />
     <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONStream.cpp" />
+    <ClCompile Include="..\..\..\Common\ThirdParty\mongoose\mongoose.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\..\src\DocType.cpp" />
+    <ClCompile Include="..\..\src\HTTPServer.cpp" />
     <ClCompile Include="..\..\src\OutputWriter.cpp" />
     <ClCompile Include="..\..\src\Publisher.cpp" />
     <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONNode.cpp" />

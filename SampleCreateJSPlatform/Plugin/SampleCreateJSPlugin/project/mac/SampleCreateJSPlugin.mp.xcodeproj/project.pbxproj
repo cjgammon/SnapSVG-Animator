@@ -27,6 +27,10 @@
 		"60d764c0-8d8e-3118-8c39-d190f2851cab" /* JSONPreparse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "960c8d89-d632-3678-815d-49888c76392b" /* JSONPreparse.cpp */; };
 		"61759552-656a-34f8-864d-dee2b46bbc02" /* JSONStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "72093546-f441-3bed-8ee2-78acd3cf688d" /* JSONStream.cpp */; };
 		"6299172a-94f3-3e36-9b11-fbe824232c00" /* MyXmlParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "41c6aa0c-3abc-3913-a79f-2072c1b28322" /* MyXmlParser.cpp */; };
+		681CC5F71AF8BE630041AEC0 /* HTTPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 681CC5F61AF8BE630041AEC0 /* HTTPServer.cpp */; };
+		681CC5F81AF8BE630041AEC0 /* HTTPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 681CC5F61AF8BE630041AEC0 /* HTTPServer.cpp */; };
+		681CC6011AF8BF5C0041AEC0 /* mongoose.c in Sources */ = {isa = PBXBuildFile; fileRef = 681CC6001AF8BF5C0041AEC0 /* mongoose.c */; };
+		681CC6021AF8BF5C0041AEC0 /* mongoose.c in Sources */ = {isa = PBXBuildFile; fileRef = 681CC6001AF8BF5C0041AEC0 /* mongoose.c */; };
 		"6df97df6-cdcc-3eec-8b67-b64cb2bd3741" /* JSONValidator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "3e78f8ad-c8d1-3e1d-9fba-a1af81089f89" /* JSONValidator.cpp */; };
 		"7115aecc-7578-3388-809f-adf2cea7fb87" /* OutputWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "b99462ab-58d9-3727-aa4b-b3246166a611" /* OutputWriter.cpp */; };
 		"80eccaa8-142f-385a-a04f-942a76afb0bf" /* JSONIterators.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "9bbfd7be-ac57-384d-984e-1afc2e0ed3b2" /* JSONIterators.cpp */; };
@@ -76,6 +80,8 @@
 		"474ed136-b062-30a7-9d9b-ab0938ef331d" /* JSONWorker.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; path = JSONWorker.cpp; sourceTree = "<group>"; };
 		"50c17538-91dd-3883-a5bc-315c0739acf4" /* JSONDebug.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; path = JSONDebug.cpp; sourceTree = "<group>"; };
 		"51d58417-2688-33d6-a149-37ad1e68e8fa" /* libxerces-c-3.1.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; path = "libxerces-c-3.1.dylib"; sourceTree = "<group>"; };
+		681CC5F61AF8BE630041AEC0 /* HTTPServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HTTPServer.cpp; sourceTree = "<group>"; };
+		681CC6001AF8BF5C0041AEC0 /* mongoose.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mongoose.c; path = ../../../Common/ThirdParty/mongoose/mongoose.c; sourceTree = "<group>"; };
 		"72093546-f441-3bed-8ee2-78acd3cf688d" /* JSONStream.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; path = JSONStream.cpp; sourceTree = "<group>"; };
 		"7423f597-956e-32d5-b016-7153947a675d" /* AppKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AppKit.framework; sourceTree = "<group>"; };
 		"7aa76593-b10f-3f2e-bbea-7a3e63e1a65b" /* JSONNode_Mutex.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; path = JSONNode_Mutex.cpp; sourceTree = "<group>"; };
@@ -135,6 +141,7 @@
 		"5d440201-ca36-32fd-882f-9a16c34ed966" /* src */ = {
 			isa = PBXGroup;
 			children = (
+				681CC5F61AF8BE630041AEC0 /* HTTPServer.cpp */,
 				"9f0688c3-3f04-3a69-a219-c79da92040db" /* Main.cpp */,
 				"37ac9b87-549b-3c4b-935a-8ff607750468" /* DocType.cpp */,
 				"a2b84e18-8788-39bf-9148-f0dbf764f142" /* Publisher.cpp */,
@@ -145,6 +152,14 @@
 			name = src;
 			path = ../../src;
 			sourceTree = SOURCE_ROOT;
+		};
+		681CC5FF1AF8BEF70041AEC0 /* Common/ThirdParty/mongoose */ = {
+			isa = PBXGroup;
+			children = (
+				681CC6001AF8BF5C0041AEC0 /* mongoose.c */,
+			);
+			name = Common/ThirdParty/mongoose;
+			sourceTree = "<group>";
 		};
 		811C721C097349F9007B1073 /* Libraries */ = {
 			isa = PBXGroup;
@@ -197,6 +212,7 @@
 		F5D3574D0948ECCD008C36CA /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				681CC5FF1AF8BEF70041AEC0 /* Common/ThirdParty/mongoose */,
 				"5d440201-ca36-32fd-882f-9a16c34ed966" /* src */,
 				"a27a8ef3-ba50-3980-a679-f6f6a9a13ebf" /* Common/ThirdParty/libjson_7.6.1/libjson/_internal/Source */,
 				"4ccc0e26-5dcd-3c55-b674-92512b29d658" /* mac */,
@@ -397,11 +413,13 @@
 				"6299172a-94f3-3e36-9b11-fbe824232c00" /* MyXmlParser.cpp in Sources */,
 				"8f71b0ac-f77e-35e0-8ba3-eafefe65d054" /* internalJSONNode.cpp in Sources */,
 				"c53ddf8a-bbbc-3dee-82ba-65a87c37db4e" /* JSONAllocator.cpp in Sources */,
+				681CC5F71AF8BE630041AEC0 /* HTTPServer.cpp in Sources */,
 				"bc7b98e1-a321-3015-9217-0f5c6f3cbfed" /* JSONChildren.cpp in Sources */,
 				"4ebc8a76-6e5e-38d1-bd1e-a44ac9b6cf09" /* JSONDebug.cpp in Sources */,
 				"80eccaa8-142f-385a-a04f-942a76afb0bf" /* JSONIterators.cpp in Sources */,
 				"a667ac45-a68a-3e4c-b8f0-e54bfac215bd" /* JSONMemory.cpp in Sources */,
 				"5a4158f3-d11a-3378-b5bb-b87611f2f747" /* JSONNode.cpp in Sources */,
+				681CC6011AF8BF5C0041AEC0 /* mongoose.c in Sources */,
 				"8ed2c99a-79c7-3e25-a978-d21041af1b50" /* JSONNode_Mutex.cpp in Sources */,
 				"411a4dda-fc45-3eaf-a9da-35ee6f8160a6" /* JSONPreparse.cpp in Sources */,
 				"61759552-656a-34f8-864d-dee2b46bbc02" /* JSONStream.cpp in Sources */,
@@ -425,11 +443,13 @@
 				"f77fdb47-d483-3c03-8a74-4c0138c180d6" /* MyXmlParser.cpp in Sources */,
 				"157ca6f8-2e54-371b-8649-bb34db8f2d63" /* internalJSONNode.cpp in Sources */,
 				"f7f31334-a317-32e3-a2ff-22b21f1da5e9" /* JSONAllocator.cpp in Sources */,
+				681CC5F81AF8BE630041AEC0 /* HTTPServer.cpp in Sources */,
 				"ac2e8f32-a38e-3738-ac31-7f1a20406449" /* JSONChildren.cpp in Sources */,
 				"d09e3c89-9e1e-31ad-a1e3-7b33bd5e56b5" /* JSONDebug.cpp in Sources */,
 				"1a74ed6f-1455-3f15-9f44-14bb8e20b635" /* JSONIterators.cpp in Sources */,
 				"cf030e3d-ea74-3c90-9ae4-541a93a2e770" /* JSONMemory.cpp in Sources */,
 				"81e0cad2-705a-3d5e-a15a-311ce49f6b73" /* JSONNode.cpp in Sources */,
+				681CC6021AF8BF5C0041AEC0 /* mongoose.c in Sources */,
 				"da95733a-774c-306e-867b-6f491e3c38e4" /* JSONNode_Mutex.cpp in Sources */,
 				"60d764c0-8d8e-3118-8c39-d190f2851cab" /* JSONPreparse.cpp in Sources */,
 				"d26de6fc-3954-384c-a0cb-033a23fa21af" /* JSONStream.cpp in Sources */,
@@ -463,6 +483,7 @@
 					../../../../../CustomPlatformSupportDevelopmentKit/app/include/common,
 					../../../../../CustomPlatformSupportDevelopmentKit/app/include/interfaces,
 					../../../../../CustomPlatformSupportDevelopmentKit/app/include/interfaces/DOM,
+					../../../Common/ThirdParty/mongoose,
 					../../../Common/ThirdParty/libjson_7.6.1/libjson,
 					"../../../Common/ThirdParty/xerces/mac/xerces-c-3.1.1/src",
 					../../../../../CustomPlatformSupportDevelopmentKit/app/include/interfaces/Exporter,
@@ -485,6 +506,7 @@
 					../../../../../CustomPlatformSupportDevelopmentKit/app/include/common,
 					../../../../../CustomPlatformSupportDevelopmentKit/app/include/interfaces,
 					../../../../../CustomPlatformSupportDevelopmentKit/app/include/interfaces/DOM,
+					../../../Common/ThirdParty/mongoose,
 					../../../Common/ThirdParty/libjson_7.6.1/libjson,
 					"../../../Common/ThirdParty/xerces/mac/xerces-c-3.1.1/src",
 					../../../../../CustomPlatformSupportDevelopmentKit/app/include/interfaces/Exporter,
@@ -512,6 +534,7 @@
 					../../../../../CustomPlatformSupportDevelopmentKit/app/include/common,
 					../../../../../CustomPlatformSupportDevelopmentKit/app/include/interfaces,
 					../../../../../CustomPlatformSupportDevelopmentKit/app/include/interfaces/DOM,
+					../../../Common/ThirdParty/mongoose,
 					../../../Common/ThirdParty/libjson_7.6.1/libjson,
 					"../../../Common/ThirdParty/xerces/mac/xerces-c-3.1.1/src",
 					../../../../../CustomPlatformSupportDevelopmentKit/app/include/interfaces/Exporter,

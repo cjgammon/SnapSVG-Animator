@@ -141,7 +141,7 @@ namespace CreateJS
             SAXParser *parser = new SAXParser();
             parser->setDocumentHandler(&featureXmlDocHandler);
             
-            XERCES_CPP_NAMESPACE::MemBufInputSource *memInput = new XERCES_CPP_NAMESPACE::MemBufInputSource((const XMLByte*) buffer, length, "dummy", false);
+            XERCES_CPP_NAMESPACE::MemBufInputSource    *memInput = new XERCES_CPP_NAMESPACE::MemBufInputSource((const XMLByte*) buffer, length, "dummy", false);
             m_bInited = true;
             parser->parse(*memInput);
             delete parser;

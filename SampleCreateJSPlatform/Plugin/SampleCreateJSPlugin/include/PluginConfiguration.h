@@ -38,6 +38,8 @@
 #define DOCTYPE_UNIVERSAL_NAME				"com.example.SnapPlugin"
 #define DOCTYPE_DESCRIPTION					"This document can be used to author content for Snap.svg runtime"
 
+/* The value of RUNTIME_FOLDER_NAME must be the name of the runtime folder present in EclipseProject/ExtensionContent. */
+#define RUNTIME_FOLDER_NAME                 "SnapRuntime"
 
 namespace CreateJS
 {

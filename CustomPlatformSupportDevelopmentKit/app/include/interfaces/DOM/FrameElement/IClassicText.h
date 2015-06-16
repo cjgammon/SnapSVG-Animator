@@ -191,6 +191,10 @@ namespace DOM
              * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              *
              * @see    IParagraph
+             *
+             * @note   For empty dynamic and input text, this function will return a 
+             *         list with one paragraph in it which in turn will contain only 
+             *         one text run.
              */
             virtual FCM::Result _FCMCALL GetParagraphs(PIFCMList& pParagraphList) = 0;
             

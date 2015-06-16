@@ -76,10 +76,12 @@ namespace DocType
           *
           * @param isSupported (OUT) 
           *        This parameter is updated based on whether the feature is supported or not.
+          *        For any value of inFeatureName not mentioned in the list below, isSupported
+          *        should be set to FALSE.
           *
           * @return On success, FCM_SUCCESS is returned; else an error code is returned.
           *
-          * @note  The below is the possible valid values for the inFeatureName:
+          * @note  The following are the possible valid values for the inFeatureName:
           *         "Stroke", 
           *         "Fill", 
           *         "Text", 
@@ -125,6 +127,8 @@ namespace DocType
          *
          * @param isSupported (OUT) 
          *        This parameter is updated based on whether feature is supported or not
+         *        For any cobination of <inFeatureName, inPropName> not mentioned in the list below,
+         *        isSupported should be set to FALSE.
          *
          * @return On success, FCM_SUCCESS is returned; else an error code is returned.
          *
@@ -205,6 +209,8 @@ namespace DocType
          *
          * @param inValName (IN)
          *        Name of the value assosciated with a property(inPropName)
+         *        For any cobination of <inFeatureName, inPropName, inValName> not mentioned 
+         *        in the list below, isSupported should be set to FALSE.
          *
          * @param isSupported (OUT)
          *        This param is updated according to whether value for the property is supported

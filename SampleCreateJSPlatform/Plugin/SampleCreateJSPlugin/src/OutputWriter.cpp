@@ -17,6 +17,7 @@
 **************************************************************************/
 
 #include "OutputWriter.h"
+#include "PluginConfiguration.h"
 
 #include <cstring>
 #include <fstream>
@@ -76,7 +77,7 @@ namespace CreateJS
                     c.play();\n\
                 }\n\
             </script>\n\
-            <script src=\"./js/vendor/requirejs/require.js\" data-main=\"js/main\"></script> \n\
+            <script src=\"./%s/js/vendor/requirejs/require.js\" data-main=\"%s/js/main\"></script> \n\
         </body>\n\
         </html>";
 
@@ -129,7 +130,9 @@ namespace CreateJS
             m_outputJSONFileName.c_str(), 
             fps, 
             stageWidth, 
-            stageHeight);
+            stageHeight,
+            RUNTIME_FOLDER_NAME,
+            RUNTIME_FOLDER_NAME);
 
         return FCM_SUCCESS;
     }
@@ -1045,8 +1048,10 @@ namespace CreateJS
         std::string fileLabel;
 
         fileLabel = Utils::ToString(m_soundFileNameLabel);
-        name = "Image" + fileLabel;
+        name = "Sound" + fileLabel;
         m_soundFileNameLabel++;
+
+        str = libPathName;
 
         // DOM APIs do not provide a way to get the compression of the sound.
         // For time being, we will use the extension of the library item name.

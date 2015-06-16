@@ -171,6 +171,43 @@ namespace FCM
 #define kLibProp_LinkageExportForAS_DictType            FCM::kFCMDictType_Bool
 
 
+/**
+ * @def   kLibProp_SymbolType_DictKey
+ *
+ * @brief Dictionary key for the property "type" of the Symbol. 
+ */
+#define kLibProp_SymbolType_DictKey                     "SymbolType"
+
+
+/**
+ * @def   kLibProp_SymbolType_DictType
+ *
+ * @brief Type of value of the property "type" of the Symbol.
+ */
+#define kLibProp_SymbolType_DictType					FCM::kFCMDictType_StringRep8
+
+/**
+* @def   kLibProp_SymbolType_Button
+*
+* @brief Dictionary value for the key kLibProp_SymbolType_DictKey if the symbol is Button
+*/
+#define kLibProp_SymbolType_Button                     "Button"
+
+/**
+* @def   kLibProp_SymbolType_MovieClip
+*
+* @brief Dictionary value for the key kLibProp_SymbolType_DictKey if the symbol is Movie Clip
+*/
+#define kLibProp_SymbolType_MovieClip                  "MovieClip"
+
+/**
+* @def   kLibProp_SymbolType_Graphic
+*
+* @brief Dictionary value for the key kLibProp_SymbolType_DictKey if the symbol is Graphic
+*/
+#define kLibProp_SymbolType_Graphic                    "Graphic"
+
+
 namespace DOM
 {
     /**
@@ -225,7 +262,8 @@ namespace DOM
         *           kLibProp_LinkageExportForRS_DictKey,
         *           kLibProp_LinkageImportForRS_DictKey,
         *           kLibProp_LinkageExportInFirstFrame_DictKey,
-        *           kLibProp_LinkageExportForAS_DictKey
+        *           kLibProp_LinkageExportForAS_DictKey,
+		*           kLibProp_SymbolType_DictKey
         *
         * @return On success, FCM_SUCCESS is returned, else an error code is returned.
         */    

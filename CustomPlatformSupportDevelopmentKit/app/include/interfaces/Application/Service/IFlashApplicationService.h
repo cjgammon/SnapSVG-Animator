@@ -92,6 +92,14 @@ namespace Application
              * @param  version (OUT)
              *         FlashPro Version
              *
+             * @note   "version" is a 32-bit integer. Version can be converted into form 
+             *         Major.Minor.Maintenance.Build, by doing the following:
+             *
+             *         ((version >> 24) & 0xFF) gives the Major number.
+             *         ((version >> 16) & 0xFF) gives the Minor number.
+             *         ((version >>  8) & 0xFF) gives the Maintenance number.
+             *         ((version      ) & 0xFF) gives the Build number.
+             *
              * @return On success, FCM_SUCCESS is returned; else an error code is returned.
              */
             virtual FCM::Result _FCMCALL GetVersion(FCM::U_Int32& version) = 0;

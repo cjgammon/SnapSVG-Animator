@@ -90,6 +90,8 @@ namespace DOM
     #define OUTPUT_FILE_EXTENSION       "html"
 #endif
 
+#define MAX_RETRY_ATTEMPT               10
+
 
 /* -------------------------------------------------- Structs / Unions */
 
@@ -149,9 +151,11 @@ namespace CreateJS
 
         FCM::Result Init();
 
-        void LaunchBrowser(const std::string& outputFileName);
+        FCM::Result ShowPreview(const std::string& outFile);
 
         FCM::Result ExportLibraryItems(FCM::FCMListPtr pLibraryItemList);
+
+        FCM::Result CopyRuntime(const std::string& outputFolder);
 
     private:
 

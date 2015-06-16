@@ -18,7 +18,7 @@
 
 #include "Publisher.h"
 #include "Utils.h"
-
+#include "HTTPServer.h"
 #include "FlashFCMPublicIDs.h"
 
 #include "FrameElement/IShape.h"
@@ -46,6 +46,7 @@
 #include "LibraryItem/ISymbolItem.h"
 #include "ILibraryItem.h"
 
+#include "FrameElement/IButton.h"
 #include "FrameElement/IClassicText.h"
 #include "FrameElement/ITextStyle.h"
 #include "FrameElement/IParagraph.h"
@@ -352,12 +353,19 @@ namespace CreateJS
             ASSERT(FCM_SUCCESS_CODE(res));
         }
 
+#ifdef USE_RUNTIME
+
+        // We are now going to copy the runtime from the zxp package to the output folder.
+        std::string outFolder;
+        
+        Utils::GetParent(outFile, outFolder);
+
+        CopyRuntime(outFolder);
+
+#endif
         if (IsPreviewNeeded(pDictConfig))
         {
-            // Launch the browser
-            std::string fileName;
-            Utils::GetFileName(outFile, fileName);
-            Utils::LaunchBrowser(fileName);
+            ShowPreview(outFile);
         }
 
 #endif
@@ -515,6 +523,58 @@ namespace CreateJS
         return res;
     }
 
+
+    FCM::Result CPublisher::ShowPreview(const std::string& outFile)
+    {
+        FCM::Result res = FCM_SUCCESS;
+
+#ifdef USE_HTTP_SERVER
+
+        // We are now about to start a web server
+        std::string fileName;
+        HTTPServer* server;
+        ServerConfigParam config;
+
+        Utils::GetFileName(outFile, fileName);
+
+        server = HTTPServer::GetInstance();
+        if (server)
+        {
+            // Stop the web server just in case it is running
+            server->Stop();
+        }
+
+        int numTries = 0;
+        while (numTries < MAX_RETRY_ATTEMPT)
+        {
+            // Configure the web server
+            config.port = Utils::GetUnusedLocalPort();
+            Utils::GetParent(outFile, config.root);
+            server->SetConfig(config);
+
+            // Start the web server
+            res = server->Start();
+            if (FCM_SUCCESS_CODE(res))
+            {
+                // Launch the browser
+                Utils::LaunchBrowser(fileName, config.port, GetCallback());
+                break;
+            }
+            numTries++;
+        }
+
+        if (numTries == MAX_RETRY_ATTEMPT)
+        {
+            Utils::Trace(GetCallback(), "Failed to start web server\n");
+            res = FCM_GENERAL_ERROR;
+        }
+
+#endif // USE_HTTP_SERVER
+
+        return res;
+    }
+
+
     FCM::Result CPublisher::Init()
     {
         FCM::Result res = FCM_SUCCESS;;
@@ -641,6 +701,27 @@ namespace CreateJS
             callocService->Free((FCM::PVoid)pLibItemName);
         }
         return FCM_SUCCESS;
+    }
+
+
+    FCM::Result CPublisher::CopyRuntime(const std::string& outputFolder)
+    {
+        FCM::Result res;
+        std::string sourceFolder;
+
+        // Get the source folder
+        Utils::GetModuleFilePath(sourceFolder, GetCallback());
+        Utils::GetParent(sourceFolder, sourceFolder);
+        Utils::GetParent(sourceFolder, sourceFolder);
+        Utils::GetParent(sourceFolder, sourceFolder);
+
+        // First let us remove the existing runtime folder (if any)
+        Utils::Remove(outputFolder + RUNTIME_FOLDER_NAME, GetCallback());
+
+        // Copy the runtime folder
+        res = Utils::CopyDir(sourceFolder + RUNTIME_FOLDER_NAME, outputFolder, GetCallback());
+
+        return res;
     }
 
     /* ----------------------------------------------------- Resource Palette */
@@ -1529,7 +1610,7 @@ namespace CreateJS
         // Free the name
         FCM::AutoPtr<FCM::IFCMUnknown> pUnkCalloc;
         res = GetCallback()->GetService(SRVCID_Core_Memory, pUnkCalloc.m_Ptr);
-        AutoPtr<FCM::IFCMCalloc> callocService  = pUnkCalloc;
+        AutoPtr<FCM::IFCMCalloc> callocService = pUnkCalloc;
 
         callocService->Free((FCM::PVoid)pName);
 
@@ -1694,7 +1775,7 @@ namespace CreateJS
         FCM::Result res;
 
         ASSERT(pShapeInfo);
-        ASSERT(pShapeInfo->structSize == sizeof(SHAPE_INFO));
+        ASSERT(pShapeInfo->structSize >= sizeof(SHAPE_INFO));
 
         LOG(("[AddShape] ObjId: %d ResId: %d PlaceAfter: %d\n", 
             objectId, pShapeInfo->resourceId, pShapeInfo->placeAfterObjectId));
@@ -1713,11 +1794,25 @@ namespace CreateJS
         FCM::Result res;
 
         ASSERT(pClassicTextInfo);
-        ASSERT(pClassicTextInfo->structSize == sizeof(CLASSIC_TEXT_INFO));
+        ASSERT(pClassicTextInfo->structSize >= sizeof(CLASSIC_TEXT_INFO));
 
         LOG(("[AddClassicText] ObjId: %d ResId: %d PlaceAfter: %d\n", 
             objectId, pClassicTextInfo->resourceId, pClassicTextInfo->placeAfterObjectId));
-
+        
+        //To get the bounding rect of the text
+        if (pClassicTextInfo->structSize >= sizeof(DISPLAY_OBJECT_INFO_2))
+        {
+            DOM::Utils::RECT rect;
+            DISPLAY_OBJECT_INFO_2 *ptr = static_cast<DISPLAY_OBJECT_INFO_2*>(pClassicTextInfo);
+            if(ptr)
+            {
+                rect = ptr->bounds;
+                // This rect object gives the bound of the text filed.
+                // This will have to be transformed using the pClassicTextInfo->matrix
+                // to map it to its parent's co-orinate space to render it.
+            }
+        }
+        
         res = m_pTimelineWriter->PlaceObject(
             pClassicTextInfo->resourceId, 
             objectId, 
@@ -1732,7 +1827,7 @@ namespace CreateJS
         FCM::Result res;
 
         ASSERT(pBitmapInfo);
-        ASSERT(pBitmapInfo->structSize == sizeof(BITMAP_INFO));
+        ASSERT(pBitmapInfo->structSize >= sizeof(BITMAP_INFO));
 
         LOG(("[AddBitmap] ObjId: %d ResId: %d PlaceAfter: %d\n", 
             objectId, pBitmapInfo->resourceId, pBitmapInfo->placeAfterObjectId));
@@ -1752,7 +1847,7 @@ namespace CreateJS
         FCM::AutoPtr<FCM::IFCMUnknown> pUnknown = pMovieClip;
 
         ASSERT(pMovieClipInfo);
-        ASSERT(pMovieClipInfo->structSize == sizeof(MOVIE_CLIP_INFO));
+        ASSERT(pMovieClipInfo->structSize >= sizeof(MOVIE_CLIP_INFO));
       
         LOG(("[AddMovieClip] ObjId: %d ResId: %d PlaceAfter: %d\n", 
             objectId, pMovieClipInfo->resourceId, pMovieClipInfo->placeAfterObjectId));
@@ -1773,7 +1868,7 @@ namespace CreateJS
         FCM::Result res;
 
         ASSERT(pGraphicInfo);
-        ASSERT(pGraphicInfo->structSize == sizeof(GRAPHIC_INFO));
+        ASSERT(pGraphicInfo->structSize >= sizeof(GRAPHIC_INFO));
 
         LOG(("[AddGraphic] ObjId: %d ResId: %d PlaceAfter: %d\n", 
             objectId, pGraphicInfo->resourceId, pGraphicInfo->placeAfterObjectId));

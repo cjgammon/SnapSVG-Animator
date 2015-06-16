@@ -20,16 +20,24 @@
 #include "Utils.h"
 
 #ifdef _WINDOWS
-#include "Windows.h"
-#include "ShellApi.h"
-#include "ShlObj.h"
+#ifdef USE_HTTP_SERVER
+    #include <WinSock.h>
+#endif
+    #include "Windows.h"
+    #include "ShellApi.h"
+    #include "ShlObj.h"
 #endif
 
 #ifdef __APPLE__
-#include "CoreFoundation/CoreFoundation.h"
-#include <dlfcn.h>
-#include <sys/types.h>
-#include <sys/stat.h>
+    #include "CoreFoundation/CoreFoundation.h"
+    #include <dlfcn.h>
+#ifdef USE_HTTP_SERVER    
+    #include <sys/socket.h>
+    #include <netinet/in.h>
+    #include <arpa/inet.h>
+    #include <sys/stat.h>    
+#endif    
+    #include <copyfile.h>
 #endif
 
 #include <iomanip>
@@ -689,28 +697,6 @@ namespace CreateJS
 #endif
     }
 
-    void Utils::LaunchBrowser(const std::string& outputFileName)
-    {
-
-#ifdef _WINDOWS
-
-        std::wstring output = L"http://localhost:8080/";
-        std::wstring tail;
-        tail.assign(outputFileName.begin(), outputFileName.end());
-        output += tail;
-        ShellExecute(NULL, L"open", output.c_str(), NULL, NULL, SW_SHOWNORMAL);
-
-#else
-
-        std::string output = "http://localhost:8080/";
-        output += outputFileName;
-        std::string str = "/usr/bin/open " + output;
-        system(str.c_str());
-
-#endif // _WINDOWS
-
-    }
-
     void Utils::OpenFStream(const std::string& outputFileName, std::fstream &file, std::ios_base::openmode mode, FCM::PIFCMCallback pCallback)
     {
  
@@ -765,5 +751,186 @@ namespace CreateJS
 
         //printf(buffer);
     }
+
+
+    // Removes the folder all its contents
+    FCM::Result Utils::Remove(const std::string& folder, FCM::PIFCMCallback pCallback)
+    {
+
+#ifdef _WINDOWS
+
+        SHFILEOPSTRUCT sf;
+        std::wstring wstr;
+
+        memset(&sf, 0, sizeof(sf));
+
+        sf.hwnd = NULL;
+        sf.wFunc = FO_DELETE;
+        sf.fFlags = FOF_NOCONFIRMATION | FOF_NOCONFIRMMKDIR | FOF_NOERRORUI | FOF_SILENT;
+        FCM::StringRep16 folderStr = Utils::ToString16(folder, pCallback);;
+        wstr = folderStr;
+        wstr.append(1, '\0');
+        sf.pFrom = wstr.c_str();
+        sf.pTo = NULL;
+
+        FCM::AutoPtr<FCM::IFCMCalloc> pCalloc = GetCallocService(pCallback);
+        int n = SHFileOperation(&sf);
+        if (n != 0)
+        {
+            pCalloc->Free(folderStr);
+            return FCM_GENERAL_ERROR;
+        }
+
+        pCalloc->Free(folderStr);
+
+#else
+        remove(folder.c_str());
+#endif
+
+        return FCM_SUCCESS;
+    }
+
+
+    // Copies a source folder to a destination folder. In other words, dstFolder contains
+    // the srcFolder after the operation.
+    FCM::Result Utils::CopyDir(const std::string& srcFolder, const std::string& dstFolder, FCM::PIFCMCallback pCallback)
+    {
+#ifdef _WINDOWS
+
+        SHFILEOPSTRUCT sf;
+        std::wstring srcWstr;
+        std::wstring dstWstr;
+
+        memset(&sf, 0, sizeof(sf));
+
+        sf.hwnd = NULL;
+        sf.wFunc = FO_COPY;
+        sf.fFlags = FOF_NOCONFIRMATION | FOF_NOCONFIRMMKDIR | FOF_NOERRORUI | FOF_SILENT;
+
+        FCM::StringRep16 srcFolderStr = Utils::ToString16(srcFolder, pCallback);
+        srcWstr = srcFolderStr;
+        srcWstr.append(1, '\0');
+        sf.pFrom = srcWstr.c_str();
+        FCM::StringRep16 dstFolderStr = Utils::ToString16(dstFolder, pCallback);
+        dstWstr = dstFolderStr;
+        dstWstr.append(1, '\0');
+        sf.pFrom = srcWstr.c_str();
+        sf.pTo = dstWstr.c_str();
+
+        FCM::AutoPtr<FCM::IFCMCalloc> pCalloc = GetCallocService(pCallback);
+        int n = SHFileOperation(&sf);
+        if (n != 0)
+        {
+            pCalloc->Free(srcFolderStr);
+            pCalloc->Free(dstFolderStr);
+            return FCM_GENERAL_ERROR;
+        }
+
+        pCalloc->Free(srcFolderStr);
+        pCalloc->Free(dstFolderStr);
+#else
+
+        copyfile(srcFolder.c_str(), dstFolder.c_str(), NULL, COPYFILE_ALL | COPYFILE_RECURSIVE);
+#endif
+        return FCM_SUCCESS;
+    }
+
+
+#ifdef USE_HTTP_SERVER
+
+    void Utils::LaunchBrowser(const std::string& outputFileName, int port, FCM::PIFCMCallback pCallback)
+    {
+
+#ifdef _WINDOWS
+
+        std::wstring output = L"http://localhost:";
+        std::wstring tail;
+        tail.assign(outputFileName.begin(), outputFileName.end());
+        FCM::StringRep16 portStr = Utils::ToString16(Utils::ToString(port), pCallback);
+        output += portStr;
+        output += L"/";
+        output += tail;
+        ShellExecute(NULL, L"open", output.c_str(), NULL, NULL, SW_SHOWNORMAL);
+
+        FCM::AutoPtr<FCM::IFCMCalloc> pCalloc = GetCallocService(pCallback);
+        pCalloc->Free(portStr);
+#else
+
+        std::string output = "http://localhost:";
+        output += Utils::ToString(port);
+        output += "/";
+        output += outputFileName;
+        std::string str = "/usr/bin/open " + output;
+        popen(str.c_str(), "r");
+        
+#endif // _WINDOWS
+
+    }
+
+    int Utils::GetUnusedLocalPort()
+    {
+        sockaddr_in client;
+
+        InitSockAddr(&client);
+
+        SOCKET sock = socket(PF_INET, SOCK_STREAM, 0);
+        
+        // Look for a port in the private port range
+        int minPortNumber = 49152;
+        int maxPortNumber = 65535;
+        int defaultPortNumber = 50000;
+        
+        int port = defaultPortNumber;
+        
+        int nTries = 0;
+        int maxTries = 10;
+        srand ((int)time(NULL));
+
+        // Try connect
+        while (nTries++ <= maxTries) 
+        {
+            client.sin_port = htons(port);
+
+            int result = connect(sock, (struct sockaddr *) &client, sizeof(client));
+
+            CLOSE_SOCKET(sock);
+
+            // Connect unsuccessful, port is available.
+            if (result != 0) 
+            {
+                break;  
+            }
+
+            // Retry at a random port number in the valid range
+            port = minPortNumber + rand() % (maxPortNumber - minPortNumber - 1);
+        }
+        
+        if (nTries > maxTries) 
+        {
+            port = -1;
+        }
+        
+        return port;
+    }
+
+    void Utils::InitSockAddr(sockaddr_in* sockAddr)
+    {
+        ASSERT(sockAddr);
+
+        memset(sockAddr, 0, sizeof(struct sockaddr_in));
+        sockAddr->sin_family = AF_INET;
+        char *ipAddressStr = (char*)"127.0.0.1";
+
+#ifdef _MAC
+        sockAddr->sin_addr.s_addr = inet_addr(ipAddressStr);
+#endif
+        
+#ifdef _WINDOWS
+        sockAddr->sin_addr.S_un.S_addr = inet_addr(ipAddressStr);
+#endif
+
+    }
+
+#endif // USE_HTTP_SERVER
 }
 

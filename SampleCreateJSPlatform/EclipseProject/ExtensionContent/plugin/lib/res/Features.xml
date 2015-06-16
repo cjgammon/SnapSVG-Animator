@@ -48,7 +48,7 @@
 		<Property name="LetterSpacing" default="0.0" supported="false"/>
 		<Property name="AutoKern" default="false" supported="false"/>
 		<Property name="AntiAlias" default="DeviceFonts" supported="false"/>
-		<Property name="Selectable" default="false" supported="false"/>
+		<Property name="Selectable" default="true" supported="false"/>
 		<Property name="RenderAsHtml" default="false" supported="false"/>
 		<Property name="Border" default="false" supported="false"/>
 		<Property name="SuperScript" default="false" supported="false"/>

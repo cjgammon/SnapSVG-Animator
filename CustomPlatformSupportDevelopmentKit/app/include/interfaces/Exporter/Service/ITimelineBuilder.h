@@ -113,6 +113,20 @@ namespace Exporter
             DOM::Utils::MATRIX2D    matrix;
         };
         
+        /**
+         * @struct DISPLAY_OBJECT_INFO_2
+         *
+         * @brief  This structure contains placement information about a display object
+         *         on the stage, that are not present in DISPLAY_OBJECT_INFO
+         *         Given a DISPLAY_OBJECT_INFO pointer pDisplayObjectInfo, access the fileds
+         *         in this structure only if the condition
+         *         (pDisplayObjectInfo->structSize >= sizeof(DISPLAY_OBJECT_INFO_2)) is true.
+         */
+        struct DISPLAY_OBJECT_INFO_2 : public DISPLAY_OBJECT_INFO
+        {
+            /** The bounds of the display object in its parent's co-ordinate space */
+            DOM::Utils::RECT bounds;
+        };
 
         /**
          * @typedef SHAPE_INFO
@@ -157,6 +171,15 @@ namespace Exporter
          *          on the stage.
          */
         typedef DISPLAY_OBJECT_INFO GRAPHIC_INFO;
+
+        /**
+         * @typedef CLASSIC_TEXT_INFO_2
+         *
+         * @brief   This structure contains a few more placement information about a 
+         *          text object in addition to containing all the the nformation that 
+         *          is present in the structure CLASSIC_TEXT_INFO.
+         */
+        typedef DISPLAY_OBJECT_INFO_2 CLASSIC_TEXT_INFO_2;
     }
 }
 
