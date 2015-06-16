@@ -187,7 +187,6 @@ define(function (require) {
 			mask = that.el.select('[mask="' + url + '"]');
 
 			if (!fill && !mask) {
-				console.log('remove');
 				defs[j].remove();
 			}
 		}
@@ -448,7 +447,9 @@ define(function (require) {
 			for (i = parseInt(this.m_maskTill); i > parseInt(this.m_objectID); i -= 1) {
 				//clone = def.clone(); //issue with reusing def ??
 				masked = parentMC.select('[token="' + i + '"]');
-				masked.attr({mask: def});
+				if (masked) {
+					masked.attr({mask: def});
+				}
 			}
 			
 		}
