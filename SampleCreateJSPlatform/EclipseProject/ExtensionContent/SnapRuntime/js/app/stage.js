@@ -56,7 +56,8 @@ define(function (require) {
 	    	// Iterate through all the elements in the display list (maintained by CreateJS) and 
 		    // check if same instance exists in the first frame 
 
-		    var children = this.root.selectAll('*');
+		    //TODO:: this should be something like m_children?
+		    var children = this.el.selectAll('*');
 
 		    for (var i = 0; i < children.length; i += 1) {
 		    	if (children[i].parent().id == this.el.id) {
@@ -187,6 +188,7 @@ define(function (require) {
 			mask = that.el.select('[mask="' + url + '"]');
 
 			if (!fill && !mask) {
+				console.log('remove');
 				defs[j].remove();
 			}
 		}
