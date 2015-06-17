@@ -382,6 +382,12 @@ define(function (require) {
 					children[i].remove();
 				}
 			}
+
+			for (i = 0; i < stage.m_children.length; i += 1) {
+				if (stage.m_children[i].el.attr('token') == this.m_objectID) {
+					stage.m_children.splice(i, 1);
+				}
+			}
 		}	
 	}
 
@@ -447,9 +453,7 @@ define(function (require) {
 			for (i = parseInt(this.m_maskTill); i > parseInt(this.m_objectID); i -= 1) {
 				//clone = def.clone(); //issue with reusing def ??
 				masked = parentMC.select('[token="' + i + '"]');
-				if (masked) {
-					masked.attr({mask: def});
-				}
+				masked.attr({mask: def});
 			}
 			
 		}
