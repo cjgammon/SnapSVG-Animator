@@ -54,6 +54,18 @@ define(function (require) {
         return false;
     };
 
+    MovieClip.prototype.getChildIndexById = function (id) {
+        var i;
+
+        for (i = 0; i < this.children.length; i += 1) {
+            if (this.children[i].id == id) {
+                return i;
+            }
+        }
+
+        return false;
+    };
+
     MovieClip.prototype.removeChildById = function (id) {
         var i;
 
@@ -106,7 +118,7 @@ define(function (require) {
                 }
 
                 if (found === false) {
-                    command = new RemoveObjectCommand(child.id);
+                    command = new CMD.RemoveObjectCommand(child.id);
                     commandList.push(command);
                 }
             }

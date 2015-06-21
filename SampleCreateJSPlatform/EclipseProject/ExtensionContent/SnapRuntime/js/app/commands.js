@@ -18,6 +18,7 @@ define(function (require) {
         //Execute function for PlaceObjectCommand
         CMD.PlaceObjectCommand.prototype.execute = function(parentMC, resourceManager)
         {
+            console.log('place object', this.m_objectID);
             
             var shape = resourceManager.getShape(this.m_charID),
                 bitmap = resourceManager.getBitmap(this.m_charID),
@@ -82,8 +83,9 @@ define(function (require) {
         };
 
         //Execute function for UpdateObjectCommand
-        CMD.UpdateObjectCommand.prototype.execute = function(timelineAnimator, resourceManager)
+        CMD.UpdateObjectCommand.prototype.execute = function(parentMC, resourceManager)
         {
+            console.log('update object', this.m_objectID, this.m_placeAfter);
             /*
             var parentMC = timelineAnimator.s;
 
@@ -126,6 +128,7 @@ define(function (require) {
         {
             var child;
 
+            console.log('removeobject', this.m_objectID);
             child = parentMC.getChildById(this.m_objectID);
             child.el.remove();
             parentMC.removeChildById(this.m_objectID);
@@ -157,33 +160,33 @@ define(function (require) {
 
         CMD.UpdateMaskCommand.prototype.execute = function (parentMC, resourceManager) 
         {
-            /*
-            var parentMC = stage.el,
-                root = stage.root,
+            var maskConetent,
                 mask,
-                maskContent,
-                masked,
-                i,
                 def,
-                clone;
-            
-            if(parentMC != undefined)
-            {
-                maskContent = parentMC.select('[token="' + this.m_objectID + '"]');
-                mask = root.mask();
-                mask.attr('mask-type', 'alpha');
-                mask.append(maskContent);
+                i;
 
-                def = mask.toDefs();
-                
-                for (i = parseInt(this.m_maskTill); i > parseInt(this.m_objectID); i -= 1) {
-                    //clone = def.clone(); //issue with reusing def ??
-                    masked = parentMC.select('[token="' + i + '"]');
-                    masked.attr({mask: def});
+            console.log('updatemask');
+
+            maskContent = parentMC.getChildById(this.m_objectID);
+            mask = parentMC.el.mask();
+            mask.attr('mask-type', 'alpha');
+
+            def = mask.toDefs();
+            def.append(maskContent.el);
+
+            pos = parentMC.getChildIndexById(this.m_objectID);
+
+            for (i = pos; i < parentMC.children.length; i += 1) {
+                masked = parentMC.children[i];
+
+                console.log(i, parseInt(masked.id), parseInt(this.m_maskTill));
+
+                if (parseInt(masked.id) <= parseInt(this.m_maskTill)) {
+                    masked.el.attr({mask: def});
+                } else {
+                    break;
                 }
-                
             }
-            */
         };
 
         CMD.UpdateColorTransformCommand = function (objectID, colorMatrix)
