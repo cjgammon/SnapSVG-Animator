@@ -155,8 +155,9 @@ define(function (require) {
             this.m_maskTill = maskTill;
         };
 
-        CMD.UpdateMaskCommand.prototype.execute = function (stage, resourceManager) 
+        CMD.UpdateMaskCommand.prototype.execute = function (parentMC, resourceManager) 
         {
+            /*
             var parentMC = stage.el,
                 root = stage.root,
                 mask,
@@ -182,6 +183,7 @@ define(function (require) {
                 }
                 
             }
+            */
         };
 
         CMD.UpdateColorTransformCommand = function (objectID, colorMatrix)

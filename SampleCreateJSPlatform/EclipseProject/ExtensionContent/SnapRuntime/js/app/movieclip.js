@@ -35,10 +35,8 @@ define(function (require) {
 		}
 
         if (placeAfter && parseInt(placeAfter) !== 0) {
-            afterMC = this.getChildById(placeAfter);
-            if (afterMC) {
-                afterMC.el.before(this.el);
-            }
+            afterMC = parentMC.getChildById(parseInt(placeAfter));
+            afterMC.el.before(this.el);
         } else {
             parentEl.add(this.el); //TODO:: handle after
         }
@@ -65,9 +63,7 @@ define(function (require) {
                 return;
             }
         }
-
     };
-
 
     MovieClip.prototype.loop = function (commandList) {
         var frame,
@@ -121,9 +117,10 @@ define(function (require) {
         var commandList = [],
             frame,
             i,
+            c,
             found,
             commands,
-            c,
+            command,
             cmdData,
             type;
 
@@ -135,6 +132,7 @@ define(function (require) {
             }
 		}
 
+        //check to handle looping of movieclip
         this.loop(commandList);
 
 		frame = this.m_timeline.Frame[this.m_currentFrameNo];
@@ -196,13 +194,11 @@ define(function (require) {
 	
 		for (i = 0; i < commandList.length ; i++)
 		{
-	  		//Execute it
 			if (commandList[i] !== undefined) {
 			     commandList[i].execute(this, resourceManager);
 			}
 		}
 
-		//Increment the current frame no
 		this.m_currentFrameNo++;
 
 		//this.cleanupUnusedDefs(); //perf hit
