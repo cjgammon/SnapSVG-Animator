@@ -19,7 +19,8 @@ define(function (require) {
     }
 
     Shape = function (parentMC,resourceManager,charId,ObjectId,placeAfter,transform) {
-        var instance = this;
+        var instance = this,
+            parentEl = parentMC.el;
 
         this.create = function () {
             var j,
@@ -46,6 +47,14 @@ define(function (require) {
             transformArray = transform.split(",");
 			transformMat = new Snap.Matrix(transformArray[0],transformArray[1],transformArray[2],transformArray[3],transformArray[4],transformArray[5]);
 			instance.el.transform(transformMat);
+
+
+            if (placeAfter && parseInt(placeAfter) !== 0) {
+                afterMC = parentMC.getChildById(parseInt(placeAfter));
+                afterMC.el.before(instance.el);
+            } else {
+                parentEl.add(instance.el); //TODO:: handle after
+            }
         };
 
         this.addPath = function (j, k) {
@@ -61,6 +70,8 @@ define(function (require) {
 
             if(resourceManager.m_data.DOMDocument.Shape[j].path[k].pathType == "Fill") {
                 this.addFill(shape1, j, k);
+            } else if(resourceManager.m_data.DOMDocument.Shape[j].path[k].pathType == "Stroke") {
+                this.addStroke(shape1, j, k);
             }
         };
 
@@ -86,8 +97,55 @@ define(function (require) {
 
         };
 
-        this.getFillGradient = function () {
+        this.getFillGradient = function (grad, type, shape1) {
+            var _x,
+                _y,
+                _x2,
+                _y2,
+                _fx,
+                _fy,
+                gradientString,
+                gradientFill,
+                i,
+                rgb;
 
+            if (type == 'linear') {
+                _x = parseFloat(grad.x1);
+                _y = parseFloat(grad.y1);
+                _x2 = parseFloat(grad.x2);
+                _y2 = parseFloat(grad.y2);
+                gradientString = "L(";
+                gradientString += _x + ", ";
+                gradientString += _y + ", ";
+                gradientString += _x2 + ", ";
+                gradientString += _y2 + ")";
+            } else {
+                _x = (shape1.getBBox().x + shape1.getBBox().width / 2) + grad.cx / 10;
+                _y = (shape1.getBBox().y + shape1.getBBox().height / 2) + grad.cy / 10;
+                _fx = (shape1.getBBox().x + shape1.getBBox().width / 2) + parseFloat(grad.fx);
+                _fy = (shape1.getBBox().y + shape1.getBBox().height / 2) + parseFloat(grad.fy);
+                
+                gradientString = "R("; 
+                gradientString += _x + ", ";
+                gradientString += _y + ", ";
+                gradientString += grad.r + ", ";
+                gradientString += _fx + ", ";
+                gradientString += _fy + ")";
+            }
+            
+            for (i = 0; i < grad.stop.length; i += 1)
+            {	
+                rgb = hexToRgb(grad.stop[i].stopColor);
+                gradientString += 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',' + grad.stop[i].stopOpacity + ')';		
+                gradientString += ":";
+                gradientString += grad.stop[i].offset;
+                if (i !== grad.stop.length-1) {
+                    gradientString += "-";
+                }		
+            }
+
+            gradientFill = parentMC.el.paper.gradient(gradientString);
+            return gradientFill;
         };
 
         this.addFill = function (shape1, k, j) {
@@ -101,17 +159,40 @@ define(function (require) {
                 
             }
             if(resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient)
-            {				
-                fillGradient = instance.getFillGradient();
+            {	
+                grad = resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient;
+                fillGradient = instance.getFillGradient(grad, 'linear');
                 shape1.attr({fill: fillGradient});
             }
-
             if(resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient)
             {	
-                fillGradient = instance.getFillGradient();
+                grad = resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient;
+                fillGradient = instance.getFillGradient(grad, 'radial', shape1);
                 shape1.attr({fill: fillGradient});
             }
 
+        };
+
+        this.addStroke = function (shape1, k, j) {
+            var r,
+                g,
+                b,
+                a,
+                colStr;
+
+            if(resourceManager.m_data.DOMDocument.Shape[k].path[j].color)
+            {
+                clr = resourceManager.m_data.DOMDocument.Shape[k].path[j].color;
+
+                r = parseInt(clr.substring(1, 3), 16);
+                g = parseInt(clr.substring(3, 5), 16);
+                b = parseInt(clr.substring(5, 7), 16);
+                a = resourceManager.m_data.DOMDocument.Shape[k].path[j].colorOpacity;
+
+                colStr = 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
+
+                shape1.attr({stroke: colStr, strokeWidth: resourceManager.m_data.DOMDocument.Shape[k].path[j].strokeWidth});
+            }
         };
 
         this.create();
