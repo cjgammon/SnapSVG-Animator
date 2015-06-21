@@ -1,7 +1,6 @@
 define(function (require) {
 	
-    var Utils,
-        DisplayObject;
+    var Shape;
 
 	function hexToRgb(hex) {
     	var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -12,11 +11,118 @@ define(function (require) {
     	} : null;
 	}
 
-    DisplayObject = function (parentMC) {
-        this.el = parentMC.g();
+    function newPattern(src, j, k) {
+        //var image = s.image(src);
+        //var pattern = image.pattern(0, 0, resourceManager.m_data.DOMDocument.Shape[a].path[b].image.width, resourceManager.m_data.DOMDocument.Shape[a].path[b].image.height);
+        //pattern.attr({x: mat.e, y: mat.f});
+        //shape1.attr({fill: pattern});
+    }
+
+    Shape = function (parentMC,resourceManager,charId,ObjectId,placeAfter,transform) {
+        var instance = this;
+
+        this.create = function () {
+            var j,
+                k,
+                transformArray,
+                transformMat;
+
+            instance.el = parentMC.el.g();
+            instance.id = ObjectId;
+            instance.el.attr({'class': 'shape', 'token': instance.id});
+            instance.children = [];
+
+            for (j = 0; j < resourceManager.m_data.DOMDocument.Shape.length; j++)
+            {
+                if (resourceManager.m_data.DOMDocument.Shape[j].charid == charId) 
+                {
+                    for (k = 0; k < resourceManager.m_data.DOMDocument.Shape[j].path.length; k++)
+                    {
+                        instance.addPath(j, k);   
+                    }
+                }
+            }
+
+            transformArray = transform.split(",");
+			transformMat = new Snap.Matrix(transformArray[0],transformArray[1],transformArray[2],transformArray[3],transformArray[4],transformArray[5]);
+			instance.el.transform(transformMat);
+        };
+
+        this.play = function () {
+
+        };
+
+        this.addPath = function (j, k) {
+            var clr,
+                crlOpacity,
+                shape1,
+                path;
+
+            shape1 = instance.el.path();
+            path = resourceManager.m_data.DOMDocument.Shape[j].path[k].d;
+            shape1.attr({fill: 'transparent'});
+            shape1.attr({d: path});
+
+            if(resourceManager.m_data.DOMDocument.Shape[j].path[k].pathType == "Fill") {
+                this.addFill(shape1, j, k);
+            }
+        };
+
+        this.getFillColor = function (k, j) {
+            var clr,
+                r,
+                g,
+                b,
+                a,
+                colStr;
+
+            clr = resourceManager.m_data.DOMDocument.Shape[k].path[j].color;
+            r = parseInt(clr.substring(1, 3), 16);
+            g = parseInt(clr.substring(3, 5), 16);
+            b = parseInt(clr.substring(5, 7), 16);
+            a = resourceManager.m_data.DOMDocument.Shape[k].path[j].colorOpacity;
+            colStr = 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
+
+            return colStr;
+        };
+
+        this.getFillImage = function () {
+
+        };
+
+        this.getFillGradient = function () {
+
+        };
+
+        this.addFill = function (shape1, k, j) {
+            if(resourceManager.m_data.DOMDocument.Shape[k].path[j].color)
+            {
+                fillColor = instance.getFillColor(k, j);
+                shape1.attr({fill: fillColor});
+            }
+            if(resourceManager.m_data.DOMDocument.Shape[k].path[j].image)
+            { 
+                
+            }
+            if(resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient)
+            {				
+                fillGradient = instance.getFillGradient();
+                shape1.attr({fill: fillGradient});
+            }
+
+            if(resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient)
+            {	
+                fillGradient = instance.getFillGradient();
+                shape1.attr({fill: fillGradient});
+            }
+
+        };
+
+        this.create();
     };
 
-	Utils = {
+    /*
+	Shape = {
 		
 		CreateShape: function (root, s, resourceManager,charId,ObjectId,placeAfter,transform)
 		{
@@ -142,17 +248,15 @@ define(function (require) {
 
 								shape1.attr({stroke: colStr, strokeWidth: resourceManager.m_data.DOMDocument.Shape[k].path[j].strokeWidth});
 							}
-							/*
-							if(resourceManager.m_data.DOMDocument.Shape[k].path[j].image)
-							{ 
-								var patternArray = resourceManager.m_data.DOMDocument.Shape[k].path[j].image.patternTransform.split(",");
-								var p = 0;
-								var mat = new createjs.Matrix2D(patternArray[p],patternArray[p+1],patternArray[p+1],patternArray[p+3],patternArray[p+4],patternArray[p+5]);
-								var image = new Image();
-								image.src = resourceManager.m_data.DOMDocument.Shape[k].path[j].image.bitmapPath;
-								shape1.graphics.beginBitmapStroke(image,"no-repeat").beginStroke().setStrokeStyle(data.DOMDocument.Shape[k].path[j].strokeWidth,resourceManager.m_data.DOMDocument.Shape[k].path[j].strokeLinecap,resourceManager.m_data.DOMDocument.Shape[k].path[j].strokeLinejoin);
-							}
-							*/
+							//if(resourceManager.m_data.DOMDocument.Shape[k].path[j].image)
+							//{ 
+							//	var patternArray = resourceManager.m_data.DOMDocument.Shape[k].path[j].image.patternTransform.split(",");
+							//	var p = 0;
+							//	var mat = new createjs.Matrix2D(patternArray[p],patternArray[p+1],patternArray[p+1],patternArray[p+3],patternArray[p+4],patternArray[p+5]);
+							//	var image = new Image();
+							//	image.src = resourceManager.m_data.DOMDocument.Shape[k].path[j].image.bitmapPath;
+							//	shape1.graphics.beginBitmapStroke(image,"no-repeat").beginStroke().setStrokeStyle(data.DOMDocument.Shape[k].path[j].strokeWidth,resourceManager.m_data.DOMDocument.Shape[k].path[j].strokeLinecap,resourceManager.m_data.DOMDocument.Shape[k].path[j].strokeLinejoin);
+							//}
 						}
 						//var path = resourceManager.m_data.DOMDocument.Shape[k].path[j].d;
 						//shape1.attr({d: path});
@@ -183,129 +287,8 @@ define(function (require) {
 				}
 				
 			}
-		},
-
-		CreateBitmap: function(root, s,resourceManager,charId,ObjectId,placeAfter,transform)
-		{
-			var bmContainer = s.g();
-			bmContainer.attr({token: parseInt(ObjectId)});
-
-			for(var b =0;b<resourceManager.m_data.DOMDocument.Bitmaps.length;b++)
-			{
-				if(resourceManager.m_data.DOMDocument.Bitmaps[b].charid == charId)
-				{
-					var path = resourceManager.m_data.DOMDocument.Bitmaps[b].bitmapPath;
-					var bitmap = s.image(path);
-					bmContainer.add(bitmap);
-				}
-			}
-
-			var transformArray = transform.split(",");
-			var TransformMat = new Snap.Matrix(transformArray[0],transformArray[1],transformArray[2],transformArray[3],transformArray[4],transformArray[5]);
-			bmContainer.transform(TransformMat);
-
-			if(s != undefined)
-			{				
-				if(placeAfter != 0)
-				{				
-					children = s.selectAll('[token="' + placeAfter + '"]');
-					for (i = 0; i < children.length; i += 1) {
-						if (children[i].parent().id == s.id) { //ensure child of current movie clip
-							children[i].before(bmContainer);
-							break;
-						}
-					}	
-				}
-				else
-				{
-					s.add(bmContainer);
-				}		
-				/*		
-				while(parentMC.mode != undefined)
-				{
-					parentMC.getStage();	 
-					parentMC = parentMC.parent;
-				}				 
-
-				parentMC.update();
-				*/
-			}
-			/*
-			else
-			{
-				s.add(bmContainer);	
-				//stage.update();				
-			}
-			*/
-		},
-
-		CreateText: function (root, s,resourceManager,charId,ObjectId,placeAfter,transform)
-		{
-			var textContainer = s.g();
-			textContainer.attr({token: parseInt(ObjectId)});
-			
-			for(var b =0;b<resourceManager.m_data.DOMDocument.Text.length;b++)
-			{
-				if(resourceManager.m_data.DOMDocument.Text[b].charid == charId)
-				{
-					var displayString = resourceManager.m_data.DOMDocument.Text[b].txt;
-					var txt = displayString.replace(/\\r/g,"\r");
-					var fontFamily = resourceManager.m_data.DOMDocument.Text[b].paras[0].textRun[0].style.fontName;
-					var fontStyle = resourceManager.m_data.DOMDocument.Text[b].paras[0].textRun[0].style.fontStyle;
-					var fontSize = resourceManager.m_data.DOMDocument.Text[b].paras[0].textRun[0].style.fontSize;
-					var fontColor = resourceManager.m_data.DOMDocument.Text[b].paras[0].textRun[0].style.fontColor;
-					var textOutput = s.text(0, 0, txt);
-					textOutput.attr({
-						fill: fontColor, 
-						fontFamily: fontFamily, 
-						fontSize: fontSize, 
-						fontStyle: fontStyle
-					});
-					
-					textContainer.add(textOutput);
-				}
-			}
-			
-			var transformArray = transform.split(",");
-			var TransformMat = new Snap.Matrix(transformArray[0],transformArray[1],transformArray[2],transformArray[3],transformArray[4],transformArray[5]);
-			textContainer.transform(TransformMat);
-				
-			if(s != undefined)
-			{				
-				if(placeAfter != 0)
-				{	
-					children = s.selectAll('[token="' + placeAfter + '"]');
-					for (i = 0; i < children.length; i += 1) {
-						if (children[i].parent().id == s.id) { //ensure child of current movie clip
-							children[i].before(textContainer);
-							break;
-						}
-					}	
-				}
-				else
-				{
-					s.add(textContainer);
-				}	
-				/*			
-				while(s.mode != undefined)
-				{
-					parentMC.getStage();	 
-					parentMC = parentMC.parent;
-				}				 
-
-				parentMC.update();
-				*/
-			}
-			/*
-			else
-			{
-				stage.addChildAt(textOutput);	
-				stage.update();				
-			}
-			*/
 		}
-		
-	}
-	
-	return Utils;
+	};
+	*/
+	return Shape;
 });
