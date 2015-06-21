@@ -23,10 +23,7 @@ define(function (require) {
                 bitmap = resourceManager.getBitmap(this.m_charID),
                 text = resourceManager.getText(this.m_charID),
                 movieclipTimeline,
-                movieclip,
-                children,
-                childMC,
-                index;
+                movieclip;
 
             if(shape !== null && shape !== undefined)
             {
@@ -43,30 +40,6 @@ define(function (require) {
             }
             else
             {
-                // Movie clip logic starts here
-                            
-
-                    //Create a  MC
-                    //childMC = parentMC.g();
-                    //childMC.attr({class: 'movieclip', token: this.m_objectID});
-                    
-                    /*
-                    if(this.m_placeAfter !== 0)
-                    {
-                        children = parentMC.selectAll('[token="' + this.m_placeAfter + '"]');
-                        for (i = 0; i < children.length; i += 1) {
-                            if (children[i].parent().id == parentMC.id) { //ensure child of current movie clip
-                                children[i].before(childMC);
-                                break;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        parentMC.add(childMC);
-                    }
-                    */
-
                 movieclipTimeline = resourceManager.getMovieClip(this.m_charID);
                 if(movieclipTimeline)
                 {
@@ -87,31 +60,18 @@ define(function (require) {
         };
 
         //Execute function for PlaceObjectCommand
-        CMD.MoveObjectCommand.prototype.execute = function(stage, resourceManager)
+        CMD.MoveObjectCommand.prototype.execute = function(parentMC, resourceManager)
         {
-            var parentMC,
-                transform,
+            var transform,
                 transformArray,
-                transformMat,
-                children,
-                i;
+                transformMat;
                 
-            parentMC = stage.el;
             transform =  this.m_transform;
             transformArray = transform.split(",");
             transformMat = new Snap.Matrix(transformArray[0],transformArray[1],transformArray[2],transformArray[3],transformArray[4],transformArray[5]);
 
-            if(parentMC != undefined)
-            {
-                children = parentMC.selectAll('[token="' + this.m_objectID + '"]');
-                
-                for (i = 0; i < children.length; i += 1) {
-                    if (children[i].parent().id == parentMC.id) { //ensure child of current movie clip
-                        children[i].transform(transformMat);
-                    }
-                }		
-            }
-            
+            child = parentMC.getChildById(this.m_objectID);
+            child.el.transform(transformMat);
         };
 
         //UpdateObjectCommand Class
@@ -162,54 +122,31 @@ define(function (require) {
         };
 
         //Execute function for RemoveObjectCommand
-        CMD.RemoveObjectCommand.prototype.execute = function(stage, resourceManager)
+        CMD.RemoveObjectCommand.prototype.execute = function(parentMC, resourceManager)
         {
-            var parentMC = stage.el,
-                child;
-            
-            if(parentMC != undefined)
-            {
-                children = parentMC.selectAll('[token="' + this.m_objectID + '"]');
-                
-                for (i = 0; i < children.length; i += 1) {
-                    if (children[i].parent() == parentMC) { //ensure child of current movie clip
-                        children[i].remove();
-                    }
-                }
-            }	
+            var child;
+
+            child = parentMC.getChildById(this.m_objectID);
+            child.el.remove();
+            parentMC.removeChildById(this.m_objectID);
         };
 
         //UpdateVisbilityCommand Class
         CMD.UpdateVisibilityCommand = function(objectID,visibility) 
         {
             this.m_objectID = objectID;	
-            this.m_visibilty = visibility;
+            this.m_visibility = visibility;
         };
 
         //Execute function for UpdateVisbilityCommand
-        CMD.UpdateVisibilityCommand.prototype.execute = function(timelineAnimator, resourceManager)
+        CMD.UpdateVisibilityCommand.prototype.execute = function(parentMC, resourceManager)
         {
-            /*
-            var parentMC = timelineAnimator.m_targetMC;
-            if(parentMC != undefined)
-            {
-                //Remove the targetMC
-                var index,visibleBool;							
-                for(var index=0; index<parentMC.children.length; index++)
-                {
-                    if(parentMC.children[index].id == parseInt(this.m_objectID))
-                    {
-                        if(this.m_visibilty == "true")
-                            visibleBool = true;
-                            else
-                            visibleBool = false;
+            var child,
+                visibleValue;
 
-                        parentMC.getChildAt(index).visible = visibleBool;
-
-                    }				
-                }		
-            }
-            */	
+            child = parentMC.getChildById(this.m_objectID);
+            visibleValue = this.m_visibility == "true" ? "visible" : "hidden";
+            child.el.attr({'visibility': visibleValue});
         };
         
         CMD.UpdateMaskCommand = function (objectID,maskTill) 
@@ -255,14 +192,12 @@ define(function (require) {
 
         CMD.UpdateColorTransformCommand.prototype.execute = function (parentMC, resourceManager) 
         {
-            //var parentEl = parentMC.el,
-                //object;
+            var child,
+                matrix;
 
-            //if (parentMC != undefined) {
-                //object = parentMC.select('[token="' + this.m_objectID + '"]');
-                //matrix = this.m_colorMatrix.split(',', 7);
-                //object.attr({opacity: parseFloat(matrix[6])}); //currently only alpha
-            //}
+            child = parentMC.getChildById(this.m_objectID);
+            matrix = this.m_colorMatrix.split(',', 7);
+            child.el.attr({opacity: parseFloat(matrix[6])}); //currently only alpha
         };
 
     });

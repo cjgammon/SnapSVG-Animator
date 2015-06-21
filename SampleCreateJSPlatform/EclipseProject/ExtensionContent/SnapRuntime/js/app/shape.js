@@ -48,10 +48,6 @@ define(function (require) {
 			instance.el.transform(transformMat);
         };
 
-        this.play = function () {
-
-        };
-
         this.addPath = function (j, k) {
             var clr,
                 crlOpacity,

@@ -59,7 +59,6 @@ define(function (require) {
 		};
 
 		function loop() {
-            console.log('loop');
 
 			instance.movieclip.play(instance.resourceManager);
 
@@ -74,8 +73,6 @@ define(function (require) {
         function traceDisplayList() {
             var debug = document.getElementById('debug'),
                 str = '';
-
-            console.log(debug);
 
             if (!debug) { 
                 debug = document.createElement('div');
@@ -93,11 +90,6 @@ define(function (require) {
             function traceChildren(j, el) {
                 var k, i;
 
-                //for (k = 0; k < j; k += 1) {
-                //    str += '-';
-                //}
-                //str += el.id + ':' + el.children.length + '<br/>';
-
                 for (i = 0; i < el.children.length; i += 1) {
 
                     for (k = 0; k < j; k += 1) {
@@ -109,7 +101,8 @@ define(function (require) {
                 }
             }
          
-            traceChildren(0, instance.movieclip);
+            str += instance.movieclip.id + '<br/>';
+            traceChildren(2, instance.movieclip);
 
             debug.innerHTML = str;
         }

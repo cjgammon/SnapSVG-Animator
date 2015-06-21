@@ -36,7 +36,9 @@ define(function (require) {
 
         if (placeAfter && parseInt(placeAfter) !== 0) {
             afterMC = this.getChildById(placeAfter);
-            afterMC.el.before(this.el);
+            if (afterMC) {
+                afterMC.el.before(this.el);
+            }
         } else {
             parentEl.add(this.el); //TODO:: handle after
         }
@@ -53,6 +55,19 @@ define(function (require) {
 
         return false;
     };
+
+    MovieClip.prototype.removeChildById = function (id) {
+        var i;
+
+        for (i = 0; i < this.children.length; i += 1) {
+            if (this.children[i].id == id) {
+                this.children.splice(i, 1);
+                return;
+            }
+        }
+
+    };
+
 
     MovieClip.prototype.loop = function (commandList) {
         var frame,
@@ -75,38 +90,30 @@ define(function (require) {
 	    	//Get the commands for the first frame
 	    	commands = frame.Command;	
 
-	    	// Iterate through all the elements in the display list (maintained by CreateJS) and 
+	    	// Iterate through all the elements in the display list
 		    // check if same instance exists in the first frame 
+            for (i = 0; i < this.children.length; i += 1) {
 
-		    //children = this.root.selectAll('*');
+                found = false;
+                child = this.children[i];
 
-            /*
-		    for (i = 0; i < children.length; i += 1) {
-		    	if (children[i].parent().id == this.el.id) {
+                for (c = 0; c < commands.length; ++c) {
+                    cmdData = commands[c];
+                    type = cmdData.cmdType;
 
-		    		found = false;
-		        	var elementId = children[i].attr('token');
+                    if (type == "Place") {
+                        if (parseInt(child.id) == parseInt(cmdData.objectId)) {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
 
-		        	for (c = 0; c < commands.length; ++c) {
-			            cmdData = commands[c];
-			            type = cmdData.cmdType;
-
-			            if (type == "Place") {
-			                if (parseInt(elementId) == parseInt(cmdData.objectId)) {
-			                    found = true;
-			                    break;
-			                }
-			            }
-			        }
-
-			        if (found === false) {
-			            command = new RemoveObjectCommand(elementId);
-			            commandList.push(command);
-			        }
-
-		    	}
-		    }
-            */
+                if (found === false) {
+                    command = new RemoveObjectCommand(child.id);
+                    commandList.push(command);
+                }
+            }
 		}
     };
 
@@ -121,9 +128,11 @@ define(function (require) {
             type;
 
         //play movieclips
-		for(i = 0; i < this.children.length; ++i)
+		for(i = 0; i < this.children.length; i += 1)
 		{
-			this.children[i].play(resourceManager);
+            if (this.children[i].play) {
+			    this.children[i].play(resourceManager);
+            }
 		}
 
         this.loop(commandList);
