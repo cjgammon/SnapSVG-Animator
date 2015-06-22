@@ -13,19 +13,17 @@ define(function (require) {
 			timeline,
 			cbk;
 
+        instance.playing = true;
+        instance.debug = false;
+
 		instance.resourceManager = new ResourceManager(data);
 		instance.s = new Snap(w, h);
 		instance.s.attr('id', id);
-        instance.playing = true;
 		create(instance.s);
 
-        /*
-        window.addEventListener('keydown', function (e) {
-            if (e.keyCode == 39) {
-                loop();
-            }
-        });
-        */
+        if (instance.debug) {
+            window.addEventListener('keydown', handleKeyDown);
+        }
 
 		function create(s) {
 			var maintimelineIndex,
@@ -42,12 +40,16 @@ define(function (require) {
 		}
 
 		this.play = function () {
+            instance.playing = true;
+
 			if (cbk === undefined) {
 				cbk = setTimeout(loop, 1000 / fps);
 			}
 		};
 
 		this.pause = function () {
+            instance.playing = false;
+
 			if(cbk !== undefined) 
 			{
 				clearTimeout(cbk);
@@ -69,9 +71,21 @@ define(function (require) {
                 cbk = setTimeout(loop, 1000 / fps);
             }
 
-            traceDisplayList();
+            if (instance.debug) {
+                traceDisplayList();
+            }
 		}
 
+        function handleKeyDown(e) {
+            if (e.keyCode == 39) { //right key press
+                loop();
+            }
+        }
+
+        /**
+         * debug output for displaylist
+         *
+         */
         function traceDisplayList() {
             var debug = document.getElementById('debug'),
                 str = '';
