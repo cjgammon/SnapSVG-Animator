@@ -25,6 +25,11 @@ define(function (require) {
 		this.m_frameCount = this.m_timeline.Frame.length;
 
 		this.children = [];
+        this.isMask = false;
+        this.isMasked = false;
+        this.mask = null;
+        this.maskElement = null;
+        this.maskTill = null;
 
 		if(this.transform !== undefined) 
 		{
@@ -75,6 +80,52 @@ define(function (require) {
                 return;
             }
         }
+    };
+
+    MovieClip.prototype.swapChildIndex = function (id, placeAfter) {
+        var i,
+            child;
+
+        for (i = 0; i < this.children.length; i += 1) {
+            if (this.children[i].id == id) {
+                child = this.children.splice(i, 1);
+                break;
+            }
+        }
+
+        for (i = 0; i < this.children.length; i += 1) {
+            if (this.children[i].id == placeAfter) {
+                this.children.splice(i + 1, 0, child[0]);
+                break;
+            }
+        }
+    };
+
+    MovieClip.prototype.insertAtIndex = function (child, placeAfter) {
+        var i;
+
+        if (parseInt(placeAfter) === 0) {
+            this.children.push(child);
+        }
+
+        for (i = 0; i < this.children.length; i += 1) {
+            if (this.children[i].id == placeAfter) {
+                this.children.splice(i + 1, 0, child);
+                break;
+            }
+        }
+    };
+
+    MovieClip.prototype.containsMask = function () {
+        var i;
+
+        for (i = 0; i < this.children.length; i += 1) {
+            if (this.children[i].isMask) {
+                return true;
+            }
+        }
+
+        return false;
     };
 
     MovieClip.prototype.loop = function (commandList) {
@@ -203,6 +254,11 @@ define(function (require) {
 			}
 
 		}
+
+        if (this.containsMask) {
+            command = new CMD.ApplyMaskCommand();
+            commandList.push(command);
+        }
 	
 		for (i = 0; i < commandList.length ; i++)
 		{

@@ -95,8 +95,17 @@ define(function (require) {
                     for (k = 0; k < j; k += 1) {
                         str += '-';
                     }
-                    str += el.children[i].id + ':' + el.children[i].children.length + '<br/>';
+                    str += el.children[i].id + ':' + el.children[i].children.length;
+                    
+                    if (el.children[i].isMask) {
+                        str += ' (MASK till:' + el.children[i].maskTill + ')'; 
+                    }
 
+                    if (el.children[i].isMasked) {
+                        str += ' (masked by: ' + el.children[i].mask + ')'; 
+                    }
+
+                    str += '<br/>';
                     traceChildren(j + 5, el.children[i]);
                 }
             }

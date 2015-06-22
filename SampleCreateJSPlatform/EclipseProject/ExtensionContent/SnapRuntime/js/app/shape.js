@@ -31,8 +31,14 @@ define(function (require) {
             instance.el = parentMC.el.g();
             instance.id = ObjectId;
             instance.el.attr({'class': 'shape', 'token': instance.id});
-            instance.children = [];
 
+            instance.children = [];
+            instance.isMask = false;
+            instance.isMasked = false;
+            instance.mask = null;
+            instance.maskTill = null;
+
+            console.log('shape', ObjectId);
             for (j = 0; j < resourceManager.m_data.DOMDocument.Shape.length; j++)
             {
                 if (resourceManager.m_data.DOMDocument.Shape[j].charid == charId) 
@@ -48,6 +54,7 @@ define(function (require) {
 			transformMat = new Snap.Matrix(transformArray[0],transformArray[1],transformArray[2],transformArray[3],transformArray[4],transformArray[5]);
 			instance.el.transform(transformMat);
 
+            console.log('four', placeAfter);
 
             if (placeAfter && parseInt(placeAfter) !== 0) {
                 afterMC = parentMC.getChildById(parseInt(placeAfter));
@@ -55,6 +62,7 @@ define(function (require) {
             } else {
                 parentEl.add(instance.el); //TODO:: handle after
             }
+            console.log('five', instance.el);
         };
 
         this.addPath = function (j, k) {

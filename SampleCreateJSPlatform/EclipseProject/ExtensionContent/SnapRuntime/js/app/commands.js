@@ -18,8 +18,6 @@ define(function (require) {
         //Execute function for PlaceObjectCommand
         CMD.PlaceObjectCommand.prototype.execute = function(parentMC, resourceManager)
         {
-            console.log('place object', this.m_objectID);
-            
             var shape = resourceManager.getShape(this.m_charID),
                 bitmap = resourceManager.getBitmap(this.m_charID),
                 text = resourceManager.getText(this.m_charID),
@@ -29,7 +27,7 @@ define(function (require) {
             if(shape !== null && shape !== undefined)
             {
                 shapeObject = new Shape(parentMC, resourceManager, this.m_charID, this.m_objectID, this.m_placeAfter, this.m_transform);
-                parentMC.children.push(shapeObject);
+                parentMC.insertAtIndex(shapeObject, this.m_placeAfter);
             } 
             else if(bitmap !== null && bitmap !== undefined)
             {
@@ -45,7 +43,7 @@ define(function (require) {
                 if(movieclipTimeline)
                 {
                     movieclip = new MovieClip(parentMC, movieclipTimeline, resourceManager, this.m_objectID, this.m_placeAfter, this.m_transform);
-                    parentMC.children.push(movieclip);
+                    parentMC.insertAtIndex(movieclip, this.m_placeAfter);
                     movieclip.play(resourceManager);
                 }
             }
@@ -85,7 +83,7 @@ define(function (require) {
         //Execute function for UpdateObjectCommand
         CMD.UpdateObjectCommand.prototype.execute = function(parentMC, resourceManager)
         {
-            console.log('update object', this.m_objectID, this.m_placeAfter);
+            //parentMC.swapChildIndex(this.m_objectID, this.m_placeAfter);
             /*
             var parentMC = timelineAnimator.s;
 
@@ -168,23 +166,57 @@ define(function (require) {
             console.log('updatemask');
 
             maskContent = parentMC.getChildById(this.m_objectID);
+            maskContent.isMask = true;
+            maskContent.maskTill = this.m_maskTill;
+
             mask = parentMC.el.mask();
             mask.attr('mask-type', 'alpha');
 
+            //use clone to keep element in DOM for placement, just hide
+            clone = maskContent.el.clone();
+            clone.attr({visibility: 'visible'});
+
             def = mask.toDefs();
-            def.append(maskContent.el);
+            def.append(clone);
+            maskContent.maskElement = def;
 
-            pos = parentMC.getChildIndexById(this.m_objectID);
+            maskContent.el.attr({visibility: 'hidden'});
+        };
 
-            for (i = pos; i < parentMC.children.length; i += 1) {
-                masked = parentMC.children[i];
+        CMD.ApplyMaskCommand = function () {
 
-                console.log(i, parseInt(masked.id), parseInt(this.m_maskTill));
+        };
 
-                if (parseInt(masked.id) <= parseInt(this.m_maskTill)) {
-                    masked.el.attr({mask: def});
+        CMD.ApplyMaskCommand.prototype.execute = function (parentMC, resourceManager) {
+            var i,
+                insideMask = false,
+                currentMask = null,
+                currentMaskEl = null,
+                currentTill = null;
+            
+            for (i = 0; i < parentMC.children.length; i += 1) {
+                child = parentMC.children[i];
+
+                if (child.isMask) {
+                    insideMask = true;
+                    currentMask = child;
+                    currentMaskEl = child.maskElement;
+                    currentTill = child.maskTill;
+
                 } else {
-                    break;
+                    if (insideMask) {
+                        //apply mask
+
+                        child.el.attr({mask: currentMaskEl});
+                        child.isMasked = true;
+                        child.mask = currentMask.id;
+
+                        if (child.id == currentTill) {
+                            insideMask = false;
+                            currentMask = null;
+                            currentTill = null;
+                        }
+                    }
                 }
             }
         };
