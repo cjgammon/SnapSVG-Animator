@@ -186,8 +186,6 @@ define(function (require) {
                 img,
                 grad;
 
-            console.log('fill', resourcePath);
-
             if(resourcePath.color)
             {
                 fillColor = instance.getFillColor(resourcePath);

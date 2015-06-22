@@ -4,7 +4,7 @@ define(function (require) {
 	
 	var CMD = {};
     
-    require(['app/shape', 'app/movieclip'], function (Shape, MovieClip) {
+    require(['app/shape', 'app/bitmap', 'app/movieclip'], function (Shape, Bitmap, MovieClip) {
 
         //PlaceObjectCommand Class
         CMD.PlaceObjectCommand = function(charID, objectID, placeAfter, transform) 
@@ -21,6 +21,8 @@ define(function (require) {
             var shape = resourceManager.getShape(this.m_charID),
                 bitmap = resourceManager.getBitmap(this.m_charID),
                 text = resourceManager.getText(this.m_charID),
+                shapeObject,
+                bmpObject,
                 movieclipTimeline,
                 movieclip;
 
@@ -31,7 +33,8 @@ define(function (require) {
             } 
             else if(bitmap !== null && bitmap !== undefined)
             {
-                //Utils.CreateBitmap(root, parentMC, resourceManager, this.m_charID, this.m_objectID, this.m_placeAfter, this.m_transform);
+                bmpObject = new Bitmap(parentMC, resourceManager, this.m_charID, this.m_objectID, this.m_placeAfter, this.m_transform);
+                parentMC.insertAtIndex(bmpObject, this.m_placeAfter);
             }
             else if (text !== null && text !== undefined) 
             {
@@ -54,7 +57,6 @@ define(function (require) {
         CMD.MoveObjectCommand = function(objectID, transform) 
         {
             this.m_objectID = objectID;
-            //this.m_placeAfter = placeAfter;
             this.m_transform = transform;	
         };
 
@@ -126,7 +128,6 @@ define(function (require) {
         {
             var child;
 
-            console.log('removeobject', this.m_objectID);
             child = parentMC.getChildById(this.m_objectID);
             child.el.remove();
             parentMC.removeChildById(this.m_objectID);
