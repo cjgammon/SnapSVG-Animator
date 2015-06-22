@@ -11,11 +11,15 @@ define(function (require) {
     	} : null;
 	}
 
-    function newPattern(src, j, k) {
-        //var image = s.image(src);
-        //var pattern = image.pattern(0, 0, resourceManager.m_data.DOMDocument.Shape[a].path[b].image.width, resourceManager.m_data.DOMDocument.Shape[a].path[b].image.height);
-        //pattern.attr({x: mat.e, y: mat.f});
-        //shape1.attr({fill: pattern});
+    function newPattern(src, resourceImg) {
+        var image,
+            pattern;
+
+        image = s.image(src);
+        pattern = image.pattern(0, 0, resourceImg.width, resourceImg.height);
+        pattern.attr({x: mat.e, y: mat.f});
+
+        return pattern;
     }
 
     Shape = function (parentMC,resourceManager,charId,ObjectId,placeAfter,transform) {
@@ -38,7 +42,6 @@ define(function (require) {
             instance.mask = null;
             instance.maskTill = null;
 
-            console.log('shape', ObjectId);
             for (j = 0; j < resourceManager.m_data.DOMDocument.Shape.length; j++)
             {
                 if (resourceManager.m_data.DOMDocument.Shape[j].charid == charId) 
@@ -54,15 +57,12 @@ define(function (require) {
 			transformMat = new Snap.Matrix(transformArray[0],transformArray[1],transformArray[2],transformArray[3],transformArray[4],transformArray[5]);
 			instance.el.transform(transformMat);
 
-            console.log('four', placeAfter);
-
             if (placeAfter && parseInt(placeAfter) !== 0) {
                 afterMC = parentMC.getChildById(parseInt(placeAfter));
                 afterMC.el.before(instance.el);
             } else {
                 parentEl.add(instance.el); //TODO:: handle after
             }
-            console.log('five', instance.el);
         };
 
         this.addPath = function (j, k) {
@@ -71,19 +71,20 @@ define(function (require) {
                 shape1,
                 path;
 
-            shape1 = instance.el.path();
-            path = resourceManager.m_data.DOMDocument.Shape[j].path[k].d;
-            shape1.attr({fill: 'transparent'});
-            shape1.attr({d: path});
+            shape = instance.el.path();
+            resourcePath = resourceManager.m_data.DOMDocument.Shape[j].path[k];
+            path = resourcePath.d;
+            shape.attr({fill: 'transparent'});
+            shape.attr({d: path});
 
-            if(resourceManager.m_data.DOMDocument.Shape[j].path[k].pathType == "Fill") {
-                this.addFill(shape1, j, k);
-            } else if(resourceManager.m_data.DOMDocument.Shape[j].path[k].pathType == "Stroke") {
-                this.addStroke(shape1, j, k);
+            if(resourcePath.pathType == "Fill") {
+                this.addFill(shape, resourcePath);
+            } else if(resourcePath.pathType == "Stroke") {
+                this.addStroke(shape, resourcePath);
             }
         };
 
-        this.getFillColor = function (k, j) {
+        this.getFillColor = function (resoucePath) {
             var clr,
                 r,
                 g,
@@ -91,18 +92,41 @@ define(function (require) {
                 a,
                 colStr;
 
-            clr = resourceManager.m_data.DOMDocument.Shape[k].path[j].color;
+            clr = resourcePath.color;
             r = parseInt(clr.substring(1, 3), 16);
             g = parseInt(clr.substring(3, 5), 16);
             b = parseInt(clr.substring(5, 7), 16);
-            a = resourceManager.m_data.DOMDocument.Shape[k].path[j].colorOpacity;
+            a = resourcePath.colorOpacity;
             colStr = 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
 
             return colStr;
         };
 
-        this.getFillImage = function () {
+        this.getFillImage = function (resourceImg) {
+            var p = 0,
+                patternArray,
+                mat,
+                src,
+                exists;
 
+            patternArray = resourceImg.patternTransform.split(",");						
+            p = 0;
+            mat = new Snap.Matrix(patternArray[p],patternArray[p+1],patternArray[p+1],patternArray[p+3],patternArray[p+4],patternArray[p+5]);
+            src = resourceImg.bitmapPath;
+            
+            exists = parentMC.el.paper.select('defs pattern image');
+            
+            if (exists) {
+                if (exists.attr('href') == src) {	//check if image href matches as well as other props
+                    fillImage = exists.parent();
+                } else {
+                    fillImage = newPattern(src, resourceImg);
+                }
+            } else {
+                fillImage = newPattern(src, resourceImg);
+            }
+
+            return fillImage;
         };
 
         this.getFillGradient = function (grad, type, shape1) {
@@ -132,7 +156,6 @@ define(function (require) {
                 _y = (shape1.getBBox().y + shape1.getBBox().height / 2) + grad.cy / 10;
                 _fx = (shape1.getBBox().x + shape1.getBBox().width / 2) + parseFloat(grad.fx);
                 _fy = (shape1.getBBox().y + shape1.getBBox().height / 2) + parseFloat(grad.fy);
-                
                 gradientString = "R("; 
                 gradientString += _x + ", ";
                 gradientString += _y + ", ";
@@ -156,50 +179,60 @@ define(function (require) {
             return gradientFill;
         };
 
-        this.addFill = function (shape1, k, j) {
-            if(resourceManager.m_data.DOMDocument.Shape[k].path[j].color)
+        this.addFill = function (shape, resourcePath) {
+            var fillColor,
+                fillImage,
+                fillGradient,
+                img,
+                grad;
+
+            console.log('fill', resourcePath);
+
+            if(resourcePath.color)
             {
-                fillColor = instance.getFillColor(k, j);
-                shape1.attr({fill: fillColor});
+                fillColor = instance.getFillColor(resourcePath);
+                shape.attr({fill: fillColor});
             }
-            if(resourceManager.m_data.DOMDocument.Shape[k].path[j].image)
+            if(resourcePath.image)
             { 
-                
+                img = resourcePath.image;
+                fillImage = instance.getFillImage(img);
+                shape.attr({fill: fillImage});
             }
-            if(resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient)
+            if(resourcePath.linearGradient)
             {	
-                grad = resourceManager.m_data.DOMDocument.Shape[k].path[j].linearGradient;
+                grad = resourcePath.linearGradient;
                 fillGradient = instance.getFillGradient(grad, 'linear');
-                shape1.attr({fill: fillGradient});
+                shape.attr({fill: fillGradient});
             }
-            if(resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient)
+            if(resourcePath.radialGradient)
             {	
-                grad = resourceManager.m_data.DOMDocument.Shape[k].path[j].radialGradient;
-                fillGradient = instance.getFillGradient(grad, 'radial', shape1);
-                shape1.attr({fill: fillGradient});
+                grad = resourcePath.radialGradient;
+                fillGradient = instance.getFillGradient(grad, 'radial', shape);
+                shape.attr({fill: fillGradient});
             }
 
         };
 
-        this.addStroke = function (shape1, k, j) {
+        this.addStroke = function (shape, resourcePath) {
             var r,
                 g,
                 b,
                 a,
                 colStr;
 
-            if(resourceManager.m_data.DOMDocument.Shape[k].path[j].color)
+            if(resourcePath.color)
             {
-                clr = resourceManager.m_data.DOMDocument.Shape[k].path[j].color;
+                clr = resourcePath.color;
 
                 r = parseInt(clr.substring(1, 3), 16);
                 g = parseInt(clr.substring(3, 5), 16);
                 b = parseInt(clr.substring(5, 7), 16);
-                a = resourceManager.m_data.DOMDocument.Shape[k].path[j].colorOpacity;
+                a = resourcePath.colorOpacity;
 
                 colStr = 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
 
-                shape1.attr({stroke: colStr, strokeWidth: resourceManager.m_data.DOMDocument.Shape[k].path[j].strokeWidth});
+                shape.attr({stroke: colStr, strokeWidth: resourcePath.strokeWidth});
             }
         };
 

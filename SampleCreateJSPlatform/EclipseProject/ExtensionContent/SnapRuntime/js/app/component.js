@@ -16,14 +16,16 @@ define(function (require) {
 		instance.resourceManager = new ResourceManager(data);
 		instance.s = new Snap(w, h);
 		instance.s.attr('id', id);
-        instance.playing = false;
+        instance.playing = true;
 		create(instance.s);
 
+        /*
         window.addEventListener('keydown', function (e) {
             if (e.keyCode == 39) {
                 loop();
             }
         });
+        */
 
 		function create(s) {
 			var maintimelineIndex,

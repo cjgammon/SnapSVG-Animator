@@ -31,6 +31,8 @@ define(function (require) {
         this.maskElement = null;
         this.maskTill = null;
 
+        console.log('mc', objectID);
+
 		if(this.transform !== undefined) 
 		{
 			transformData = this.transform;
@@ -39,11 +41,12 @@ define(function (require) {
 			this.el.transform(transformMat);
 		}
 
+        console.log(parentMC.id, parentMC.children, placeAfter);
         if (placeAfter && parseInt(placeAfter) !== 0) {
             afterMC = parentMC.getChildById(parseInt(placeAfter));
             afterMC.el.before(this.el);
         } else {
-            parentEl.add(this.el); //TODO:: handle after
+            parentEl.add(this.el);         
         }
 	};
 
