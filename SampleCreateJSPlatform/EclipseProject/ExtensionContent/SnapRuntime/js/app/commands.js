@@ -188,12 +188,16 @@ define(function (require) {
 
         };
 
+        /**
+         * create group for mask and add masked content
+         */
         CMD.ApplyMaskCommand.prototype.execute = function (parentMC, resourceManager) {
             var i,
                 insideMask = false,
                 currentMask = null,
                 currentMaskEl = null,
-                currentTill = null;
+                currentTill = null,
+                currentMaskGroup;
             
             for (i = 0; i < parentMC.children.length; i += 1) {
                 child = parentMC.children[i];
@@ -203,12 +207,17 @@ define(function (require) {
                     currentMask = child;
                     currentMaskEl = child.maskElement;
                     currentTill = child.maskTill;
+                    currentMaskGroup = parentMC.el.g();
+                    currentMaskGroup.attr({'class': 'maskGroup'});
+                    child.el.after(currentMaskGroup);
+                    currentMaskGroup.attr({mask: currentMaskEl});
+
+                    //TODO:: add group to pool of items to remove
 
                 } else {
                     if (insideMask) {
-                        //apply mask
 
-                        child.el.attr({mask: currentMaskEl});
+                        currentMaskGroup.prepend(child.el);
                         child.isMasked = true;
                         child.mask = currentMask.id;
 
