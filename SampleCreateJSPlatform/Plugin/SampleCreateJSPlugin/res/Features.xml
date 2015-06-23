@@ -22,7 +22,7 @@
 			<Value name="NoFill" supported="true"/>
 			<Value name="SolidFill" supported="true"/>
 			<Value name="LinearGradientFill" supported="true"/>
-			<Value name="RadialGradientFill" supported="false"/>
+			<Value name="RadialGradientFill" supported="true"/>
 			<Value name="BitmapFill" supported="true"/>
 		</Property>
 		<Property name="GradientFlow" default="Extend" supported="true">
@@ -32,7 +32,7 @@
 		</Property>
 		<Property name="LinearRGB" default="false" supported="true"/>
 	</Feature>
-	<Feature name="Text" supported="true">
+	<Feature name="Text" supported="false">
 		<Property name="TextType" default="DynamicText" supported="true">
 			<Value name="StaticText" supported="false"/>
 			<Value name="DynamicText" supported="true"/>
