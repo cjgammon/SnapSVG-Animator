@@ -13,7 +13,6 @@ define(function (require) {
 			timeline,
 			cbk;
 
-        instance.playing = true;
         instance.debug = false;
 
 		instance.resourceManager = new ResourceManager(data);

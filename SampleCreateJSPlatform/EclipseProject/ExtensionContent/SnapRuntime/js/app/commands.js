@@ -18,6 +18,7 @@ define(function (require) {
         //Execute function for PlaceObjectCommand
         CMD.PlaceObjectCommand.prototype.execute = function(parentMC, resourceManager)
         {
+            //console.log('place', this.m_objectID, this.m_placeAfter);
             var shape = resourceManager.getShape(this.m_charID),
                 bitmap = resourceManager.getBitmap(this.m_charID),
                 text = resourceManager.getText(this.m_charID),
@@ -85,6 +86,7 @@ define(function (require) {
         //Execute function for UpdateObjectCommand
         CMD.UpdateObjectCommand.prototype.execute = function(parentMC, resourceManager)
         {
+            //console.log('update', this.m_objectID, this.m_placeAfter);
             //parentMC.swapChildIndex(this.m_objectID, this.m_placeAfter);
             /*
             var parentMC = timelineAnimator.s;
@@ -159,12 +161,12 @@ define(function (require) {
 
         CMD.UpdateMaskCommand.prototype.execute = function (parentMC, resourceManager) 
         {
+            //console.log('updatemask', this.m_objectID, this.m_maskTill);
+
             var maskConetent,
                 mask,
                 def,
                 i;
-
-            console.log('updatemask');
 
             maskContent = parentMC.getChildById(this.m_objectID);
             maskContent.isMask = true;
@@ -203,6 +205,7 @@ define(function (require) {
                 child = parentMC.children[i];
 
                 if (child.isMask) {
+
                     insideMask = true;
                     currentMask = child;
                     currentMaskEl = child.maskElement;
@@ -212,9 +215,13 @@ define(function (require) {
                     child.el.after(currentMaskGroup);
                     currentMaskGroup.attr({mask: currentMaskEl});
 
+                    if (child.id == child.maskTill) {
+                        insideMask = false;
+                    }
                     //TODO:: add group to pool of items to remove
 
                 } else {
+
                     if (insideMask) {
 
                         currentMaskGroup.prepend(child.el);

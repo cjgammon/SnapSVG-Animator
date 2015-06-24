@@ -105,7 +105,7 @@ define(function (require) {
         var i;
 
         if (parseInt(placeAfter) === 0) {
-            this.children.push(child);
+            this.children.unshift(child);
         }
 
         for (i = 0; i < this.children.length; i += 1) {
