@@ -66,45 +66,12 @@ function setUI(uiState)
 	{
 		document.getElementById("of").value = uiState.data.out_file;
 		
-		if(uiState.data["SWF.PublishSettings.EnableDeblockingFilter"] == "true")
-		{
-			document.getElementById("myCheck1").checked = true;
-		}else
-		{
-			document.getElementById("myCheck1").checked = false;
-		}
-		
-		if(uiState.data["SWF.PublishSettings.EnableMovieCompression"] == "true")
-		{
-			document.getElementById("myCheck2").checked = true;
-		}else
-		{
-			document.getElementById("myCheck2").checked = false;
-		}
-		
 		if(uiState.data["PublishSettings.IncludeInvisibleLayer"] == "true")
 		{
 			document.getElementById("myCheck3").checked = true;
 		}else
 		{
 			document.getElementById("myCheck3").checked = false;
-		}
-		
-		if(uiState.data["SWF.PublishSettings.EnableSizeReport"] == "true")
-		{
-			document.getElementById("myCheck4").checked = true;
-		}else
-		{
-			document.getElementById("myCheck4").checked = false;
-		}
-		
-		if(uiState.data["SWF.PublishSettings.EnableOmitTrace"] == "true")
-		{
-			document.getElementById("myCheck5").checked = true;
-			
-		}else
-		{
-			document.getElementById("myCheck5").checked = false;
 		}
 	}
 }
@@ -162,7 +129,7 @@ function serializeUI()
 	event.scope = "APPLICATION";
 	event.type = "com.adobe.events.flash.extension.savestate";
     event.data = JSON.stringify(pubSettings);
-	event.extensionId = "com.example.SamplePlugin.PublishSettings";
+	event.extensionId = "com.example.SnapPlugin.PublishSettings";
 	csInterface.dispatchEvent(event);
 	
 	
@@ -186,7 +153,7 @@ function onLoaded() {
 	event.scope = "APPLICATION";
 	event.type = "com.adobe.events.flash.extensionLoaded";
 	event.data = "Test Event";
-	event.extensionId = "com.example.SamplePlugin.PublishSettings";
+	event.extensionId = "com.example.SnapPlugin.PublishSettings";
 	csInterface.dispatchEvent(event);
 }
     
