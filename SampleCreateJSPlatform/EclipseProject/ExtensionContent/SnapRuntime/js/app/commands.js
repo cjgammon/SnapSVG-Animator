@@ -176,7 +176,7 @@ define(function (require) {
 
         CMD.UpdateMaskCommand.prototype.execute = function (parentMC, resourceManager) 
         {
-            console.log('updatemask', this.m_objectID, this.m_maskTill);
+            //console.log('updatemask', this.m_objectID, this.m_maskTill);
 
             var maskConetent,
                 mask,
