@@ -31,6 +31,7 @@ define(function (require) {
         this.mask = null;
         this.maskElement = null;
         this.maskTill = null;
+        this.loops = true;
 
 		if(this.transform !== undefined) 
 		{
@@ -138,43 +139,41 @@ define(function (require) {
             cmData,
             type;
 
-        if(this.m_currentFrameNo == this.m_frameCount) {
-			this.m_currentFrameNo = 0;
+        this.m_currentFrameNo = 0;
 
-	    	frame = this.m_timeline.Frame[this.m_currentFrameNo];	
+        frame = this.m_timeline.Frame[this.m_currentFrameNo];	
 
-	    	if (!frame) {
-	    		return;
-	    	}
+        if (!frame) {
+            return;
+        }
 
-	    	//Get the commands for the first frame
-	    	commands = frame.Command;	
+        //Get the commands for the first frame
+        commands = frame.Command;	
 
-	    	// Iterate through all the elements in the display list
-		    // check if same instance exists in the first frame 
-            for (i = 0; i < this.children.length; i += 1) {
+        // Iterate through all the elements in the display list
+        // check if same instance exists in the first frame 
+        for (i = 0; i < this.children.length; i += 1) {
 
-                found = false;
-                child = this.children[i];
+            found = false;
+            child = this.children[i];
 
-                for (c = 0; c < commands.length; ++c) {
-                    cmdData = commands[c];
-                    type = cmdData.cmdType;
+            for (c = 0; c < commands.length; ++c) {
+                cmdData = commands[c];
+                type = cmdData.cmdType;
 
-                    if (type == "Place") {
-                        if (parseInt(child.id) == parseInt(cmdData.objectId)) {
-                            found = true;
-                            break;
-                        }
+                if (type == "Place") {
+                    if (parseInt(child.id) == parseInt(cmdData.objectId)) {
+                        found = true;
+                        break;
                     }
                 }
-
-                if (found === false) {
-                    command = new CMD.RemoveObjectCommand(child.id);
-                    commandList.push(command);
-                }
             }
-		}
+
+            if (found === false) {
+                command = new CMD.RemoveObjectCommand(child.id);
+                commandList.push(command);
+            }
+        }
     };
 
 	MovieClip.prototype.play = function (resourceManager) {
@@ -197,7 +196,13 @@ define(function (require) {
 		}
 
         //check to handle looping of movieclip
-        this.loop(commandList);
+        if(this.m_currentFrameNo == this.m_frameCount) 
+        {
+            if (!this.loops) {
+                return;
+            }
+            this.loop(commandList);
+        }
 
 		frame = this.m_timeline.Frame[this.m_currentFrameNo];
 	  	if (!frame) {

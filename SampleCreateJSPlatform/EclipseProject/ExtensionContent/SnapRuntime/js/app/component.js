@@ -61,6 +61,10 @@ define(function (require) {
 			reset();
 		};
 
+        this.setLoop = function (l) {
+            instance.movieclip.loops = l;
+        };
+
 		function loop() {
 
 			instance.movieclip.play(instance.resourceManager);
