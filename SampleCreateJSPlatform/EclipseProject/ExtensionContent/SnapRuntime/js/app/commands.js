@@ -4,7 +4,7 @@ define(function (require) {
 	
 	var CMD = {};
     
-    require(['app/shape', 'app/bitmap', 'app/movieclip'], function (Shape, Bitmap, MovieClip) {
+    require(['app/shape', 'app/bitmap', 'app/movieclip', 'app/garbagePool'], function (Shape, Bitmap, MovieClip, gp) {
 
         //PlaceObjectCommand Class
         CMD.PlaceObjectCommand = function(charID, objectID, placeAfter, transform) 
@@ -19,6 +19,7 @@ define(function (require) {
         CMD.PlaceObjectCommand.prototype.execute = function(parentMC, resourceManager)
         {
             //console.log('place', this.m_objectID, this.m_placeAfter);
+
             var shape = resourceManager.getShape(this.m_charID),
                 bitmap = resourceManager.getBitmap(this.m_charID),
                 text = resourceManager.getText(this.m_charID),
@@ -64,6 +65,8 @@ define(function (require) {
         //Execute function for PlaceObjectCommand
         CMD.MoveObjectCommand.prototype.execute = function(parentMC, resourceManager)
         {
+            //console.log('move', this.m_objectID);
+
             var transform,
                 transformArray,
                 transformMat;
@@ -159,9 +162,21 @@ define(function (require) {
             this.m_maskTill = maskTill;
         };
 
+        function updateMaskContent(parentMC, child) {
+            var def = child.maskElement,
+                orig = parentMC.getChildById(child.id);
+
+            def.clear();
+
+            clone = orig.el.clone();
+            clone.attr({visibility: 'visible'});
+
+            def.append(clone);
+        }
+
         CMD.UpdateMaskCommand.prototype.execute = function (parentMC, resourceManager) 
         {
-            //console.log('updatemask', this.m_objectID, this.m_maskTill);
+            console.log('updatemask', this.m_objectID, this.m_maskTill);
 
             var maskConetent,
                 mask,
@@ -206,6 +221,8 @@ define(function (require) {
 
                 if (child.isMask) {
 
+                    updateMaskContent(parentMC, child); //mask needs to update
+
                     insideMask = true;
                     currentMask = child;
                     currentMaskEl = child.maskElement;
@@ -215,10 +232,12 @@ define(function (require) {
                     child.el.after(currentMaskGroup);
                     currentMaskGroup.attr({mask: currentMaskEl});
 
+                    gp.addEmpty(currentMaskGroup);
+                    gp.addRef(currentMaskEl, [currentMaskGroup]);
+
                     if (child.id == child.maskTill) {
                         insideMask = false;
                     }
-                    //TODO:: add group to pool of items to remove
 
                 } else {
 

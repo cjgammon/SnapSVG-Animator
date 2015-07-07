@@ -3,7 +3,8 @@
 define(function (require) {
 	
 	var MovieClip,
-		CMD = require('app/commands');
+		CMD = require('app/commands'),
+        GP = require('app/garbagePool');
 	
 	MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, placeAfter, transform) {
 		var i,
@@ -269,7 +270,7 @@ define(function (require) {
 
 		this.m_currentFrameNo++;
 
-		//this.cleanupUnusedDefs(); //perf hit
+        GP.purge();
 	};
 	
 	/**
