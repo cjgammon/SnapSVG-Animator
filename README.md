@@ -1,17 +1,28 @@
-Snap SVG Platform Plugin for Flash CC
-=====================================
+Snap.svg Animator
+=================
 
-This is a Custom Platform Plugin for Flash CC exporting animated content to SVG using the Snap.svg javascript library to render content.
+This is a Plugin for Flash CC exporting animated SVG using the Snap.svg javascript library to render content.
 
-This is an early stage **proof of concept**.
+This is in **active development**.
 
 ##Install
-Open the SnapPlatform.zxp file found in the SampleCreateJSPlatform/EclipseProject directory. 
-This should launch Adobe Extensions Manager. Follow instructions to install the plugin. Then proceed to create 
-a SnapPlatform project and test/publish as usual.
+There are two ways to install the plug-in.
 
-More detailed instructions can be found here:
-https://helpx.adobe.com/flash/using/custom-platform-support.html
+###Command Line Tool
+Download the Adobe Extension Command Line Tool for your platform:
+- [Mac OS](http://www.adobeexchange.com/ExManCmd_mac.zip)
+- [Windows](http://www.adobeexchange.com/ExManCmd_win.zip)
+
+Then run the command:
+- Mac OS: ```./Contents/MacOS/ExManCmd – -install myaddon.zxp```
+- Windows: ```ExManCmd.exe /install myaddon.zxp```
+
+Once it is installed you can create a new 'SnapPlatform' document and publish like normal.
+
+###Adobe Add-ons Portal
+Coming soon..
+
+More instructions can be found [here](https://helpx.adobe.com/flash/using/custom-platform-support.html).
 
 ##Instructions
 To read more about building or writing your own Custom Platform Plugins for Flash go here:
