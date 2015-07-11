@@ -4,7 +4,7 @@ define(function (require) {
 	
 	var CMD = {};
     
-    require(['app/shape', 'app/bitmap', 'app/movieclip', 'app/garbagePool'], function (Shape, Bitmap, MovieClip, gp) {
+    require(['app/shape', 'app/bitmap', 'app/text', 'app/movieclip', 'app/garbagePool'], function (Shape, Bitmap, Text, MovieClip, gp) {
 
         //PlaceObjectCommand Class
         CMD.PlaceObjectCommand = function(charID, objectID, placeAfter, transform) 
@@ -23,6 +23,7 @@ define(function (require) {
             var shape = resourceManager.getShape(this.m_charID),
                 bitmap = resourceManager.getBitmap(this.m_charID),
                 text = resourceManager.getText(this.m_charID),
+                textObject,
                 shapeObject,
                 bmpObject,
                 movieclipTimeline,
@@ -40,7 +41,8 @@ define(function (require) {
             }
             else if (text !== null && text !== undefined) 
             {
-                //Utils.CreateText(root, parentMC, resourceManager, this.m_charID, this.m_objectID, this.m_placeAfter, this.m_transform);
+                textObject = new Text(parentMC, resourceManager, this.m_charID, this.m_objectID, this.m_placeAfter, this.m_transform);
+                parentMC.insertAtIndex(textObject, this.m_placeAfter);
             }
             else
             {
@@ -52,7 +54,6 @@ define(function (require) {
                     movieclip.play(resourceManager);
                 }
             }
-
         };
 
         //MoveObjectCommand Class
