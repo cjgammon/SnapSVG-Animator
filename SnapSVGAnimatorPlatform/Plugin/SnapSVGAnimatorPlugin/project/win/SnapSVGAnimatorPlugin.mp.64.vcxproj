@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>SampleCreateJSPlugin</ProjectName>
+    <ProjectName>SnapSVGAnimatorPlugin</ProjectName>
     <ProjectGuid>{4801AE5B-6706-3BBE-42E5-47D686CD8ED4}</ProjectGuid>
-    <RootNamespace>SampleCreateJSPlugin</RootNamespace>
+    <RootNamespace>SnapSVGAnimatorPlugin</RootNamespace>
     <SccLocalPath />
     <SccProjectName />
     <SccProvider />
@@ -61,9 +61,9 @@
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectName)</TargetName>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.dll</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.fcm</TargetExt>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectName)</TargetName>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.dll</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.fcm</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Midl>
@@ -91,7 +91,7 @@
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>DocTypePublisherPlugin_Precomp.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>SnapSVGAnimatorPlugin_Precomp.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)</ObjectFileName>
@@ -101,7 +101,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
-      <ForcedIncludeFiles>DocTypePublisherPlugin_Precomp.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles>SnapSVGAnimatorPlugin_Precomp.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <DisableSpecificWarnings>4355;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
@@ -173,7 +173,7 @@
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>DocTypePublisherPlugin_Precomp.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>SnapSVGAnimatorPlugin_Precomp.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)</ObjectFileName>
@@ -183,7 +183,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
-      <ForcedIncludeFiles>DocTypePublisherPlugin_Precomp.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles>SnapSVGAnimatorPlugin_Precomp.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <DisableSpecificWarnings>4355;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
@@ -228,20 +228,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="..\SampleCreateJSPlugin.mp" />
-    <None Include="..\..\..\..\..\..\..\ext\adobe\dvacore\project\dvaincludes.mp" />
-    <None Include="..\..\..\..\..\..\..\ext\adobe\dvacore\project\dvabase.mp" />
-    <None Include="..\..\..\..\..\..\..\ext\adobe\dvacore\project\dvaproduct.mp" />
-    <None Include="..\..\..\..\..\..\..\ext\adobe\metaproject\config\Flash\product_options.py" />
-    <None Include="..\..\..\..\..\..\..\ext\adobe\dvacore\project\icuincludes.mp" />
-    <None Include="..\..\..\..\..\..\Flash\project\Flashbase.mp" />
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <ResourceCompile Include="SampleCreateJSPlugin_version_64.rc" />
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
     <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONWorker.cpp" />
     <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONValidator.cpp" />
     <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\libjson.cpp" />
@@ -265,20 +251,12 @@
     <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONMemory.cpp" />
     <ClCompile Include="..\..\src\Main.cpp" />
     <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONIterators.cpp" />
-    <ClCompile Include="SampleCreateJSPlugin_mp_precomp_64.cpp">
+    <ClCompile Include="SnapSVGAnimatorPlugin_mp_precomp_64.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\src\Utils.cpp" />
     <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONDebug.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="post_build.64.py">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Outputs)</Outputs>
-    </CustomBuild>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
