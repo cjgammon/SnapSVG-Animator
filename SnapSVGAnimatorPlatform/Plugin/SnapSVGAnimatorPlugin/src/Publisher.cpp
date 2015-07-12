@@ -1799,25 +1799,24 @@ namespace SnapSVGAnimator
         LOG(("[AddClassicText] ObjId: %d ResId: %d PlaceAfter: %d\n", 
             objectId, pClassicTextInfo->resourceId, pClassicTextInfo->placeAfterObjectId));
         
-        //To get the bounding rect of the text
-        if (pClassicTextInfo->structSize >= sizeof(DISPLAY_OBJECT_INFO_2))
+        ASSERT(pClassicTextInfo->structSize >= sizeof(DISPLAY_OBJECT_INFO_2))
+
+        DOM::Utils::RECT* pRect = NULL;
+        DISPLAY_OBJECT_INFO_2 *ptr = static_cast<DISPLAY_OBJECT_INFO_2*>(pClassicTextInfo);
+        if(ptr)
         {
-            DOM::Utils::RECT rect;
-            DISPLAY_OBJECT_INFO_2 *ptr = static_cast<DISPLAY_OBJECT_INFO_2*>(pClassicTextInfo);
-            if(ptr)
-            {
-                rect = ptr->bounds;
-                // This rect object gives the bound of the text filed.
-                // This will have to be transformed using the pClassicTextInfo->matrix
-                // to map it to its parent's co-orinate space to render it.
-            }
+            pRect = &ptr->bounds;
+            // This rect object gives the bound of the text field.
+            // This will have to be transformed using the pClassicTextInfo->matrix
+            // to map it to its parent's co-orinate space to render it.
         }
         
         res = m_pTimelineWriter->PlaceObject(
             pClassicTextInfo->resourceId, 
             objectId, 
             pClassicTextInfo->placeAfterObjectId, 
-            &pClassicTextInfo->matrix);
+            &pClassicTextInfo->matrix,
+            pRect);
 
         return res;
     }

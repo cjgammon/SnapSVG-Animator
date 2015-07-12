@@ -464,6 +464,21 @@ namespace SnapSVGAnimator
         return str;
     }
 
+    std::string Utils::ToString(const DOM::Utils::RECT& rect)
+    {
+        std::string rectString = "";
+
+        rectString.append(ToString(rect.topLeft.x));
+        rectString.append(comma);
+        rectString.append(ToString(rect.topLeft.y));
+        rectString.append(comma);
+        rectString.append(ToString(rect.bottomRight.x));
+        rectString.append(comma);
+        rectString.append(ToString(rect.bottomRight.y));
+
+        return rectString;
+    }
+
     FCM::StringRep16 Utils::ToString16(const std::string& str, FCM::PIFCMCallback pCallback)
     {
         FCM::StringRep16 pStrFeatureName = NULL;
@@ -473,6 +488,27 @@ namespace SnapSVGAnimator
         return pStrFeatureName;
     }
 
+
+    // It is assumed that the versionStr is of the form "a.b.c.d".
+    FCM::U_Int32 Utils::ToVersion(const std::string& versionStr)
+    {
+        FCM::U_Int32 ver = 0;
+        FCM::S_Int32 shift = 24;
+        size_t pos = 0;
+
+        size_t nextPos = versionStr.find(".", pos);
+        while ((shift >= 0) && (nextPos != pos))
+        {
+            FCM::U_Int32 val = atoi(versionStr.substr(pos, nextPos).c_str());
+
+            ver = ver | (val << shift);
+            pos = nextPos + 1;
+            nextPos = versionStr.find(".", pos);
+            shift -= 8;
+        }
+
+        return ver;
+    }
 
     std::string Utils::ToString(const DOM::FillStyle::GradientSpread& spread)
     {

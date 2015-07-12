@@ -36,6 +36,8 @@
 
 #define DOCTYPE_NAME						"SnapSVGAnimator"
 #define DOCTYPE_UNIVERSAL_NAME				"com.svg.SnapSVGAnimator"
+
+/* This string must be localized for various locales and stored in the "res" in their respective lang folder. */
 #define DOCTYPE_DESCRIPTION					"This document can be used to author content for SnapSVG animator."
 
 /* The value of RUNTIME_FOLDER_NAME must be the name of the runtime folder present in EclipseProject/ExtensionContent. */

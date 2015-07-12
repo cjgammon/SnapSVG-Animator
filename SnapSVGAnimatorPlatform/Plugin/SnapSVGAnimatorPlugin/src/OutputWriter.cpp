@@ -1111,7 +1111,8 @@ namespace SnapSVGAnimator
         FCM::U_Int32 resId,
         FCM::U_Int32 objectId,
         FCM::U_Int32 placeAfterObjectId,
-        const DOM::Utils::MATRIX2D* pMatrix)
+        const DOM::Utils::MATRIX2D* pMatrix,
+        const DOM::Utils::RECT* pRect /* = NULL */)
     {
         JSONNode commandElement(JSON_NODE);
 
@@ -1123,6 +1124,11 @@ namespace SnapSVGAnimator
         if (pMatrix)
         {
             commandElement.push_back(JSONNode("transformMatrix", Utils::ToString(*pMatrix).c_str()));
+        }
+
+        if (pRect)
+        {
+            commandElement.push_back(JSONNode("bounds", Utils::ToString(*pRect).c_str()));
         }
 
         m_pCommandArray->push_back(commandElement);

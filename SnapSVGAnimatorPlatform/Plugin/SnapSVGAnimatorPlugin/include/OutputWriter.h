@@ -337,7 +337,8 @@ namespace SnapSVGAnimator
             FCM::U_Int32 resId,
             FCM::U_Int32 objectId,
             FCM::U_Int32 placeAfterObjectId,
-            const DOM::Utils::MATRIX2D* pMatrix);
+            const DOM::Utils::MATRIX2D* pMatrix,
+            const DOM::Utils::RECT* pRect = NULL);
 
         virtual FCM::Result PlaceObject(
             FCM::U_Int32 resId,

@@ -151,6 +151,8 @@ namespace SnapSVGAnimator
 
         Property* mCurrentProperty;
 
+        FCM::U_Int32 m_appVersion;
+
         bool m_bInited;
         
         friend class FeatureDocumentHandler;

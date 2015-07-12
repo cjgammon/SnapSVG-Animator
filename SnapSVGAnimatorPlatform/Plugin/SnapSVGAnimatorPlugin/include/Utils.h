@@ -132,8 +132,12 @@ namespace SnapSVGAnimator
         static std::string ToString(FCM::CStringRep16 pStr16, FCM::PIFCMCallback pCallback);
 
         static std::string ToString(FCM::CStringRep8 pStr8);
+
+        static std::string ToString(const DOM::Utils::RECT& rect);
         
         static FCM::StringRep16 ToString16(const std::string& str, FCM::PIFCMCallback pCallback);
+
+        static FCM::U_Int32 ToVersion(const std::string& versionStr);
 
         static std::string ToString(const DOM::FillStyle::GradientSpread& spread);
 

@@ -37,6 +37,7 @@ namespace SnapSVGAnimator
     static const std::string kElement_Value("Value");
     static const std::string kAttribute_name("name");
     static const std::string kAttribute_supported("supported");
+    static const std::string kAttribute_minVersion("minVersion");
     static const std::string kAttribute_default("default");
     static const std::string kValue_true("true");
     static const std::string kValue_false("false");
@@ -100,6 +101,8 @@ namespace SnapSVGAnimator
         Utils::GetModuleFilePath(featureXMLPath, pCallback);
 
         featureXMLPath += "../res/Features.xml";
+
+        Utils::GetAppVersion(pCallback, m_appVersion);
 
         // trace
         FCM::AutoPtr<FCM::IFCMUnknown> pUnk;
@@ -387,8 +390,24 @@ namespace SnapSVGAnimator
             supported = (itr->second == kValue_true);
         }
         
-        // Find or Create new Feature
+        // minVersion: optional atrribute 
+        if (supported == true)
+        {
+            itr = inAttrs.find(kAttribute_minVersion);
+            if (itr != inAttrs.end())
+            {
+                // If the Flash professional version is less than minVersion, then we 
+                // consider the feature not supported.
+                std::string minVersionStr = itr->second;
+                FCM::U_Int32 minVersion = Utils::ToVersion(minVersionStr);
+                if (m_appVersion < minVersion)
+                {
+                    supported = false;
+                }
+            }
+        }
 
+        // Find or Create new Feature
         Feature * pFeature = FindFeature(name);   
         if (pFeature == NULL)
         {
