@@ -1,0 +1,1 @@
+This document can be used to author content for sample runtime.
