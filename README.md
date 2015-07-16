@@ -28,4 +28,4 @@ Download the plug-in from the [Adobe add-ons portal](https://creative.adobe.com/
 More instructions on installing plug-ins can be found [here](https://helpx.adobe.com/flash/using/custom-platform-support.html).
 
 ###Building Custom Platform Plug-Ins
-To read more about building or writing your own Custom Platform Plugins for Flash go (here)[https://helpx.adobe.com/flash/using/enabling-support-custom-platforms.html].
+To read more about building or writing your own Custom Platform Plugins for Flash go [here](https://helpx.adobe.com/flash/using/enabling-support-custom-platforms.html).
