@@ -19,11 +19,13 @@ Then run the command:
 
 Once it is installed you can create a new 'SnapPlatform' document and publish like normal.
 
-###Adobe Add-ons Portal
-Coming soon..
+###Adobe Add-Ons Portal
+Download the plug-in from the [Adobe add-ons portal](https://creative.adobe.com/addons/products/12329)
 
-More instructions can be found [here](https://helpx.adobe.com/flash/using/custom-platform-support.html).
 
-##Instructions
-To read more about building or writing your own Custom Platform Plugins for Flash go here:
-https://helpx.adobe.com/flash/using/enabling-support-custom-platforms.html
+##More Info
+###Installing Plug-Ins
+More instructions on installing plug-ins can be found [here](https://helpx.adobe.com/flash/using/custom-platform-support.html).
+
+###Building Custom Platform Plug-Ins
+To read more about building or writing your own Custom Platform Plugins for Flash go (here)[https://helpx.adobe.com/flash/using/enabling-support-custom-platforms.html].
