@@ -9,7 +9,7 @@ This is in **active development**.
 There are two ways to install the plug-in.
 
 ###Adobe Add-Ons Portal
-Download the plug-in from the [Adobe add-ons portal](https://creative.adobe.com/addons/products/12329)
+Install the plug-in from the [Adobe add-ons site](https://creative.adobe.com/addons/products/12329).
 
 ###Command Line Tool
 Download the Adobe Extension Command Line Tool for your platform:
