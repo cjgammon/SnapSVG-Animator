@@ -8,6 +8,9 @@ This is in **active development**.
 ##Install
 There are two ways to install the plug-in.
 
+###Adobe Add-Ons Portal
+Install the plug-in from the [Adobe add-ons site](https://creative.adobe.com/addons/products/12329).
+
 ###Command Line Tool
 Download the Adobe Extension Command Line Tool for your platform:
 - [Mac OS](http://www.adobeexchange.com/ExManCmd_mac.zip)
@@ -19,11 +22,9 @@ Then run the command:
 
 Once it is installed you can create a new 'SnapPlatform' document and publish like normal.
 
-###Adobe Add-ons Portal
-Coming soon..
+##More Info
+####Installing Plug-Ins
+More instructions on installing plug-ins can be found [here](https://helpx.adobe.com/flash/using/custom-platform-support.html).
 
-More instructions can be found [here](https://helpx.adobe.com/flash/using/custom-platform-support.html).
-
-##Instructions
-To read more about building or writing your own Custom Platform Plugins for Flash go here:
-https://helpx.adobe.com/flash/using/enabling-support-custom-platforms.html
+####Building Custom Platform Plug-Ins
+To read more about building or writing your own Custom Platform Plugins for Flash go [here](https://helpx.adobe.com/flash/using/enabling-support-custom-platforms.html).
