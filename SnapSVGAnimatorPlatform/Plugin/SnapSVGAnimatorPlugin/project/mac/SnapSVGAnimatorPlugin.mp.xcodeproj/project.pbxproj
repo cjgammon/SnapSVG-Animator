@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		"0342196c-51f9-3863-9ca9-99c032d70574" /* DocTypePublisherPlugin_Precomp.pch in Sources */ = {isa = PBXBuildFile; fileRef = "11d6bc95-8183-33eb-99d4-152c30d9f62a" /* DocTypePublisherPlugin_Precomp.pch */; };
+		"0342196c-51f9-3863-9ca9-99c032d70574" /* SnapSVGAnimatorPlugin_Precomp.pch in Sources */ = {isa = PBXBuildFile; fileRef = "11d6bc95-8183-33eb-99d4-152c30d9f62a" /* SnapSVGAnimatorPlugin_Precomp.pch */; };
 		"11b6ea6f-8dda-395a-b7d9-307f60c8da7e" /* DocType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "37ac9b87-549b-3c4b-935a-8ff607750468" /* DocType.cpp */; };
 		"12b2c04d-7e57-3257-95ec-c44ea79fff4b" /* Utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "12cad407-b42b-3fd9-afb2-7703a0006994" /* Utils.cpp */; };
 		"12b2c354-21e2-31f5-b092-ac00777d4c80" /* JSONWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "9af15e97-f1a1-37db-bcf9-fba2786df1c4" /* JSONWriter.cpp */; };
@@ -22,7 +22,7 @@
 		"411a4dda-fc45-3eaf-a9da-35ee6f8160a6" /* JSONPreparse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "960c8d89-d632-3678-815d-49888c76392b" /* JSONPreparse.cpp */; };
 		"4acf8c4b-efb4-370e-a74a-01714f9a1a73" /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "242250eb-c22a-31fb-b531-b0b9cb9b75e8" /* ApplicationServices.framework */; };
 		"4ebc8a76-6e5e-38d1-bd1e-a44ac9b6cf09" /* JSONDebug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "50c17538-91dd-3883-a5bc-315c0739acf4" /* JSONDebug.cpp */; };
-		"55ece1ca-591c-3be3-83a1-8c71554e3784" /* DocTypePublisherPlugin_Precomp.pch in Sources */ = {isa = PBXBuildFile; fileRef = "11d6bc95-8183-33eb-99d4-152c30d9f62a" /* DocTypePublisherPlugin_Precomp.pch */; };
+		"55ece1ca-591c-3be3-83a1-8c71554e3784" /* SnapSVGAnimatorPlugin_Precomp.pch in Sources */ = {isa = PBXBuildFile; fileRef = "11d6bc95-8183-33eb-99d4-152c30d9f62a" /* SnapSVGAnimatorPlugin_Precomp.pch */; };
 		"5a4158f3-d11a-3378-b5bb-b87611f2f747" /* JSONNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "41c65d04-39ac-3a96-94e1-12f1abc61564" /* JSONNode.cpp */; };
 		"60d764c0-8d8e-3118-8c39-d190f2851cab" /* JSONPreparse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "960c8d89-d632-3678-815d-49888c76392b" /* JSONPreparse.cpp */; };
 		"61759552-656a-34f8-864d-dee2b46bbc02" /* JSONStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "72093546-f441-3bed-8ee2-78acd3cf688d" /* JSONStream.cpp */; };
@@ -66,7 +66,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		"11d6bc95-8183-33eb-99d4-152c30d9f62a" /* DocTypePublisherPlugin_Precomp.pch */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; path = DocTypePublisherPlugin_Precomp.pch; sourceTree = "<group>"; };
+		"11d6bc95-8183-33eb-99d4-152c30d9f62a" /* SnapSVGAnimatorPlugin_Precomp.pch */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; path = SnapSVGAnimatorPlugin_Precomp.pch; sourceTree = "<group>"; };
 		"12cad407-b42b-3fd9-afb2-7703a0006994" /* Utils.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; path = Utils.cpp; sourceTree = "<group>"; };
 		"18b8044a-5909-32aa-9155-c8c1788376b5" /* JSONChildren.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; path = JSONChildren.cpp; sourceTree = "<group>"; };
 		"1f9d9071-e694-3006-9299-60f935a277f6" /* CoreServices.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CoreServices.framework; sourceTree = "<group>"; };
@@ -90,11 +90,11 @@
 		"9af15e97-f1a1-37db-bcf9-fba2786df1c4" /* JSONWriter.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; path = JSONWriter.cpp; sourceTree = "<group>"; };
 		"9bbfd7be-ac57-384d-984e-1afc2e0ed3b2" /* JSONIterators.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; path = JSONIterators.cpp; sourceTree = "<group>"; };
 		"9f0688c3-3f04-3a69-a219-c79da92040db" /* Main.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; path = Main.cpp; sourceTree = "<group>"; };
-		F540544A0950B01B00D1FC3F /* SampleCreateJSPlugin.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SampleCreateJSPlugin.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		F540544A0950B01B00D1FC3F /* SnapSVGAnimatorPlugin.fcm.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SnapSVGAnimatorPlugin.fcm.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		F5977F0C09B7D3B80058A43E /* project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; path = project.xcconfig; sourceTree = "<group>"; };
 		F5977F0F09B7D4150058A43E /* project_debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; path = project_debug.xcconfig; sourceTree = "<group>"; };
 		F5977F1109B7D41E0058A43E /* project_release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; path = project_release.xcconfig; sourceTree = "<group>"; };
-		F5D357480948EC91008C36CA /* SampleCreateJSPlugin.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SampleCreateJSPlugin.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		F5D357480948EC91008C36CA /* SnapSVGAnimatorPlugin.fcm.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SnapSVGAnimatorPlugin.fcm.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		"a2b84e18-8788-39bf-9148-f0dbf764f142" /* Publisher.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; path = Publisher.cpp; sourceTree = "<group>"; };
 		"a47eaabc-0062-3299-b91c-06037678b948" /* internalJSONNode.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; path = internalJSONNode.cpp; sourceTree = "<group>"; };
 		"b99462ab-58d9-3727-aa4b-b3246166a611" /* OutputWriter.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; path = OutputWriter.cpp; sourceTree = "<group>"; };
@@ -132,7 +132,7 @@
 		"4ccc0e26-5dcd-3c55-b674-92512b29d658" /* mac */ = {
 			isa = PBXGroup;
 			children = (
-				"11d6bc95-8183-33eb-99d4-152c30d9f62a" /* DocTypePublisherPlugin_Precomp.pch */,
+				"11d6bc95-8183-33eb-99d4-152c30d9f62a" /* SnapSVGAnimatorPlugin_Precomp.pch */,
 			);
 			name = mac;
 			path = .;
@@ -178,20 +178,20 @@
 			path = "../../../Common/ThirdParty/xerces-c-3.1.1/Build/Mac/Release";
 			sourceTree = SOURCE_ROOT;
 		};
-		F5977F0909B7D3970058A43E /* SampleCreateJSPlugin.xcconfigs */ = {
+		F5977F0909B7D3970058A43E /* SnapSVGAnimatorPlugin.xcconfigs */ = {
 			isa = PBXGroup;
 			children = (
 				F5977F0C09B7D3B80058A43E /* project.xcconfig */,
 				F5977F0F09B7D4150058A43E /* project_debug.xcconfig */,
 				F5977F1109B7D41E0058A43E /* project_release.xcconfig */,
 			);
-			path = SampleCreateJSPlugin.xcconfigs;
+			path = SnapSVGAnimatorPlugin.xcconfigs;
 			sourceTree = "<group>";
 		};
 		F5D357220948E8C4008C36CA = {
 			isa = PBXGroup;
 			children = (
-				F5977F0909B7D3970058A43E /* SampleCreateJSPlugin.xcconfigs */,
+				F5977F0909B7D3970058A43E /* SnapSVGAnimatorPlugin.xcconfigs */,
 				F5D3576909491A7D008C36CA /* Frameworks */,
 				811C721C097349F9007B1073 /* Libraries */,
 				F5D3574E0948ECD5008C36CA /* Resources */,
@@ -203,8 +203,8 @@
 		F5D357400948EBCB008C36CA /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F540544A0950B01B00D1FC3F /* SampleCreateJSPlugin.plugin */,
-				F5D357480948EC91008C36CA /* SampleCreateJSPlugin.plugin */,
+				F540544A0950B01B00D1FC3F /* SnapSVGAnimatorPlugin.fcm.plugin */,
+				F5D357480948EC91008C36CA /* SnapSVGAnimatorPlugin.fcm.plugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -272,9 +272,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		"4a8c50d8-6ecf-35c7-b187-7d012fe8e3c4" /* SampleCreateJSPlugin.Debug */ = {
+		"4a8c50d8-6ecf-35c7-b187-7d012fe8e3c4" /* SnapSVGAnimatorPlugin.Debug */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F54054480950B01B00D1FC3F /* Build configuration list for PBXNativeTarget "SampleCreateJSPlugin.Debug" */;
+			buildConfigurationList = F54054480950B01B00D1FC3F /* Build configuration list for PBXNativeTarget "SnapSVGAnimatorPlugin.Debug" */;
 			buildPhases = (
 				F540543D0950B01B00D1FC3F /* Resources */,
 				F540543E0950B01B00D1FC3F /* Sources */,
@@ -286,14 +286,14 @@
 			);
 			dependencies = (
 			);
-			name = SampleCreateJSPlugin.Debug;
+			name = SnapSVGAnimatorPlugin.Debug;
 			productName = Debug;
-			productReference = F540544A0950B01B00D1FC3F /* SampleCreateJSPlugin.plugin */;
+			productReference = F540544A0950B01B00D1FC3F /* SnapSVGAnimatorPlugin.fcm.plugin */;
 			productType = "com.apple.product-type.bundle";
 		};
-		"6df6e65a-e184-31e8-ab40-d210674741f0" /* SampleCreateJSPlugin.Release */ = {
+		"6df6e65a-e184-31e8-ab40-d210674741f0" /* SnapSVGAnimatorPlugin.Release */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F5D3574A0948EC91008C36CA /* Build configuration list for PBXNativeTarget "SampleCreateJSPlugin.Release" */;
+			buildConfigurationList = F5D3574A0948EC91008C36CA /* Build configuration list for PBXNativeTarget "SnapSVGAnimatorPlugin.Release" */;
 			buildPhases = (
 				F5D357440948EC91008C36CA /* Resources */,
 				F5D357450948EC91008C36CA /* Sources */,
@@ -305,9 +305,9 @@
 			);
 			dependencies = (
 			);
-			name = SampleCreateJSPlugin.Release;
+			name = SnapSVGAnimatorPlugin.Release;
 			productName = Release;
-			productReference = F5D357480948EC91008C36CA /* SampleCreateJSPlugin.plugin */;
+			productReference = F5D357480948EC91008C36CA /* SnapSVGAnimatorPlugin.fcm.plugin */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -317,7 +317,7 @@
 			isa = PBXProject;
 			attributes = {
 			};
-			buildConfigurationList = F5D357250948E8C4008C36CA /* Build configuration list for PBXProject "SampleCreateJSPlugin.mp" */;
+			buildConfigurationList = F5D357250948E8C4008C36CA /* Build configuration list for PBXProject "SnapSVGAnimatorPlugin.mp" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -329,8 +329,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				"4a8c50d8-6ecf-35c7-b187-7d012fe8e3c4" /* SampleCreateJSPlugin.Debug */,
-				"6df6e65a-e184-31e8-ab40-d210674741f0" /* SampleCreateJSPlugin.Release */,
+				"4a8c50d8-6ecf-35c7-b187-7d012fe8e3c4" /* SnapSVGAnimatorPlugin.Debug */,
+				"6df6e65a-e184-31e8-ab40-d210674741f0" /* SnapSVGAnimatorPlugin.Release */,
 			);
 		};
 /* End PBXProject section */
@@ -427,7 +427,7 @@
 				"18fd347f-e3e6-39d6-871d-61dfdd6a372d" /* JSONWorker.cpp in Sources */,
 				"a3dd5fb5-163b-33cf-83f9-75486dca0771" /* JSONWriter.cpp in Sources */,
 				"35666a89-c77e-30b3-8294-49cb42bb3457" /* libjson.cpp in Sources */,
-				"55ece1ca-591c-3be3-83a1-8c71554e3784" /* DocTypePublisherPlugin_Precomp.pch in Sources */,
+				"55ece1ca-591c-3be3-83a1-8c71554e3784" /* SnapSVGAnimatorPlugin_Precomp.pch in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -457,7 +457,7 @@
 				"3d6b6be0-13dd-3221-921c-9cd8689e5891" /* JSONWorker.cpp in Sources */,
 				"12b2c354-21e2-31f5-b092-ac00777d4c80" /* JSONWriter.cpp in Sources */,
 				"24fed128-bfa3-35fe-9403-2c37eed95a7d" /* libjson.cpp in Sources */,
-				"0342196c-51f9-3863-9ca9-99c032d70574" /* DocTypePublisherPlugin_Precomp.pch in Sources */,
+				"0342196c-51f9-3863-9ca9-99c032d70574" /* SnapSVGAnimatorPlugin_Precomp.pch in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -551,7 +551,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		F54054480950B01B00D1FC3F /* Build configuration list for PBXNativeTarget "SampleCreateJSPlugin.Debug" */ = {
+		F54054480950B01B00D1FC3F /* Build configuration list for PBXNativeTarget "SnapSVGAnimatorPlugin.Debug" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F54054490950B01B00D1FC3F /* Default */,
@@ -559,7 +559,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;
 		};
-		F5D357250948E8C4008C36CA /* Build configuration list for PBXProject "SampleCreateJSPlugin.mp" */ = {
+		F5D357250948E8C4008C36CA /* Build configuration list for PBXProject "SnapSVGAnimatorPlugin.mp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F5D357270948E8C4008C36CA /* Default */,
@@ -567,7 +567,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;
 		};
-		F5D3574A0948EC91008C36CA /* Build configuration list for PBXNativeTarget "SampleCreateJSPlugin.Release" */ = {
+		F5D3574A0948EC91008C36CA /* Build configuration list for PBXNativeTarget "SnapSVGAnimatorPlugin.Release" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F5D3574B0948EC91008C36CA /* Default */,

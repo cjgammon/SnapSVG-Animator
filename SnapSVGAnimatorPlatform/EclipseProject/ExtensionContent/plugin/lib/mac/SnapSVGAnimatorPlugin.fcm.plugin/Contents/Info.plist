@@ -7,15 +7,15 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>SampleCreateJSPlugin</string>
+	<string>SnapSVGAnimatorPlugin</string>
 	<key>CFBundleGetInfoString</key>
-	<string>SampleCreateJSPlugin .., Copyright © - Adobe Systems Incorporated.  All rights reserved.</string>
+	<string>SnapSVGAnimatorPlugin .., Copyright © - Adobe Systems Incorporated.  All rights reserved.</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.adobe.flashpro.DocTypePublisherPlugin.plugin</string>
+	<string>com.adobe.flashpro.SnapSVGAnimatorPlugin.fcm.plugin</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>SampleCreateJSPlugin</string>
+	<string>SnapSVGAnimatorPlugin</string>
 	<key>CFBundlePackageType</key>
 	<string>FMWK</string>
 	<key>CFBundleShortVersionString</key>

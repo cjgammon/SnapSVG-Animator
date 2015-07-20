@@ -32,7 +32,7 @@
 		</Property>
 		<Property name="LinearRGB" default="false" supported="true"/>
 	</Feature>
-	<Feature name="Text" supported="false">
+	<Feature name="Text" supported="true" minVersion="15.0.0.173">
 		<Property name="TextType" default="DynamicText" supported="true">
 			<Value name="StaticText" supported="false"/>
 			<Value name="DynamicText" supported="true"/>

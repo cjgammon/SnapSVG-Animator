@@ -34,9 +34,9 @@
 			<key>isa</key>
 			<string>PBXFileReference</string>
 			<key>name</key>
-			<string>DocTypePublisherPlugin_Precomp.pch</string>
+			<string>SnapSVGAnimatorPlugin_Precomp.pch</string>
 			<key>path</key>
-			<string>DocTypePublisherPlugin_Precomp.pch</string>
+			<string>SnapSVGAnimatorPlugin_Precomp.pch</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
@@ -676,7 +676,7 @@
 			<key>isa</key>
 			<string>PBXNativeTarget</string>
 			<key>name</key>
-			<string>SampleCreateJSPlugin.Debug</string>
+			<string>SnapSVGAnimatorPlugin.Debug</string>
 			<key>productName</key>
 			<string>Debug</string>
 			<key>productReference</key>
@@ -837,7 +837,7 @@
 			<key>isa</key>
 			<string>PBXFileReference</string>
 			<key>path</key>
-			<string>SampleCreateJSPlugin.plugin</string>
+			<string>SnapSVGAnimatorPlugin.plugin</string>
 			<key>sourceTree</key>
 			<string>BUILT_PRODUCTS_DIR</string>
 		</dict>
@@ -852,9 +852,9 @@
 			<key>isa</key>
 			<string>PBXGroup</string>
 			<key>name</key>
-			<string>SampleCreateJSPlugin.xcconfigs</string>
+			<string>SnapSVGAnimatorPlugin.xcconfigs</string>
 			<key>path</key>
-			<string>SampleCreateJSPlugin.xcconfigs</string>
+			<string>SnapSVGAnimatorPlugin.xcconfigs</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
@@ -1084,7 +1084,7 @@
 			<key>isa</key>
 			<string>PBXNativeTarget</string>
 			<key>name</key>
-			<string>SampleCreateJSPlugin.Release</string>
+			<string>SnapSVGAnimatorPlugin.Release</string>
 			<key>productName</key>
 			<string>Release</string>
 			<key>productReference</key>
@@ -1101,7 +1101,7 @@
 			<key>isa</key>
 			<string>PBXFileReference</string>
 			<key>path</key>
-			<string>SampleCreateJSPlugin.plugin</string>
+			<string>SnapSVGAnimatorPlugin.plugin</string>
 			<key>sourceTree</key>
 			<string>BUILT_PRODUCTS_DIR</string>
 		</dict>

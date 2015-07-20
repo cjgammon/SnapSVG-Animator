@@ -14,9 +14,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "6df6e65a-e184-31e8-ab40-d210674741f0"
-               BuildableName = "SampleCreateJSPlugin.plugin"
-               BlueprintName = "SampleCreateJSPlugin.Release"
-               ReferencedContainer = "container:SampleCreateJSPlugin.mp.xcodeproj">
+               BuildableName = "SnapSVGAnimatorPlugin.plugin"
+               BlueprintName = "SnapSVGAnimatorPlugin.Release"
+               ReferencedContainer = "container:SnapSVGAnimatorPlugin.mp.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -42,9 +42,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6df6e65a-e184-31e8-ab40-d210674741f0"
-            BuildableName = "SampleCreateJSPlugin.plugin"
-            BlueprintName = "SampleCreateJSPlugin.Release"
-            ReferencedContainer = "container:SampleCreateJSPlugin.mp.xcodeproj">
+            BuildableName = "SnapSVGAnimatorPlugin.plugin"
+            BlueprintName = "SnapSVGAnimatorPlugin.Release"
+            ReferencedContainer = "container:SnapSVGAnimatorPlugin.mp.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
