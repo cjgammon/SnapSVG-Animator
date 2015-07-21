@@ -20,7 +20,7 @@ Then run the command:
 - Mac OS: ```./Contents/MacOS/ExManCmd --install myaddon.zxp```
 - Windows: ```ExManCmd.exe /install myaddon.zxp```
 
-Once it is installed you can create a new 'SnapPlatform' document and publish like normal.
+Once it is installed you can create a new 'SnapSVGAnimator' document and publish like normal.
 
 ##More Info
 ####Installing Plug-Ins
