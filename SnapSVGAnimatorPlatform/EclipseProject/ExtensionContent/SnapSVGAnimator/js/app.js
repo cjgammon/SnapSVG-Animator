@@ -7,12 +7,31 @@ define(function (require) {
 		
     App = function () {
 		var json,
-			comp;
-	
-		if (jsonfile) {
+			comp,
+            script,
+            callbackName = 'jsonp_callback_' + jsonfile.replace('.json', '');
+
+        if (jsonfile) {
+			//JSONP_Req(jsonfile);
 			AJAX_JSON_Req(jsonfile);
-		}
-		
+        }
+
+        window[callbackName] = function (data) {
+            delete window[callbackName];
+            document.body.removeChild(script);
+
+            json = data;
+            comp = new Component(jsonfile.replace('.json', ''), json, width, height);
+            ready(comp);
+        };
+
+
+        function JSONP_Req(url) {
+            script = document.createElement('script');
+            script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
+            document.body.appendChild(script);
+        }
+
 		function AJAX_JSON_Req( url )
 		{
 		    var AJAX_req = new XMLHttpRequest();
@@ -30,6 +49,7 @@ define(function (require) {
 		    }
 		    AJAX_req.send();
 		}
+
     };
 
 	return new App();
