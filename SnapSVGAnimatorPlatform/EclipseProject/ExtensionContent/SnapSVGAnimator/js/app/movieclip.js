@@ -223,7 +223,7 @@ define(function (require) {
                     found = this.getChildById(cmdData.objectId);
 
 			        if (!found) {
-			            command = new CMD.PlaceObjectCommand(cmdData.charid, cmdData.objectId, cmdData.placeAfter, cmdData.transformMatrix);
+			            command = new CMD.PlaceObjectCommand(cmdData.charid, cmdData.objectId, cmdData.placeAfter, cmdData.transformMatrix, cmdData.bounds);
 			            commandList.push(command);
 			        } else {
 			            command = new CMD.MoveObjectCommand(cmdData.objectId, cmdData.transformMatrix);
