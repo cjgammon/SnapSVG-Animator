@@ -61,20 +61,31 @@ function checkvalue() {
 
 function setUI(uiState)
 {
-	//alert(JSON.stringify(uiState.data.out_file));
-	if(uiState.data.out_file !=null && uiState.data.out_file != undefined)
+	//alert(JSON.stringify(uiState.data["PublishSettings.SnapSvgAnimator.OutFile"]));
+	if(uiState.data["PublishSettings.SnapSvgAnimator.OutFile"] !=null && uiState.data["PublishSettings.SnapSvgAnimator.OutFile"] != undefined)
 	{
-		document.getElementById("of").value = uiState.data.out_file;
+		document.getElementById("of").value = uiState.data["PublishSettings.SnapSvgAnimator.OutFile"];
 		
-		if(uiState.data["PublishSettings.IncludeInvisibleLayer"] == "true")
+		if (uiState.data["PublishSettings.IncludeInvisibleLayer"] == "true")
 		{
-			document.getElementById("myCheck3").checked = true;
-		}else
+			document.getElementById("HiddenLayer").checked = true;
+        }
+        else
 		{
-			document.getElementById("myCheck3").checked = false;
+			document.getElementById("HiddenLayer").checked = false;
 		}
+
+        if (uiState.data["PublishSettings.SnapSvgAnimator.MinifyJSON"] == true)
+        {
+            document.getElementById("MinifyJSON").checked = true;
+        }
+        else
+		{
+			document.getElementById("MinifyJSON").checked = false;
+		}     
 	}
 }
+
 function publish_callback()
 {
 	//csInterface.closeExtension();
@@ -100,7 +111,7 @@ function serializeUI()
 	var event = new CSEvent();
 
     var pubSettings = new Object();
-    pubSettings["out_file"] = document.getElementById("of").value.toString();
+    pubSettings["PublishSettings.SnapSvgAnimator.OutFile"] = document.getElementById("of").value.toString();
     //
     // Possible Values:
     //   "FlashPlayer10.3"
@@ -116,13 +127,23 @@ function serializeUI()
     //   "FlashPlayer12.0"
     //   "FlashPlayer13.0"
 		
-	if(document.getElementById("myCheck3").checked == true)
+	if(document.getElementById("HiddenLayer").checked == true)
 	{
 		pubSettings["PublishSettings.IncludeInvisibleLayer"] = "true";
 	}
 	else
 	{
 		pubSettings["PublishSettings.IncludeInvisibleLayer"] = "false";
+	}
+
+    
+	if(document.getElementById("MinifyJSON").checked == true)
+	{
+		pubSettings["PublishSettings.SnapSvgAnimator.MinifyJSON"] = "true";
+	}
+	else
+	{
+		pubSettings["PublishSettings.SnapSvgAnimator.MinifyJSON"] = "false";
 	}
 	
 	
@@ -226,7 +247,8 @@ function imsd() {
 		<details open>
 			<summary>ADVANCED</summary>
 				<p>
-					<input type="checkbox" id="myCheck3" checked>Include hidden layers<br>
+					<input type="checkbox" id="HiddenLayer" checked>Include hidden layers<br>
+					<input type="checkbox" id="MinifyJSON" checked>Minify JSON<br>
 				</p>
 	</div>
 

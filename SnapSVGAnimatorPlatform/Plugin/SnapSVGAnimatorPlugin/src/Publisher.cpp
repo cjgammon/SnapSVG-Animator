@@ -192,7 +192,9 @@ namespace SnapSVGAnimator
         FCM::U_Int32 timelineCount;
 
         // Create a output writer
-        std::auto_ptr<IOutputWriter> pOutputWriter(new JSONOutputWriter(GetCallback()));
+        std::auto_ptr<IOutputWriter> pOutputWriter(new JSONOutputWriter(GetCallback(), 
+            pDictPublishSettings));
+
         if (pOutputWriter.get() == NULL)
         {
             return FCM_MEM_NOT_AVAILABLE;
@@ -399,7 +401,7 @@ namespace SnapSVGAnimator
         ASSERT(pCalloc.m_Ptr != NULL);
 
         // Read the output file name from the publish settings
-        ReadString(pDictPublishSettings, (FCM::StringRep8)"out_file", outFile);
+        Utils::ReadString(pDictPublishSettings, (FCM::StringRep8)DICT_OUT_FILE_KEY, outFile);
         if (outFile.empty())
         {
             FCM::StringRep16 path;
@@ -471,42 +473,13 @@ namespace SnapSVGAnimator
     }
 
 
-    bool CPublisher::ReadString(
-        const FCM::PIFCMDictionary pDict,
-        FCM::StringRep8 key, 
-        std::string &retString)
-    {
-        FCM::U_Int32 valueLen;
-        FCM::FCMDictRecTypeID type;
-
-        FCM::Result res = pDict->GetInfo(key, type, valueLen);
-        if (FCM_FAILURE_CODE(res))
-        {
-            return false;
-        }
-
-        FCM::StringRep8 strValue = new char[valueLen];
-        res = pDict->Get(key, type, (FCM::PVoid)strValue, valueLen);
-        if (FCM_FAILURE_CODE(res))
-        {
-            delete [] strValue;
-            return false;
-        }
-
-        retString = strValue;
-
-        delete [] strValue;
-        return true;
-    }
-
-
     FCM::Boolean CPublisher::IsPreviewNeeded(const PIFCMDictionary pDictConfig)
     {
         FCM::Boolean found;
         std::string previewNeeded;
         FCM::Boolean res;
 
-        found = ReadString(pDictConfig, (FCM::StringRep8)kPublishSettingsKey_PreviewNeeded, previewNeeded);
+        found = Utils::ReadString(pDictConfig, (FCM::StringRep8)kPublishSettingsKey_PreviewNeeded, previewNeeded);
 
         res = true;
         if (found)

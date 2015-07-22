@@ -129,11 +129,6 @@ namespace SnapSVGAnimator
 
     private:
 
-        bool ReadString(
-            const FCM::PIFCMDictionary pDict, 
-            FCM::StringRep8 key, 
-            std::string& retString);
-
         FCM::Result GetOutputFileName(        
             DOM::PIFLADocument pFlaDocument, 
             DOM::PITimeline pITimeline, 

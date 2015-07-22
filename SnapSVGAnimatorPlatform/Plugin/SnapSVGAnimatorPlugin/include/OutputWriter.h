@@ -245,7 +245,7 @@ namespace SnapSVGAnimator
             const std::string& libPathName,
             DOM::LibraryItem::PIMediaItem pMediaItem);
 
-        JSONOutputWriter(FCM::PIFCMCallback pCallback);
+        JSONOutputWriter(FCM::PIFCMCallback pCallback, const FCM::PIFCMDictionary pDictPublishSettings);
 
         virtual ~JSONOutputWriter();
 
@@ -326,6 +326,8 @@ namespace SnapSVGAnimator
         FCM::Boolean m_imageFolderCreated;
         
         FCM::Boolean m_soundFolderCreated;
+
+        FCM::Boolean m_minifyJSON;
     };
 
 

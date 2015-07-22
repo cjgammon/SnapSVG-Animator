@@ -153,7 +153,17 @@ namespace SnapSVGAnimator
         JSONNode firstNode(JSON_NODE);
         firstNode.push_back(*m_pRootNode);
 
-        file << firstNode.write_formatted();
+        if (m_minifyJSON)
+        {
+            // Minify JSON
+            file << firstNode.write();
+        }
+        else
+        {
+            // Pretty printing of JSON
+            file << firstNode.write_formatted();
+        }
+        
         file.close();
 
         // Write the HTML file (overwrite file if it already exists)
@@ -933,7 +943,8 @@ namespace SnapSVGAnimator
         return FCM_SUCCESS;
     }
 
-    JSONOutputWriter::JSONOutputWriter(FCM::PIFCMCallback pCallback)
+    JSONOutputWriter::JSONOutputWriter(FCM::PIFCMCallback pCallback,
+        const FCM::PIFCMDictionary pDictPublishSettings)
         : m_pCallback(pCallback),
           m_shapeElem(NULL),
           m_pathArray(NULL),
@@ -969,6 +980,15 @@ namespace SnapSVGAnimator
         ASSERT(m_pSoundArray);
         m_pSoundArray->set_name("Sounds");
         m_strokeStyle.type = INVALID_STROKE_STYLE_TYPE;
+
+        // Read the minifyJSON option from the publish settings
+        std::string str;
+        m_minifyJSON = true;
+        Utils::ReadString(pDictPublishSettings, (FCM::StringRep8)DICT_MINIFY_JSON_KEY, str);
+        if (!str.empty())
+        {
+            m_minifyJSON = Utils::ToBool(str);
+        }
     }
 
 

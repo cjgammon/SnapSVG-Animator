@@ -871,6 +871,46 @@ namespace SnapSVGAnimator
         return FCM_SUCCESS;
     }
 
+    bool Utils::ReadString(
+        const FCM::PIFCMDictionary pDict,
+        FCM::StringRep8 key, 
+        std::string &retString)
+    {
+        FCM::U_Int32 valueLen;
+        FCM::FCMDictRecTypeID type;
+
+        FCM::Result res = pDict->GetInfo(key, type, valueLen);
+        if (FCM_FAILURE_CODE(res))
+        {
+            return false;
+        }
+
+        ASSERT(type == kFCMDictType_StringRep8);
+
+        FCM::StringRep8 strValue = new char[valueLen];
+        res = pDict->Get(key, type, (FCM::PVoid)strValue, valueLen);
+        if (FCM_FAILURE_CODE(res))
+        {
+            delete [] strValue;
+            return false;
+        }
+
+        retString = strValue;
+
+        delete [] strValue;
+        return true;
+    }
+
+
+    bool Utils::ToBool(const std::string& str)
+    {
+        std::string tempStr = str;
+        std::transform(tempStr.begin(), tempStr.end(), tempStr.begin(), ::tolower);
+        if (tempStr == "true")
+            return true;
+        return false;
+    }
+
 
 #ifdef USE_HTTP_SERVER
 

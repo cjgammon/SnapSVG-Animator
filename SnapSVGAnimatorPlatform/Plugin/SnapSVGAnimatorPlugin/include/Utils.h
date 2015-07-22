@@ -82,6 +82,9 @@
     #endif
 #endif
 
+#define DICT_OUT_FILE_KEY               "PublishSettings.SnapSvgAnimator.OutFile"
+#define DICT_MINIFY_JSON_KEY            "PublishSettings.SnapSvgAnimator.MinifyJSON"
+
 /* -------------------------------------------------- Structs / Unions */
 
 #ifdef USE_HTTP_SERVER
@@ -143,6 +146,8 @@ namespace SnapSVGAnimator
 
         static std::string ToString(const DOM::Utils::COLOR& color);
 
+        static bool ToBool(const std::string& str);
+
         static void TransformPoint(
             const DOM::Utils::MATRIX2D& matrix, 
             DOM::Utils::POINT2D& inPoint,
@@ -174,11 +179,21 @@ namespace SnapSVGAnimator
 
         static void Log(const char* fmt, ...);
 
-        static void OpenFStream(const std::string& outputFileName, std::fstream &file, std::ios_base::openmode mode, FCM::PIFCMCallback pCallback);
+        static void OpenFStream(
+            const std::string& outputFileName, 
+            std::fstream &file, 
+            std::ios_base::openmode mode, 
+            FCM::PIFCMCallback pCallback);
 
-        static FCM::Result CopyDir(const std::string& srcFolder, const std::string& dstFolder, FCM::PIFCMCallback pCallback);
+        static FCM::Result CopyDir(
+            const std::string& srcFolder, 
+            const std::string& dstFolder, 
+            FCM::PIFCMCallback pCallback);
 
         static FCM::Result Remove(const std::string& folder, FCM::PIFCMCallback pCallback);
+
+        static bool ReadString(const FCM::PIFCMDictionary pDict, FCM::StringRep8 key, 
+            std::string &retString);
 
 #ifdef USE_HTTP_SERVER
 
