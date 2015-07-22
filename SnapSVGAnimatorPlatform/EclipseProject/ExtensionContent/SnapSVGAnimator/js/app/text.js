@@ -2,7 +2,7 @@ define(function (require) {
 	
     var Text;
 
-    Text = function (parentMC,resourceManager,charId,ObjectId,placeAfter,transform) {
+    Text = function (parentMC,resourceManager,charId,ObjectId,placeAfter,transform,bounds) {
 
         var instance = this,
             parentEl = parentMC.el;
@@ -23,7 +23,7 @@ define(function (require) {
             instance.mask = null;
             instance.maskTill = null;
 
-            console.log(resourceManager.m_data.DOMDocument.Text);
+            //console.log(resourceManager.m_data.DOMDocument.Text);
 
             for (j = 0; j < resourceManager.m_data.DOMDocument.Text.length; j++)
             {
@@ -46,14 +46,23 @@ define(function (require) {
         };
 
         this.addText = function (data) {
-            console.log(data);
+            //console.log(data);
 
             var text,
                 fontSize,
                 fontName,
                 fontColor,
                 textAlign,
-                textAnchor;
+                textAnchor,
+                textBounds;
+
+            if (bounds) {
+                textBounds = bounds.split(',');
+            } else {
+                textBounds = [0, 0, 200, 100];
+            }
+
+            console.log(textBounds);
 
             textAlign = data.paras[0].alignment;
             fontSize = data.paras[0].textRun[0].style.fontSize;
@@ -69,7 +78,7 @@ define(function (require) {
                 textAnchor = 'end';
             }
 
-            text = instance.el.text(0, 48, data.txt);
+            text = instance.el.text(0, 0, data.txt);
             text.attr({
                 'text-anchor': textAnchor,
                 'alignment-baseline': 'baseline',
@@ -78,6 +87,18 @@ define(function (require) {
                 'letter-spacing': letterSpacing,
                 'fill': fontColor
             });
+
+            bbox = text.getBBox();
+
+
+            y = parseFloat(textBounds[1]) + (parseFloat(textBounds[3]) / 2);
+
+            text.attr({
+                //'y': (bbox.height / 2) - parseFloat(textBounds[1])
+                'y': y
+            });
+
+            console.log((bbox.height / 2), parseFloat(textBounds[1]), (bbox.height / 2) - parseFloat(textBounds[1]));
         };
 
         this.create();
