@@ -7,12 +7,13 @@ define(function (require) {
     require(['app/shape', 'app/bitmap', 'app/text', 'app/movieclip', 'app/garbagePool'], function (Shape, Bitmap, Text, MovieClip, gp) {
 
         //PlaceObjectCommand Class
-        CMD.PlaceObjectCommand = function(charID, objectID, placeAfter, transform) 
+        CMD.PlaceObjectCommand = function(charID, objectID, placeAfter, transform, bounds) 
         {
             this.m_charID = charID;
             this.m_objectID = objectID;
             this.m_placeAfter = placeAfter;
             this.m_transform = transform;
+            this.m_bounds = bounds;
         };
 
         //Execute function for PlaceObjectCommand
@@ -41,7 +42,7 @@ define(function (require) {
             }
             else if (text !== null && text !== undefined) 
             {
-                textObject = new Text(parentMC, resourceManager, this.m_charID, this.m_objectID, this.m_placeAfter, this.m_transform);
+                textObject = new Text(parentMC, resourceManager, this.m_charID, this.m_objectID, this.m_placeAfter, this.m_transform, this.m_bounds);
                 parentMC.insertAtIndex(textObject, this.m_placeAfter);
             }
             else
