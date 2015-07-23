@@ -1,4 +1,9 @@
-({
+/**
+ * Build File for minification
+ * r.js -o build.js
+ */
+
+ ({
     baseUrl: './',
     paths: {
         snap: 'vendor/snap.svg/dist/snap.svg'
