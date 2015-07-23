@@ -75,13 +75,13 @@ function setUI(uiState)
 			document.getElementById("HiddenLayer").checked = false;
 		}
 
-        if (uiState.data["PublishSettings.SnapSvgAnimator.MinifyJSON"] == true)
+        if (uiState.data["PublishSettings.SnapSvgAnimator.Minify"] == true)
         {
-            document.getElementById("MinifyJSON").checked = true;
+            document.getElementById("Minify").checked = true;
         }
         else
 		{
-			document.getElementById("MinifyJSON").checked = false;
+			document.getElementById("Minify").checked = false;
 		}     
 	}
 }
@@ -137,13 +137,13 @@ function serializeUI()
 	}
 
     
-	if(document.getElementById("MinifyJSON").checked == true)
+	if(document.getElementById("Minify").checked == true)
 	{
-		pubSettings["PublishSettings.SnapSvgAnimator.MinifyJSON"] = "true";
+		pubSettings["PublishSettings.SnapSvgAnimator.Minify"] = "true";
 	}
 	else
 	{
-		pubSettings["PublishSettings.SnapSvgAnimator.MinifyJSON"] = "false";
+		pubSettings["PublishSettings.SnapSvgAnimator.Minify"] = "false";
 	}
 	
 	
@@ -248,7 +248,7 @@ function imsd() {
 			<summary>ADVANCED</summary>
 				<p>
 					<input type="checkbox" id="HiddenLayer" checked>Include hidden layers<br>
-					<input type="checkbox" id="MinifyJSON" checked>Minify JSON<br>
+					<input type="checkbox" id="Minify" checked>Minify<br>
 				</p>
 	</div>
 

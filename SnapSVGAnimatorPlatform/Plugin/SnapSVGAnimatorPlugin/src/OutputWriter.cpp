@@ -77,9 +77,16 @@ namespace SnapSVGAnimator
                     c.play();\n\
                 }\n\
             </script>\n\
-            <script src=\"./%s/js/vendor/requirejs/require.js\" data-main=\"%s/js/main\"></script> \n\
+            <script src=\"./%s/%s\" %s></script> \n\
         </body>\n\
         </html>";
+
+    // scriptSrcPath and dataMain are needed only for non-minified versions of the runtime
+    static const char* scriptSrcPathUnMinified = "js/vendor/requirejs/require.js";
+    static const char* dataMainUnMinified = "data-main=\"%s/js/main\"";
+
+    static const char* scriptSrcPathMinified = "%s/%s";
+    static const char* dataMainMinified = "";
 
     /* -------------------------------------------------- JSONOutputWriter */
 
@@ -113,6 +120,9 @@ namespace SnapSVGAnimator
         FCM::U_Int32 stageWidth,
         FCM::U_Int32 fps)
     {
+        char scriptSrcPath[256];
+        char dataMainPath[256];
+
         m_HTMLOutput = new char[strlen(htmlOutput) + 2 * FILENAME_MAX + 50];
         if (m_HTMLOutput == NULL)
         {
@@ -121,6 +131,18 @@ namespace SnapSVGAnimator
 
         std::string outputFileName;
         Utils::GetFileNameWithoutExtension(m_outputJSONFileName, outputFileName);
+
+        if (!m_minify)
+        {
+            strcpy(scriptSrcPath, scriptSrcPathUnMinified);
+            sprintf(dataMainPath, dataMainUnMinified, RUNTIME_FOLDER_NAME);
+        }
+        else
+        {
+            sprintf(scriptSrcPath, scriptSrcPathMinified, RUNTIME_MINIFIED_SUBFOLDER_NAME, RUNTIME_MINIFIED_FILE_NAME);
+            strcpy(dataMainPath, dataMainMinified);
+        }
+
         sprintf(m_HTMLOutput, 
             htmlOutput, 
             outputFileName.c_str(), 
@@ -132,7 +154,8 @@ namespace SnapSVGAnimator
             stageWidth, 
             stageHeight,
             RUNTIME_FOLDER_NAME,
-            RUNTIME_FOLDER_NAME);
+            scriptSrcPath,
+            dataMainPath);
 
         return FCM_SUCCESS;
     }
@@ -153,7 +176,7 @@ namespace SnapSVGAnimator
         JSONNode firstNode(JSON_NODE);
         firstNode.push_back(*m_pRootNode);
 
-        if (m_minifyJSON)
+        if (m_minify)
         {
             // Minify JSON
             file << firstNode.write();
@@ -943,8 +966,7 @@ namespace SnapSVGAnimator
         return FCM_SUCCESS;
     }
 
-    JSONOutputWriter::JSONOutputWriter(FCM::PIFCMCallback pCallback,
-        const FCM::PIFCMDictionary pDictPublishSettings)
+    JSONOutputWriter::JSONOutputWriter(FCM::PIFCMCallback pCallback, bool minify)
         : m_pCallback(pCallback),
           m_shapeElem(NULL),
           m_pathArray(NULL),
@@ -954,7 +976,8 @@ namespace SnapSVGAnimator
           m_imageFileNameLabel(0),
           m_soundFileNameLabel(0),
           m_imageFolderCreated(false),
-          m_soundFolderCreated(false)
+          m_soundFolderCreated(false),
+          m_minify(minify)
     {
         m_pRootNode = new JSONNode(JSON_NODE);
         ASSERT(m_pRootNode);
@@ -980,15 +1003,6 @@ namespace SnapSVGAnimator
         ASSERT(m_pSoundArray);
         m_pSoundArray->set_name("Sounds");
         m_strokeStyle.type = INVALID_STROKE_STYLE_TYPE;
-
-        // Read the minifyJSON option from the publish settings
-        std::string str;
-        m_minifyJSON = true;
-        Utils::ReadString(pDictPublishSettings, (FCM::StringRep8)DICT_MINIFY_JSON_KEY, str);
-        if (!str.empty())
-        {
-            m_minifyJSON = Utils::ToBool(str);
-        }
     }
 
 

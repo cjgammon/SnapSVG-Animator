@@ -871,6 +871,39 @@ namespace SnapSVGAnimator
         return FCM_SUCCESS;
     }
 
+
+    // Copies a source file to a destination folder. 
+    FCM::Result Utils::CopyAFile(const std::string& srcFile, const std::string& dstFolder, FCM::PIFCMCallback pCallback)
+    {
+#ifdef _WINDOWS
+
+        std::wstring srcWstr;
+        std::wstring dstWstr;
+
+        FCM::StringRep16 srcFileStr = Utils::ToString16(srcFile, pCallback);
+        srcWstr = srcFileStr;
+        srcWstr.append(1, '\0');
+
+        FCM::StringRep16 dstFolderStr = Utils::ToString16(dstFolder, pCallback);
+        dstWstr = dstFolderStr;
+        dstWstr.append(1, '\0');
+
+        ::CopyFile(srcWstr.c_str(), dstWstr.c_str(), false);
+
+        FCM::AutoPtr<FCM::IFCMCalloc> pCalloc = GetCallocService(pCallback);
+
+        pCalloc->Free(srcFileStr);
+        pCalloc->Free(dstFolderStr);
+
+
+#else
+
+        copyfile(srcFile.c_str(), dstFolder.c_str(), NULL, COPYFILE_ALL);
+#endif
+        return FCM_SUCCESS;
+    }
+
+
     bool Utils::ReadString(
         const FCM::PIFCMDictionary pDict,
         FCM::StringRep8 key, 
@@ -884,8 +917,6 @@ namespace SnapSVGAnimator
         {
             return false;
         }
-
-        ASSERT(type == kFCMDictType_StringRep8);
 
         FCM::StringRep8 strValue = new char[valueLen];
         res = pDict->Get(key, type, (FCM::PVoid)strValue, valueLen);

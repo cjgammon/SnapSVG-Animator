@@ -43,6 +43,12 @@
 /* The value of RUNTIME_FOLDER_NAME must be the name of the runtime folder present in EclipseProject/ExtensionContent. */
 #define RUNTIME_FOLDER_NAME                 "SnapSVGAnimator"
 
+/* Sub-folder within RUNTIME_FOLDER_NAME where the minified runtime resides */
+#define RUNTIME_MINIFIED_SUBFOLDER_NAME     "js"
+
+/* Minified runtime file name */
+#define RUNTIME_MINIFIED_FILE_NAME          "main.min.js"
+
 namespace SnapSVGAnimator
 {
     // {C457B30A-A9EA-4FE6-B468-334F8F57075B}

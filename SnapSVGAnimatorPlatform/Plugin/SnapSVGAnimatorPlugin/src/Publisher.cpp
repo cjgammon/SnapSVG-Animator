@@ -191,10 +191,17 @@ namespace SnapSVGAnimator
         FCM::FCMListPtr pTimelineList;
         FCM::U_Int32 timelineCount;
 
-        // Create a output writer
-        std::auto_ptr<IOutputWriter> pOutputWriter(new JSONOutputWriter(GetCallback(), 
-            pDictPublishSettings));
+        // Read the minify option from the publish settings
+        std::string str;
+        m_minify = true;
+        Utils::ReadString(pDictPublishSettings, (FCM::StringRep8)DICT_MINIFY_KEY, str);
+        if (!str.empty())
+        {
+            m_minify = Utils::ToBool(str);
+        }
 
+        // Create a output writer
+        std::auto_ptr<IOutputWriter> pOutputWriter(new JSONOutputWriter(GetCallback(), m_minify));
         if (pOutputWriter.get() == NULL)
         {
             return FCM_MEM_NOT_AVAILABLE;
@@ -691,8 +698,29 @@ namespace SnapSVGAnimator
         // First let us remove the existing runtime folder (if any)
         Utils::Remove(outputFolder + RUNTIME_FOLDER_NAME, GetCallback());
 
-        // Copy the runtime folder
-        res = Utils::CopyDir(sourceFolder + RUNTIME_FOLDER_NAME, outputFolder, GetCallback());
+        if (m_minify)
+        {
+            // Copy the minified runtime
+            std::string srcFilePath = sourceFolder + RUNTIME_FOLDER_NAME + "\\" + 
+                RUNTIME_MINIFIED_SUBFOLDER_NAME + "\\" + RUNTIME_MINIFIED_FILE_NAME;
+            std::string dstFilePath = outputFolder + RUNTIME_FOLDER_NAME + "\\";
+
+            Utils::CreateDir(dstFilePath, GetCallback());
+
+            dstFilePath += RUNTIME_MINIFIED_SUBFOLDER_NAME;
+            dstFilePath += "\\";
+            Utils::CreateDir(dstFilePath, GetCallback());
+
+            dstFilePath += RUNTIME_MINIFIED_FILE_NAME;
+
+            std::string dstFolder = outputFolder + RUNTIME_FOLDER_NAME + "\\";
+            res = Utils::CopyAFile(srcFilePath, dstFilePath, GetCallback());
+        }
+        else
+        {
+            // Copy the runtime folder
+            res = Utils::CopyDir(sourceFolder + RUNTIME_FOLDER_NAME, outputFolder, GetCallback());
+        }
 
         return res;
     }

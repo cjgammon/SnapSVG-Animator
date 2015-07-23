@@ -83,7 +83,7 @@
 #endif
 
 #define DICT_OUT_FILE_KEY               "PublishSettings.SnapSvgAnimator.OutFile"
-#define DICT_MINIFY_JSON_KEY            "PublishSettings.SnapSvgAnimator.MinifyJSON"
+#define DICT_MINIFY_KEY                 "PublishSettings.SnapSvgAnimator.Minify"
 
 /* -------------------------------------------------- Structs / Unions */
 
@@ -187,6 +187,11 @@ namespace SnapSVGAnimator
 
         static FCM::Result CopyDir(
             const std::string& srcFolder, 
+            const std::string& dstFolder, 
+            FCM::PIFCMCallback pCallback);
+
+        static FCM::Result CopyAFile(
+            const std::string& srcFile, 
             const std::string& dstFolder, 
             FCM::PIFCMCallback pCallback);
 

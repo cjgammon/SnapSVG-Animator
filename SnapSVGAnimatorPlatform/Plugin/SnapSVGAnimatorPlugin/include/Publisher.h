@@ -156,6 +156,7 @@ namespace SnapSVGAnimator
 
         AutoPtr<IFrameCommandGenerator> m_frameCmdGeneratorService;
         AutoPtr<IResourcePalette> m_pResourcePalette;
+        bool m_minify;
     };
 
 
