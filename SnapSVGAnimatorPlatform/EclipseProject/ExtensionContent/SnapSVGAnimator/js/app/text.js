@@ -50,12 +50,14 @@ define(function (require) {
                 textBox,
                 textX,
                 textY,
+                lineMode,
                 fontSize,
                 fontName,
                 fontColor,
                 textAlign,
                 textAnchor,
                 textIndent,
+                textBaseline,
                 textBounds;
 
             textBox = instance.el.g();
@@ -66,7 +68,9 @@ define(function (require) {
                 textBounds = [0, 0, 200, 100];
             }
 
+            lineMode = data.behaviour.lineMode;
             textAlign = data.paras[0].alignment;
+            textBaseline = lineMode == 'single' ? 'central' : 'auto';
             fontSize = data.paras[0].textRun[0].style.fontSize;
             fontName = data.paras[0].textRun[0].style.fontName;
             fontColor = data.paras[0].textRun[0].style.fontColor;
@@ -89,19 +93,13 @@ define(function (require) {
                 });
             }
 
-            //text
-            text = textBox.text(0, 0, data.txt);
-
-            text.attr({
-                'text-anchor': textAnchor,
-                'dominant-baseline': 'central',
-                'font-family': fontName,
-                'font-size': fontSize,
-                'letter-spacing': letterSpacing,
-                'fill': fontColor
-            });
-
-            textY = parseFloat(textBounds[1]) + (parseFloat(textBounds[3]) / 2);
+            if (lineMode == 'single') {
+                text = textBox.text(0, 0, data.txt);
+                textY = parseFloat(textBounds[1]) + (parseFloat(textBounds[3]) / 2);
+            } else {
+                text = instance.multiLine(textBox, data, textBounds); 
+                textY = parseFloat(textBounds[1]) - 10;
+            }
 
             if (textAlign == 'left') {
                 textX = parseFloat(textBounds[0]);
@@ -109,9 +107,63 @@ define(function (require) {
                 textX = parseFloat(textBounds[0]) + (parseFloat(textBounds[2]) / 2);
             }
 
-            console.log(data);
+            text.attr({
+                'text-anchor': textAnchor,
+                'dominant-baseline': textBaseline,
+                'font-family': fontName,
+                'font-size': fontSize,
+                'letter-spacing': letterSpacing,
+                'fill': fontColor
+            });
 
             text.transform('translate(' + textX + ',' + textY + ')');
+        };
+
+        this.multiLine = function (textBox, data, textBounds) {
+            
+            var string = data.txt,
+                spans = [],
+                chars = '',
+                substr,
+                tempTxt,
+                boundsWidth = parseFloat(textBounds[2]) - 10,
+                sp,
+                i = 0;
+
+            while (i > -1) {
+                chars += data.txt.charAt(i);
+                tempTxt = textBox.text(0, 0, chars);
+                bbox = tempTxt.getBBox();
+
+                if (bbox.w > boundsWidth) {
+                    newIndex = chars.lastIndexOf(' ');
+                    substr = chars.slice(0, newIndex);
+                    spans.push(substr);
+                    i = i - (chars.length - substr.length) + 2;
+                    chars = '';
+                } else {
+                    i += 1;
+                }
+
+                if (i >= data.txt.length) {
+                    substr = chars.slice(0, newIndex);
+                    spans.push(substr);
+                    i = -1;
+                }
+
+                tempTxt.remove();
+            }
+
+            console.log(spans);
+
+            text = textBox.text(0, 0, spans);
+            sp = text.selectAll('tspan');
+            sp.attr({
+                'x': 0,
+                'dy': data.paras[0].linespacing * 2.5
+            });
+
+            return text;
         };
 
         this.create();
