@@ -80,21 +80,38 @@ define(function (require) {
                 textAnchor = 'end';
             }
 
+            //rect
+            if (data.behaviour.isBorderDrawn !== "false") {
+                textRect = textBox.rect(textBounds[0], textBounds[1], textBounds[2], textBounds[3]);
+                textRect.attr({
+                    stroke: 'black',
+                    fill: 'transparent'
+                });
+            }
+
+            //text
             text = textBox.text(0, 0, data.txt);
+
             text.attr({
                 'text-anchor': textAnchor,
-                'alignment-baseline': 'baseline',
+                'dominant-baseline': 'central',
                 'font-family': fontName,
                 'font-size': fontSize,
                 'letter-spacing': letterSpacing,
                 'fill': fontColor
             });
 
-            bbox = text.getBBox();
-            textX = parseFloat(textBounds[0]) + (parseFloat(textBounds[2]) / 2) - bbox.cx;
-            textY = parseFloat(textBounds[1]) + (parseFloat(textBounds[3]) / 2) - bbox.cy;
+            textY = parseFloat(textBounds[1]) + (parseFloat(textBounds[3]) / 2);
 
-            textBox.transform('translate(' + textX + ',' + textY + ')');
+            if (textAlign == 'left') {
+                textX = parseFloat(textBounds[0]);
+            } else {
+                textX = parseFloat(textBounds[0]) + (parseFloat(textBounds[2]) / 2);
+            }
+
+            console.log(data);
+
+            text.transform('translate(' + textX + ',' + textY + ')');
         };
 
         this.create();
