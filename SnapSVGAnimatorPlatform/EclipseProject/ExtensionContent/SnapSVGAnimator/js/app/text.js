@@ -103,6 +103,7 @@ define(function (require) {
                 });
             }
 
+            //make text and y
             if (lineMode == 'single') {
                 text = textBox.text(0, 0, data.txt);
                 textY = parseFloat(textBounds[1]) + (parseFloat(textBounds[3]) / 2);
@@ -111,6 +112,7 @@ define(function (require) {
                 textY = parseFloat(textBounds[1]) - (parseFloat(data.paras[0].linespacing) * 2);
             }
 
+            //x
             if (textAlign == 'left') {
                 textX = parseFloat(textBounds[0]);
             } else {
@@ -118,7 +120,6 @@ define(function (require) {
             }
 
             text.attr(textStyles);
-
             text.transform('translate(' + textX + ',' + textY + ')');
         };
 
@@ -134,6 +135,7 @@ define(function (require) {
                 bbox,
                 i = 0;
 
+            //break into spans
             while (i > -1) {
                 chars += data.txt.charAt(i);
                 tempTxt = textBox.text(0, 0, chars);
@@ -159,8 +161,6 @@ define(function (require) {
 
                 tempTxt.remove();
             }
-
-            console.log(spans);
 
             text = textBox.text(0, 0, spans);
             sp = text.selectAll('tspan');
