@@ -58,7 +58,8 @@ define(function (require) {
                 textAnchor,
                 textIndent,
                 textBaseline,
-                textBounds;
+                textBounds,
+                textStyles;
 
             textBox = instance.el.g();
 
@@ -84,6 +85,15 @@ define(function (require) {
                 textAnchor = 'end';
             }
 
+            textStyles = {
+                'text-anchor': textAnchor,
+                'dominant-baseline': textBaseline,
+                'font-family': fontName,
+                'font-size': fontSize,
+                'letter-spacing': letterSpacing,
+                'fill': fontColor
+            };
+
             //rect
             if (data.behaviour.isBorderDrawn !== "false") {
                 textRect = textBox.rect(textBounds[0], textBounds[1], textBounds[2], textBounds[3]);
@@ -97,8 +107,8 @@ define(function (require) {
                 text = textBox.text(0, 0, data.txt);
                 textY = parseFloat(textBounds[1]) + (parseFloat(textBounds[3]) / 2);
             } else {
-                text = instance.multiLine(textBox, data, textBounds); 
-                textY = parseFloat(textBounds[1]) - 10;
+                text = instance.multiLine(textBox, data, textBounds, textStyles); 
+                textY = parseFloat(textBounds[1]) - (parseFloat(data.paras[0].linespacing) * 2);
             }
 
             if (textAlign == 'left') {
@@ -107,32 +117,28 @@ define(function (require) {
                 textX = parseFloat(textBounds[0]) + (parseFloat(textBounds[2]) / 2);
             }
 
-            text.attr({
-                'text-anchor': textAnchor,
-                'dominant-baseline': textBaseline,
-                'font-family': fontName,
-                'font-size': fontSize,
-                'letter-spacing': letterSpacing,
-                'fill': fontColor
-            });
+            text.attr(textStyles);
 
             text.transform('translate(' + textX + ',' + textY + ')');
         };
 
-        this.multiLine = function (textBox, data, textBounds) {
+        this.multiLine = function (textBox, data, textBounds, textStyles) {
             
             var string = data.txt,
                 spans = [],
                 chars = '',
                 substr,
                 tempTxt,
-                boundsWidth = parseFloat(textBounds[2]) - 10,
+                boundsWidth = parseFloat(textBounds[2]),
                 sp,
+                bbox,
                 i = 0;
 
             while (i > -1) {
                 chars += data.txt.charAt(i);
                 tempTxt = textBox.text(0, 0, chars);
+                tempTxt.attr(textStyles);
+
                 bbox = tempTxt.getBBox();
 
                 if (bbox.w > boundsWidth) {
@@ -160,7 +166,7 @@ define(function (require) {
             sp = text.selectAll('tspan');
             sp.attr({
                 'x': 0,
-                'dy': data.paras[0].linespacing * 2.5
+                'dy': bbox.h + parseFloat(data.paras[0].linespacing)
             });
 
             return text;
