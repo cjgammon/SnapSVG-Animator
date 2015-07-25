@@ -425,6 +425,8 @@ namespace SnapSVGAnimator
         std::vector<MaskInfo> maskInfoList;
 
         FCM::PIFCMCallback m_pCallback;
+
+        FCM::U_Int32 m_FrameCount;
     };
 };
 

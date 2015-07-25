@@ -701,19 +701,19 @@ namespace SnapSVGAnimator
         if (m_minify)
         {
             // Copy the minified runtime
-            std::string srcFilePath = sourceFolder + RUNTIME_FOLDER_NAME + "\\" + 
-                RUNTIME_MINIFIED_SUBFOLDER_NAME + "\\" + RUNTIME_MINIFIED_FILE_NAME;
-            std::string dstFilePath = outputFolder + RUNTIME_FOLDER_NAME + "\\";
+            std::string srcFilePath = sourceFolder + RUNTIME_FOLDER_NAME + "/" + 
+                RUNTIME_MINIFIED_SUBFOLDER_NAME + "/" + RUNTIME_MINIFIED_FILE_NAME;
+            std::string dstFilePath = outputFolder + RUNTIME_FOLDER_NAME + "/";
 
             Utils::CreateDir(dstFilePath, GetCallback());
 
             dstFilePath += RUNTIME_MINIFIED_SUBFOLDER_NAME;
-            dstFilePath += "\\";
+            dstFilePath += "/";
             Utils::CreateDir(dstFilePath, GetCallback());
 
             dstFilePath += RUNTIME_MINIFIED_FILE_NAME;
 
-            std::string dstFolder = outputFolder + RUNTIME_FOLDER_NAME + "\\";
+            std::string dstFolder = outputFolder + RUNTIME_FOLDER_NAME + "/";
             res = Utils::CopyAFile(srcFilePath, dstFilePath, GetCallback());
         }
         else

@@ -2012,9 +2012,15 @@ namespace SnapSVGAnimator
     FCM::Result JSONTimelineWriter::ShowFrame(FCM::U_Int32 frameNum)
     {
         DeferUpdateMasks();
-        m_pFrameElement->push_back(JSONNode(("num"), SnapSVGAnimator::Utils::ToString(frameNum)));
-        m_pFrameElement->push_back(*m_pCommandArray);
-        m_pFrameArray->push_back(*m_pFrameElement);
+
+        if (!m_pCommandArray->empty())
+        {
+            m_pFrameElement->push_back(JSONNode(("num"), SnapSVGAnimator::Utils::ToString(frameNum)));
+            m_pFrameElement->push_back(*m_pCommandArray);
+            m_pFrameArray->push_back(*m_pFrameElement);
+        }
+
+        m_FrameCount++;
 
         delete m_pCommandArray;
         delete m_pFrameElement;
@@ -2025,7 +2031,6 @@ namespace SnapSVGAnimator
         m_pFrameElement = new JSONNode(JSON_NODE);
         ASSERT(m_pFrameElement);
 
-        
         return FCM_SUCCESS;
     }
 
@@ -2107,7 +2112,8 @@ namespace SnapSVGAnimator
 
         m_pFrameElement = new JSONNode(JSON_NODE);
         ASSERT(m_pFrameElement);
-        //m_pCommandArray->set_name("Command");
+
+        m_FrameCount = 0;
     }
 
 
@@ -2137,6 +2143,10 @@ namespace SnapSVGAnimator
                 JSONNode(("charid"), 
                 SnapSVGAnimator::Utils::ToString(resId)));
         }
+
+        m_pTimelineElement->push_back(
+                JSONNode(("frameCount"), 
+                SnapSVGAnimator::Utils::ToString(m_FrameCount)));
 
         m_pTimelineElement->push_back(*m_pFrameArray);
     }
