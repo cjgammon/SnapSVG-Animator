@@ -192,16 +192,40 @@ namespace SnapSVGAnimator
         FCM::U_Int32 timelineCount;
 
         // Read the minify option from the publish settings
-        std::string str;
-        m_minify = true;
-        Utils::ReadString(pDictPublishSettings, (FCM::StringRep8)DICT_MINIFY_KEY, str);
-        if (!str.empty())
         {
-            m_minify = Utils::ToBool(str);
+            std::string str;
+            m_minify = true;
+            Utils::ReadString(pDictPublishSettings, (FCM::StringRep8)DICT_MINIFY_KEY, str);
+            if (!str.empty())
+            {
+                m_minify = Utils::ToBool(str);
+            }
+        }
+
+        // Read the precision option from the publish settings
+        DataPrecision precision = PRECISION_3;
+        {
+            std::string str;
+
+            Utils::ReadString(pDictPublishSettings, (FCM::StringRep8)DICT_COMPACT_DATA_KEY, str);
+            if (!str.empty())
+            {
+                bool isCompactData = Utils::ToBool(str);
+                if (isCompactData)
+                {
+                    Utils::ReadString(pDictPublishSettings, (FCM::StringRep8)DICT_COMPACT_DATA_OPT_KEY, str);
+                    precision = Utils::ToPrecision(str);
+                }
+                else
+                {
+                    // User does not want to compact data. Use highest precision.
+                    precision = PRECISION_6;
+                }
+            }
         }
 
         // Create a output writer
-        std::auto_ptr<IOutputWriter> pOutputWriter(new JSONOutputWriter(GetCallback(), m_minify));
+        std::auto_ptr<IOutputWriter> pOutputWriter(new JSONOutputWriter(GetCallback(), m_minify, precision));
         if (pOutputWriter.get() == NULL)
         {
             return FCM_MEM_NOT_AVAILABLE;
@@ -222,7 +246,7 @@ namespace SnapSVGAnimator
         }
 
         (static_cast<TimelineBuilderFactory*>(pTimelineBuilderFactory.m_Ptr))->Init(
-            pOutputWriter.get());
+            pOutputWriter.get(), precision);
 
         ResourcePalette* pResPalette = static_cast<ResourcePalette*>(m_pResourcePalette.m_Ptr);
         pResPalette->Clear();
@@ -2090,13 +2114,13 @@ namespace SnapSVGAnimator
     {
     }
 
-    void TimelineBuilder::Init(IOutputWriter* pOutputWriter)
+    void TimelineBuilder::Init(IOutputWriter* pOutputWriter, DataPrecision precision)
     {
         m_pOutputWriter = pOutputWriter;
 
         m_pOutputWriter->StartDefineTimeline();
 
-        m_pTimelineWriter = new JSONTimelineWriter(GetCallback());
+        m_pTimelineWriter = new JSONTimelineWriter(GetCallback(), precision);
         ASSERT(m_pTimelineWriter);
     }
 
@@ -2116,14 +2140,15 @@ namespace SnapSVGAnimator
 
         TimelineBuilder* pTimeline = static_cast<TimelineBuilder*>(pTimelineBuilder);
         
-        pTimeline->Init(m_pOutputWriter);
+        pTimeline->Init(m_pOutputWriter, m_dataPrecision);
 
         return res;
     }
 
-    void TimelineBuilderFactory::Init(IOutputWriter* pOutputWriter)
+    void TimelineBuilderFactory::Init(IOutputWriter* pOutputWriter, DataPrecision dataPrecision)
     {
         m_pOutputWriter = pOutputWriter;
+        m_dataPrecision = dataPrecision;
     }
 
     FCM::Result RegisterPublisher(PIFCMDictionary pPlugins, FCM::FCMCLSID docId)

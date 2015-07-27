@@ -83,6 +83,19 @@ function setUI(uiState)
 		{
 			document.getElementById("Minify").checked = false;
 		}     
+
+        if (uiState.data["PublishSettings.SnapSvgAnimator.CompactData"] == "true")
+        {
+            document.getElementById("CompactData").checked = true;
+            document.getElementById("CompactDataOptions").disabled = false;
+        }
+        else
+		{
+			document.getElementById("CompactData").checked = false;
+            document.getElementById("CompactDataOptions").disabled = true;
+		}             
+        val = uiState.data["PublishSettings.SnapSvgAnimator.CompactDataOptions"];
+        document.getElementById("CompactDataOptions").value = val;
 	}
 }
 
@@ -106,26 +119,10 @@ function evalScript(script, callback) {
 }
 function serializeUI()
 {
-	
-	
 	var event = new CSEvent();
 
     var pubSettings = new Object();
     pubSettings["PublishSettings.SnapSvgAnimator.OutFile"] = document.getElementById("of").value.toString();
-    //
-    // Possible Values:
-    //   "FlashPlayer10.3"
-    //   "FlashPlayer11.1"
-    //   "FlashPlayer11.2"
-    //   "FlashPlayer11.3"
-    //   "FlashPlayer11.4"
-    //   "FlashPlayer11.5"
-    //   "FlashPlayer11.6"
-    //   "FlashPlayer11.7"
-    //   "FlashPlayer11.8"
-    //   "FlashPlayer11.9"    
-    //   "FlashPlayer12.0"
-    //   "FlashPlayer13.0"
 		
 	if(document.getElementById("HiddenLayer").checked == true)
 	{
@@ -146,14 +143,23 @@ function serializeUI()
 		pubSettings["PublishSettings.SnapSvgAnimator.Minify"] = "false";
 	}
 	
+    if(document.getElementById("CompactData").checked == true)
+	{
+		pubSettings["PublishSettings.SnapSvgAnimator.CompactData"] = "true";
+	}
+	else
+	{
+		pubSettings["PublishSettings.SnapSvgAnimator.CompactData"] = "false";
+    }
+
+	var compactVal = document.getElementById("CompactDataOptions");
+    pubSettings["PublishSettings.SnapSvgAnimator.CompactDataOptions"] = compactVal.value;
 	
 	event.scope = "APPLICATION";
 	event.type = "com.adobe.events.flash.extension.savestate";
     event.data = JSON.stringify(pubSettings);
 	event.extensionId = "com.svg.SnapSVGAnimator.PublishSettings";
 	csInterface.dispatchEvent(event);
-	
-	
 
 	evalScript("fl.getDocumentDOM().publish();",publish_callback);
 }
@@ -225,6 +231,19 @@ function opsd() {
    evalScript("fl.browseForFileURL('save','Publish to HTML','HTML','html');",open_callback);
 }
 
+
+function compactDataChanged()
+{
+    if (document.getElementById("CompactData").checked == true)
+    {
+        document.getElementById("CompactDataOptions").disabled = false;
+    }
+    else
+    {
+        document.getElementById("CompactDataOptions").disabled = true;
+    }
+}
+
 /*
 function imsd() {
     var result = window.cep.fs.showOpenDialog();
@@ -240,6 +259,7 @@ function imsd() {
 		<label class="myLabel">Output File :</label>
         <input type="text"  id="of">
         <input id="OPShowOpenDialog" type="image" src="folderOpen.png" style="left:10px" onclick="opsd()" >
+
         <br/>
 	</p>
 	
@@ -248,7 +268,14 @@ function imsd() {
 			<summary>ADVANCED</summary>
 				<p>
 					<input type="checkbox" id="HiddenLayer" checked>Include hidden layers<br>
-					<input type="checkbox" id="Minify" checked>Minify<br>
+                    <input type="checkbox" id="Minify" checked>Minify<br>
+			        <input type="checkbox" id="CompactData" onchange="compactDataChanged()" checked>Compact data</label>
+						<select id="CompactDataOptions" class="myList">
+							<option value = "Low">Low</option>
+							<option value = "Medium">Medium</option>
+							<option value = "High" selected>High</option>
+							<option value = "VeryHigh">Very High</option>
+						</select><br>
 				</p>
 	</div>
 

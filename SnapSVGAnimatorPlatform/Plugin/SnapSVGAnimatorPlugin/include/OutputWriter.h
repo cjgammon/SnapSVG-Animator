@@ -26,6 +26,7 @@
 #define OUTPUT_WRITER_H_
 
 #include "IOutputWriter.h"
+#include "Utils.h"
 #include <string>
 #include <vector>
 #include <map>
@@ -245,7 +246,7 @@ namespace SnapSVGAnimator
             const std::string& libPathName,
             DOM::LibraryItem::PIMediaItem pMediaItem);
 
-        JSONOutputWriter(FCM::PIFCMCallback pCallback, bool minify);
+        JSONOutputWriter(FCM::PIFCMCallback pCallback, bool minify, DataPrecision dataPrecision);
 
         virtual ~JSONOutputWriter();
 
@@ -328,6 +329,8 @@ namespace SnapSVGAnimator
         FCM::Boolean m_soundFolderCreated;
 
         FCM::Boolean m_minify;
+
+        DataPrecision m_dataPrecision;
     };
 
 
@@ -394,7 +397,7 @@ namespace SnapSVGAnimator
 
         virtual FCM::Result SetFrameLabel(FCM::StringRep16 pLabel, DOM::KeyFrameLabelType labelType);
 
-        JSONTimelineWriter(FCM::PIFCMCallback pCallback);
+        JSONTimelineWriter(FCM::PIFCMCallback pCallback, DataPrecision dataPrecision);
 
         virtual ~JSONTimelineWriter();
 
@@ -427,6 +430,8 @@ namespace SnapSVGAnimator
         FCM::PIFCMCallback m_pCallback;
 
         FCM::U_Int32 m_FrameCount;
+
+        DataPrecision m_dataPrecision;
     };
 };
 

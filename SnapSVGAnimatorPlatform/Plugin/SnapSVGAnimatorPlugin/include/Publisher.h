@@ -336,7 +336,7 @@ namespace SnapSVGAnimator
             FCM::StringRep16 pName,
             ITimelineWriter** ppTimelineWriter);
 
-        void Init(IOutputWriter* pOutputWriter);
+        void Init(IOutputWriter* pOutputWriter, DataPrecision precision);
 
     private:
 
@@ -362,11 +362,13 @@ namespace SnapSVGAnimator
 
         ~TimelineBuilderFactory();
 
-        void Init(IOutputWriter* pOutputWriter);
+        void Init(IOutputWriter* pOutputWriter, DataPrecision dataPrecision);
 
     private:
 
         IOutputWriter* m_pOutputWriter;
+
+        DataPrecision m_dataPrecision;
     };
 
     FCM::Result RegisterPublisher(PIFCMDictionary pPlugins, FCM::FCMCLSID docId);

@@ -47,8 +47,8 @@
 namespace SnapSVGAnimator
 {
     static const std::string moveTo = "M";
-    static const std::string lineTo = "L";
-    static const std::string bezierCurveTo = "Q";
+    static const std::string lineTo = "l";
+    static const std::string bezierCurveTo = "q";
     static const std::string space = " ";
     static const std::string comma = ",";
     static const std::string semiColon = ";";
@@ -266,7 +266,7 @@ namespace SnapSVGAnimator
     FCM::Result JSONOutputWriter::DefineSolidFillStyle(const DOM::Utils::COLOR& color)
     {
         std::string colorStr = Utils::ToString(color);
-        std::string colorOpacityStr = SnapSVGAnimator::Utils::ToString((double)(color.alpha / 255.0));
+        std::string colorOpacityStr = SnapSVGAnimator::Utils::ToString((float)(color.alpha / 255.0), m_dataPrecision);
 
         m_pathElem->push_back(JSONNode("color", colorStr.c_str()));
         m_pathElem->push_back(JSONNode("colorOpacity", colorOpacityStr.c_str()));
@@ -349,7 +349,7 @@ namespace SnapSVGAnimator
         matrix1.d /= 20.0;
 
         bitmapElem.push_back(JSONNode(("patternUnits"), "userSpaceOnUse"));
-        bitmapElem.push_back(JSONNode(("patternTransform"), Utils::ToString(matrix1).c_str()));
+        bitmapElem.push_back(JSONNode(("patternTransform"), Utils::ToString(matrix1, m_dataPrecision).c_str()));
 
         m_pathElem->push_back(bitmapElem);
 
@@ -372,15 +372,15 @@ namespace SnapSVGAnimator
         point.y = 0;
         Utils::TransformPoint(matrix, point, point);
 
-        m_gradientColor->push_back(JSONNode("x1", Utils::ToString((double) (point.x))));
-        m_gradientColor->push_back(JSONNode("y1", Utils::ToString((double) (point.y))));
+        m_gradientColor->push_back(JSONNode("x1", Utils::ToString(point.x, m_dataPrecision)));
+        m_gradientColor->push_back(JSONNode("y1", Utils::ToString(point.y, m_dataPrecision)));
 
         point.x = GRADIENT_VECTOR_CONSTANT / 20;
         point.y = 0;
         Utils::TransformPoint(matrix, point, point);
 
-        m_gradientColor->push_back(JSONNode("x2", Utils::ToString((double) (point.x))));
-        m_gradientColor->push_back(JSONNode("y2", Utils::ToString((double) (point.y))));
+        m_gradientColor->push_back(JSONNode("x2", Utils::ToString(point.x, m_dataPrecision)));
+        m_gradientColor->push_back(JSONNode("y2", Utils::ToString(point.y, m_dataPrecision)));
 
         m_gradientColor->push_back(JSONNode("spreadMethod", Utils::ToString(spread)));
 
@@ -401,9 +401,9 @@ namespace SnapSVGAnimator
         
         offset = (float)((colorPoint.pos * 100) / 255.0);
 
-        stopEntry.push_back(JSONNode("offset", Utils::ToString((double) offset)));
+        stopEntry.push_back(JSONNode("offset", Utils::ToString(offset, m_dataPrecision)));
         stopEntry.push_back(JSONNode("stopColor", Utils::ToString(colorPoint.color)));
-        stopEntry.push_back(JSONNode("stopOpacity", Utils::ToString((double)(colorPoint.color.alpha / 255.0))));
+        stopEntry.push_back(JSONNode("stopOpacity", Utils::ToString((colorPoint.color.alpha / 255.0), m_dataPrecision)));
 
         m_stopPointArray->push_back(stopEntry);
 
@@ -451,15 +451,15 @@ namespace SnapSVGAnimator
         FCM::Float r = sqrt(xd * xd + yd * yd);
 
         FCM::Float angle = atan2(yd, xd);
-        double focusPointRatio = focalPoint / 255.0;
-        double fx = -r * focusPointRatio * cos(angle);
-        double fy = -r * focusPointRatio * sin(angle);
+        float focusPointRatio = focalPoint / (float)255.0;
+        float fx = -r * focusPointRatio * cos(angle);
+        float fy = -r * focusPointRatio * sin(angle);
 
         m_gradientColor->push_back(JSONNode("cx", "0"));
         m_gradientColor->push_back(JSONNode("cy", "0"));
-        m_gradientColor->push_back(JSONNode("r", Utils::ToString((double) r)));
-        m_gradientColor->push_back(JSONNode("fx", Utils::ToString((double) fx)));
-        m_gradientColor->push_back(JSONNode("fy", Utils::ToString((double) fy)));
+        m_gradientColor->push_back(JSONNode("r", Utils::ToString((float) r, m_dataPrecision)));
+        m_gradientColor->push_back(JSONNode("fx", Utils::ToString((float) fx, m_dataPrecision)));
+        m_gradientColor->push_back(JSONNode("fy", Utils::ToString((float) fy, m_dataPrecision)));
 
         FCM::Float scaleFactor = (GRADIENT_VECTOR_CONSTANT / 20) / r;
         DOM::Utils::MATRIX2D matrix1 = {};
@@ -470,7 +470,7 @@ namespace SnapSVGAnimator
         matrix1.tx = matrix.tx;
         matrix1.ty = matrix.ty;
 
-        m_gradientColor->push_back(JSONNode("gradientTransform", Utils::ToString(matrix1)));
+        m_gradientColor->push_back(JSONNode("gradientTransform", Utils::ToString(matrix1, m_dataPrecision)));
         m_gradientColor->push_back(JSONNode("spreadMethod", Utils::ToString(spread)));
 
         m_stopPointArray = new JSONNode(JSON_ARRAY);
@@ -506,44 +506,73 @@ namespace SnapSVGAnimator
     {
         if (m_firstSegment)
         {
+            if (m_minify)
+            {
+                m_pathCmdStr.append(space);
+            }
+
             if (segment.segmentType == DOM::Utils::LINE_SEGMENT)
             {
-                m_pathCmdStr.append(SnapSVGAnimator::Utils::ToString((double)(segment.line.endPoint1.x)));
+                m_pathCmdStr.append(SnapSVGAnimator::Utils::ToString(segment.line.endPoint1.x, m_dataPrecision));
                 m_pathCmdStr.append(space);
-                m_pathCmdStr.append(SnapSVGAnimator::Utils::ToString((double)(segment.line.endPoint1.y)));
-                m_pathCmdStr.append(space);
+                m_pathCmdStr.append(SnapSVGAnimator::Utils::ToString(segment.line.endPoint1.y, m_dataPrecision));
             }
             else
             {
-                m_pathCmdStr.append(SnapSVGAnimator::Utils::ToString((double)(segment.quadBezierCurve.anchor1.x)));
+                m_pathCmdStr.append(SnapSVGAnimator::Utils::ToString(segment.quadBezierCurve.anchor1.x, m_dataPrecision));
                 m_pathCmdStr.append(space);
-                m_pathCmdStr.append(SnapSVGAnimator::Utils::ToString((double)(segment.quadBezierCurve.anchor1.y)));
+                m_pathCmdStr.append(SnapSVGAnimator::Utils::ToString(segment.quadBezierCurve.anchor1.y, m_dataPrecision));
+            }
+
+            if (!m_minify)
+            {
                 m_pathCmdStr.append(space);
             }
+
             m_firstSegment = false;
         }
 
         if (segment.segmentType == DOM::Utils::LINE_SEGMENT)
         {
             m_pathCmdStr.append(lineTo);
+            if (!m_minify)
+            {
+                m_pathCmdStr.append(space);
+            }
+
+            float relPt = segment.line.endPoint2.x - segment.line.endPoint1.x;
+            m_pathCmdStr.append(SnapSVGAnimator::Utils::ToString(relPt, m_dataPrecision));
             m_pathCmdStr.append(space);
-            m_pathCmdStr.append(SnapSVGAnimator::Utils::ToString((double)(segment.line.endPoint2.x)));
-            m_pathCmdStr.append(space);
-            m_pathCmdStr.append(SnapSVGAnimator::Utils::ToString((double)(segment.line.endPoint2.y)));
-            m_pathCmdStr.append(space);
+            relPt = segment.line.endPoint2.y - segment.line.endPoint1.y;
+            m_pathCmdStr.append(SnapSVGAnimator::Utils::ToString(relPt, m_dataPrecision));
+
+            if (!m_minify)
+            {
+                m_pathCmdStr.append(space);
+            }
         }
         else
         {
             m_pathCmdStr.append(bezierCurveTo);
+            if (!m_minify)
+            {
+                m_pathCmdStr.append(space);
+            }
+            float relPt = segment.quadBezierCurve.control.x - segment.quadBezierCurve.anchor1.x;
+            m_pathCmdStr.append(SnapSVGAnimator::Utils::ToString(relPt, m_dataPrecision));
             m_pathCmdStr.append(space);
-            m_pathCmdStr.append(SnapSVGAnimator::Utils::ToString((double)(segment.quadBezierCurve.control.x)));
+            relPt = segment.quadBezierCurve.control.y - segment.quadBezierCurve.anchor1.y;
+            m_pathCmdStr.append(SnapSVGAnimator::Utils::ToString(relPt, m_dataPrecision));
             m_pathCmdStr.append(space);
-            m_pathCmdStr.append(SnapSVGAnimator::Utils::ToString((double)(segment.quadBezierCurve.control.y)));
+            relPt = segment.quadBezierCurve.anchor2.x - segment.quadBezierCurve.anchor1.x;
+            m_pathCmdStr.append(SnapSVGAnimator::Utils::ToString(relPt, m_dataPrecision));
             m_pathCmdStr.append(space);
-            m_pathCmdStr.append(SnapSVGAnimator::Utils::ToString((double)(segment.quadBezierCurve.anchor2.x)));
-            m_pathCmdStr.append(space);
-            m_pathCmdStr.append(SnapSVGAnimator::Utils::ToString((double)(segment.quadBezierCurve.anchor2.y)));
-            m_pathCmdStr.append(space);
+            relPt = segment.quadBezierCurve.anchor2.y - segment.quadBezierCurve.anchor1.y;
+            m_pathCmdStr.append(SnapSVGAnimator::Utils::ToString(relPt, m_dataPrecision));
+            if (!m_minify)
+            {
+                m_pathCmdStr.append(space);
+            }
         }
 
         return FCM_SUCCESS;
@@ -626,7 +655,8 @@ namespace SnapSVGAnimator
 
         if (m_strokeStyle.type == SOLID_STROKE_STYLE_TYPE)
         {
-            m_pathElem->push_back(JSONNode("strokeWidth", SnapSVGAnimator::Utils::ToString((double)m_strokeStyle.solidStrokeStyle.thickness).c_str()));
+            m_pathElem->push_back(JSONNode("strokeWidth", 
+                SnapSVGAnimator::Utils::ToString((double)m_strokeStyle.solidStrokeStyle.thickness, m_dataPrecision).c_str()));
             m_pathElem->push_back(JSONNode("fill", "none"));
             m_pathElem->push_back(JSONNode("strokeLinecap", Utils::ToString(m_strokeStyle.solidStrokeStyle.capStyle.type).c_str()));
             m_pathElem->push_back(JSONNode("strokeLinejoin", Utils::ToString(m_strokeStyle.solidStrokeStyle.joinStyle.type).c_str()));
@@ -635,7 +665,8 @@ namespace SnapSVGAnimator
             {
                 m_pathElem->push_back(JSONNode(
                     "stroke-miterlimit", 
-                    SnapSVGAnimator::Utils::ToString((double)m_strokeStyle.solidStrokeStyle.joinStyle.miterJoinProp.miterLimit).c_str()));
+                    SnapSVGAnimator::Utils::ToString((double)m_strokeStyle.solidStrokeStyle.joinStyle.miterJoinProp.miterLimit,
+                        m_dataPrecision).c_str()));
             }
             m_pathElem->push_back(JSONNode("pathType", "Stroke"));
         }
@@ -766,8 +797,10 @@ namespace SnapSVGAnimator
         aaMode.push_back(JSONNode(("mode"), SnapSVGAnimator::Utils::ToString(aaModeProp.aaMode)));
         if (aaModeProp.aaMode == DOM::FrameElement::ANTI_ALIAS_MODE_CUSTOM)
         {
-            aaMode.push_back(JSONNode(("thickness"), SnapSVGAnimator::Utils::ToString(aaModeProp.customAAModeProp.aaThickness)));
-            aaMode.push_back(JSONNode(("sharpness"), SnapSVGAnimator::Utils::ToString(aaModeProp.customAAModeProp.aaSharpness)));
+            aaMode.push_back(JSONNode(("thickness"), 
+                SnapSVGAnimator::Utils::ToString(aaModeProp.customAAModeProp.aaThickness, m_dataPrecision)));
+            aaMode.push_back(JSONNode(("sharpness"), 
+                SnapSVGAnimator::Utils::ToString(aaModeProp.customAAModeProp.aaSharpness, m_dataPrecision)));
         }
         m_pTextElem->push_back(aaMode);
         
@@ -966,7 +999,10 @@ namespace SnapSVGAnimator
         return FCM_SUCCESS;
     }
 
-    JSONOutputWriter::JSONOutputWriter(FCM::PIFCMCallback pCallback, bool minify)
+    JSONOutputWriter::JSONOutputWriter(
+        FCM::PIFCMCallback pCallback, 
+        bool minify, 
+        DataPrecision dataPrecision)
         : m_pCallback(pCallback),
           m_shapeElem(NULL),
           m_pathArray(NULL),
@@ -977,7 +1013,8 @@ namespace SnapSVGAnimator
           m_soundFileNameLabel(0),
           m_imageFolderCreated(false),
           m_soundFolderCreated(false),
-          m_minify(minify)
+          m_minify(minify),
+          m_dataPrecision(dataPrecision)
     {
         m_pRootNode = new JSONNode(JSON_NODE);
         ASSERT(m_pRootNode);
@@ -1024,7 +1061,12 @@ namespace SnapSVGAnimator
     FCM::Result JSONOutputWriter::StartDefinePath()
     {
         m_pathCmdStr.append(moveTo);
-        m_pathCmdStr.append(space);
+
+        if (!m_minify)
+        {
+            m_pathCmdStr.append(space);
+        }
+
         m_firstSegment = true;
 
         return FCM_SUCCESS;
@@ -1157,12 +1199,12 @@ namespace SnapSVGAnimator
 
         if (pMatrix)
         {
-            commandElement.push_back(JSONNode("transformMatrix", Utils::ToString(*pMatrix).c_str()));
+            commandElement.push_back(JSONNode("transformMatrix", Utils::ToString(*pMatrix, m_dataPrecision).c_str()));
         }
 
         if (pRect)
         {
-            commandElement.push_back(JSONNode("bounds", Utils::ToString(*pRect).c_str()));
+            commandElement.push_back(JSONNode("bounds", Utils::ToString(*pRect, m_dataPrecision).c_str()));
         }
 
         m_pCommandArray->push_back(commandElement);
@@ -1188,7 +1230,7 @@ namespace SnapSVGAnimator
 
         if (pMatrix)
         {
-            commandElement.push_back(JSONNode("transformMatrix", Utils::ToString(*pMatrix).c_str()));
+            commandElement.push_back(JSONNode("transformMatrix", Utils::ToString(*pMatrix, m_dataPrecision).c_str()));
         }
 
         commandElement.push_back(JSONNode("loop", loop ? "true" : "false"));
@@ -1440,19 +1482,23 @@ namespace SnapSVGAnimator
 
             res = pDropShadowFilter->GetAngle(angle);
             ASSERT(FCM_SUCCESS_CODE(res));
-            commandElement.push_back(JSONNode("angle", SnapSVGAnimator::Utils::ToString((double)angle)));
+            commandElement.push_back(JSONNode("angle", 
+                SnapSVGAnimator::Utils::ToString((double)angle, m_dataPrecision)));
 
             res = pDropShadowFilter->GetBlurX(blurX);
             ASSERT(FCM_SUCCESS_CODE(res));
-            commandElement.push_back(JSONNode("blurX", SnapSVGAnimator::Utils::ToString((double)blurX)));
+            commandElement.push_back(JSONNode("blurX", 
+                SnapSVGAnimator::Utils::ToString((double)blurX, m_dataPrecision)));
 
             res = pDropShadowFilter->GetBlurY(blurY);
             ASSERT(FCM_SUCCESS_CODE(res));
-            commandElement.push_back(JSONNode("blurY", SnapSVGAnimator::Utils::ToString((double)blurY)));
+            commandElement.push_back(JSONNode("blurY", 
+                SnapSVGAnimator::Utils::ToString((double)blurY, m_dataPrecision)));
 
             res = pDropShadowFilter->GetDistance(distance);
             ASSERT(FCM_SUCCESS_CODE(res));
-            commandElement.push_back(JSONNode("distance", SnapSVGAnimator::Utils::ToString((double)distance)));
+            commandElement.push_back(JSONNode("distance", 
+                SnapSVGAnimator::Utils::ToString((double)distance, m_dataPrecision)));
 
             res = pDropShadowFilter->GetHideObject(hideObject);
             ASSERT(FCM_SUCCESS_CODE(res));
@@ -1528,11 +1574,13 @@ namespace SnapSVGAnimator
 
             res = pBlurFilter->GetBlurX(blurX);
             ASSERT(FCM_SUCCESS_CODE(res));
-            commandElement.push_back(JSONNode("blurX", SnapSVGAnimator::Utils::ToString((double)blurX)));
+            commandElement.push_back(JSONNode("blurX", 
+                SnapSVGAnimator::Utils::ToString((double)blurX, m_dataPrecision)));
 
             res = pBlurFilter->GetBlurY(blurY);
             ASSERT(FCM_SUCCESS_CODE(res));
-            commandElement.push_back(JSONNode("blurY", SnapSVGAnimator::Utils::ToString((double)blurY)));
+            commandElement.push_back(JSONNode("blurY", 
+                SnapSVGAnimator::Utils::ToString((double)blurY, m_dataPrecision)));
 
             res = pBlurFilter->GetQuality(qualityType);
             ASSERT(FCM_SUCCESS_CODE(res));
@@ -1570,11 +1618,13 @@ namespace SnapSVGAnimator
 
             res = pGlowFilter->GetBlurX(blurX);
             ASSERT(FCM_SUCCESS_CODE(res));
-            commandElement.push_back(JSONNode("blurX", SnapSVGAnimator::Utils::ToString((double)blurX)));
+            commandElement.push_back(JSONNode("blurX", 
+                SnapSVGAnimator::Utils::ToString((double)blurX, m_dataPrecision)));
 
             res = pGlowFilter->GetBlurY(blurY);
             ASSERT(FCM_SUCCESS_CODE(res));
-            commandElement.push_back(JSONNode("blurY", SnapSVGAnimator::Utils::ToString((double)blurY)));
+            commandElement.push_back(JSONNode("blurY", 
+                SnapSVGAnimator::Utils::ToString((double)blurY, m_dataPrecision)));
 
             res = pGlowFilter->GetInnerShadow(innerShadow);
             ASSERT(FCM_SUCCESS_CODE(res));
@@ -1647,19 +1697,23 @@ namespace SnapSVGAnimator
 
             res = pBevelFilter->GetAngle(angle);
             ASSERT(FCM_SUCCESS_CODE(res));
-            commandElement.push_back(JSONNode("angle", SnapSVGAnimator::Utils::ToString((double)angle)));
+            commandElement.push_back(JSONNode("angle", 
+                SnapSVGAnimator::Utils::ToString((double)angle, m_dataPrecision)));
 
             res = pBevelFilter->GetBlurX(blurX);
             ASSERT(FCM_SUCCESS_CODE(res));
-            commandElement.push_back(JSONNode("blurX", SnapSVGAnimator::Utils::ToString((double)blurX)));
+            commandElement.push_back(JSONNode("blurX", 
+                SnapSVGAnimator::Utils::ToString((double)blurX, m_dataPrecision)));
 
             res = pBevelFilter->GetBlurY(blurY);
             ASSERT(FCM_SUCCESS_CODE(res));
-            commandElement.push_back(JSONNode("blurY", SnapSVGAnimator::Utils::ToString((double)blurY)));
+            commandElement.push_back(JSONNode("blurY", 
+                SnapSVGAnimator::Utils::ToString((double)blurY, m_dataPrecision)));
 
             res = pBevelFilter->GetDistance(distance);
             ASSERT(FCM_SUCCESS_CODE(res));
-            commandElement.push_back(JSONNode("distance", SnapSVGAnimator::Utils::ToString((double)distance)));
+            commandElement.push_back(JSONNode("distance", 
+                SnapSVGAnimator::Utils::ToString((double)distance, m_dataPrecision)));
 
             res = pBevelFilter->GetHighlightColor(highlightColor);
             ASSERT(FCM_SUCCESS_CODE(res));
@@ -1732,19 +1786,23 @@ namespace SnapSVGAnimator
 
             res = pGradientGlowFilter->GetAngle(angle);
             ASSERT(FCM_SUCCESS_CODE(res));
-            commandElement.push_back(JSONNode("angle", SnapSVGAnimator::Utils::ToString((double)angle)));
+            commandElement.push_back(JSONNode("angle", 
+                SnapSVGAnimator::Utils::ToString((double)angle, m_dataPrecision)));
 
             res = pGradientGlowFilter->GetBlurX(blurX);
             ASSERT(FCM_SUCCESS_CODE(res));
-            commandElement.push_back(JSONNode("blurX", SnapSVGAnimator::Utils::ToString((double)blurX)));
+            commandElement.push_back(JSONNode("blurX", 
+                SnapSVGAnimator::Utils::ToString((double)blurX, m_dataPrecision)));
 
             res = pGradientGlowFilter->GetBlurY(blurY);
             ASSERT(FCM_SUCCESS_CODE(res));
-            commandElement.push_back(JSONNode("blurY", SnapSVGAnimator::Utils::ToString((double)blurY)));
+            commandElement.push_back(JSONNode("blurY", 
+                SnapSVGAnimator::Utils::ToString((double)blurY, m_dataPrecision)));
 
             res = pGradientGlowFilter->GetDistance(distance);
             ASSERT(FCM_SUCCESS_CODE(res));
-            commandElement.push_back(JSONNode("distance", SnapSVGAnimator::Utils::ToString((double)distance)));
+            commandElement.push_back(JSONNode("distance", 
+                SnapSVGAnimator::Utils::ToString((double)distance, m_dataPrecision)));
 
             res = pGradientGlowFilter->GetKnockout(knockOut);
             ASSERT(FCM_SUCCESS_CODE(res));
@@ -1806,9 +1864,10 @@ namespace SnapSVGAnimator
 
                     offset = (float)((colorPoint.pos * 100) / 255.0);
 
-                    stopEntry.push_back(JSONNode("offset", Utils::ToString((double) offset)));
+                    stopEntry.push_back(JSONNode("offset", Utils::ToString((float) offset, m_dataPrecision)));
                     stopEntry.push_back(JSONNode("stopColor", Utils::ToString(colorPoint.color)));
-                    stopEntry.push_back(JSONNode("stopOpacity", Utils::ToString((double)(colorPoint.color.alpha / 255.0))));
+                    stopEntry.push_back(JSONNode("stopOpacity", 
+                        Utils::ToString((float)(colorPoint.color.alpha / 255.0), m_dataPrecision)));
                     stopPointArray->set_name("GradientStops");
                     stopPointArray->push_back(stopEntry);
                 }
@@ -1844,19 +1903,23 @@ namespace SnapSVGAnimator
 
             res = pGradientBevelFilter->GetAngle(angle);
             ASSERT(FCM_SUCCESS_CODE(res));
-            commandElement.push_back(JSONNode("angle", SnapSVGAnimator::Utils::ToString((double)angle)));
+            commandElement.push_back(JSONNode("angle", 
+                SnapSVGAnimator::Utils::ToString((double)angle, m_dataPrecision)));
 
             res = pGradientBevelFilter->GetBlurX(blurX);
             ASSERT(FCM_SUCCESS_CODE(res));
-            commandElement.push_back(JSONNode("blurX", SnapSVGAnimator::Utils::ToString((double)blurX)));
+            commandElement.push_back(JSONNode("blurX", 
+                SnapSVGAnimator::Utils::ToString((double)blurX, m_dataPrecision)));
 
             res = pGradientBevelFilter->GetBlurY(blurY);
             ASSERT(FCM_SUCCESS_CODE(res));
-            commandElement.push_back(JSONNode("blurY", SnapSVGAnimator::Utils::ToString((double)blurY)));
+            commandElement.push_back(JSONNode("blurY", 
+                SnapSVGAnimator::Utils::ToString((double)blurY, m_dataPrecision)));
 
             res = pGradientBevelFilter->GetDistance(distance);
             ASSERT(FCM_SUCCESS_CODE(res));
-            commandElement.push_back(JSONNode("distance", SnapSVGAnimator::Utils::ToString((double)distance)));
+            commandElement.push_back(JSONNode("distance", 
+                SnapSVGAnimator::Utils::ToString((double)distance, m_dataPrecision)));
 
             res = pGradientBevelFilter->GetKnockout(knockOut);
             ASSERT(FCM_SUCCESS_CODE(res));
@@ -1918,9 +1981,11 @@ namespace SnapSVGAnimator
 
                     offset = (float)((colorPoint.pos * 100) / 255.0);
 
-                    stopEntry.push_back(JSONNode("offset", Utils::ToString((double) offset)));
+                    stopEntry.push_back(JSONNode("offset", 
+                        Utils::ToString((float) offset, m_dataPrecision)));
                     stopEntry.push_back(JSONNode("stopColor", Utils::ToString(colorPoint.color)));
-                    stopEntry.push_back(JSONNode("stopOpacity", Utils::ToString((double)(colorPoint.color.alpha / 255.0))));
+                    stopEntry.push_back(JSONNode("stopOpacity", 
+                        Utils::ToString((float)(colorPoint.color.alpha / 255.0), m_dataPrecision)));
                     stopPointsArray->set_name("GradientStops");
                     stopPointsArray->push_back(stopEntry);
                 }
@@ -1952,19 +2017,23 @@ namespace SnapSVGAnimator
 
             res = pAdjustColorFilter->GetBrightness(brightness);
             ASSERT(FCM_SUCCESS_CODE(res));
-            commandElement.push_back(JSONNode("brightness", SnapSVGAnimator::Utils::ToString((double)brightness)));
+            commandElement.push_back(JSONNode("brightness", 
+                SnapSVGAnimator::Utils::ToString((double)brightness, m_dataPrecision)));
 
             res = pAdjustColorFilter->GetContrast(contrast);
             ASSERT(FCM_SUCCESS_CODE(res));
-            commandElement.push_back(JSONNode("contrast", SnapSVGAnimator::Utils::ToString((double)contrast)));
+            commandElement.push_back(JSONNode("contrast", 
+                SnapSVGAnimator::Utils::ToString((double)contrast, m_dataPrecision)));
 
             res = pAdjustColorFilter->GetSaturation(saturation);
             ASSERT(FCM_SUCCESS_CODE(res));
-            commandElement.push_back(JSONNode("saturation", SnapSVGAnimator::Utils::ToString((double)saturation)));
+            commandElement.push_back(JSONNode("saturation", 
+                SnapSVGAnimator::Utils::ToString((double)saturation, m_dataPrecision)));
 
             res = pAdjustColorFilter->GetHue(hue);
             ASSERT(FCM_SUCCESS_CODE(res));
-            commandElement.push_back(JSONNode("hue", SnapSVGAnimator::Utils::ToString((double)hue)));
+            commandElement.push_back(JSONNode("hue", 
+                SnapSVGAnimator::Utils::ToString((double)hue, m_dataPrecision)));
         }
 
         m_pCommandArray->push_back(commandElement);
@@ -1982,7 +2051,7 @@ namespace SnapSVGAnimator
 
         commandElement.push_back(JSONNode("cmdType", "Move"));
         commandElement.push_back(JSONNode("objectId", SnapSVGAnimator::Utils::ToString(objectId)));
-        transformMat = SnapSVGAnimator::Utils::ToString(matrix);
+        transformMat = SnapSVGAnimator::Utils::ToString(matrix, m_dataPrecision);
         commandElement.push_back(JSONNode("transformMatrix", transformMat.c_str()));
 
         m_pCommandArray->push_back(commandElement);
@@ -2000,7 +2069,7 @@ namespace SnapSVGAnimator
 
         commandElement.push_back(JSONNode("cmdType", "UpdateColorTransform"));
         commandElement.push_back(JSONNode("objectId", SnapSVGAnimator::Utils::ToString(objectId)));
-        colorMat = SnapSVGAnimator::Utils::ToString(colorMatrix);
+        colorMat = SnapSVGAnimator::Utils::ToString(colorMatrix, m_dataPrecision);
         commandElement.push_back(JSONNode("colorMatrix", colorMat.c_str()));
 
         m_pCommandArray->push_back(commandElement);
@@ -2095,8 +2164,11 @@ namespace SnapSVGAnimator
     }
 
 
-    JSONTimelineWriter::JSONTimelineWriter(FCM::PIFCMCallback pCallback) :
-        m_pCallback(pCallback)
+    JSONTimelineWriter::JSONTimelineWriter(
+        FCM::PIFCMCallback pCallback,
+        DataPrecision dataPrecision) :
+        m_pCallback(pCallback),
+        m_dataPrecision(dataPrecision)
     {
         m_pCommandArray = new JSONNode(JSON_ARRAY);
         ASSERT(m_pCommandArray);

@@ -47,6 +47,18 @@
 
 /* -------------------------------------------------- Enums */
 
+namespace SnapSVGAnimator
+{
+    enum DataPrecision
+    {
+        PRECISION_2 = 2,
+        PRECISION_3 = 3,
+        PRECISION_4 = 4,
+        PRECISION_5 = 5,
+        PRECISION_6 = 6
+    };
+}
+
 
 /* -------------------------------------------------- Macros / Constants */
 
@@ -84,6 +96,8 @@
 
 #define DICT_OUT_FILE_KEY               "PublishSettings.SnapSvgAnimator.OutFile"
 #define DICT_MINIFY_KEY                 "PublishSettings.SnapSvgAnimator.Minify"
+#define DICT_COMPACT_DATA_KEY           "PublishSettings.SnapSvgAnimator.CompactData"
+#define DICT_COMPACT_DATA_OPT_KEY       "PublishSettings.SnapSvgAnimator.CompactDataOptions"
 
 /* -------------------------------------------------- Structs / Unions */
 
@@ -104,17 +118,17 @@ namespace SnapSVGAnimator
 
         static std::string ToString(const FCM::FCMGUID& in);
 
-        static std::string ToString(const double& in);
+        static std::string ToString(const double& in, int precision);
 
-        static std::string ToString(const float& in);
+        static std::string ToString(const float& in, int precision);
 
         static std::string ToString(const FCM::U_Int32& in);
 
         static std::string ToString(const FCM::S_Int32& in);
 
-        static std::string ToString(const DOM::Utils::MATRIX2D& matrix);
+        static std::string ToString(const DOM::Utils::MATRIX2D& matrix, FCM::U_Int8 precision);
 
-        static std::string ToString(const DOM::Utils::COLOR_MATRIX& colorMatrix);
+        static std::string ToString(const DOM::Utils::COLOR_MATRIX& colorMatrix, FCM::U_Int8 precision);
 
         static std::string ToString(const DOM::Utils::CapType& capType);
 
@@ -136,7 +150,7 @@ namespace SnapSVGAnimator
 
         static std::string ToString(FCM::CStringRep8 pStr8);
 
-        static std::string ToString(const DOM::Utils::RECT& rect);
+        static std::string ToString(const DOM::Utils::RECT& rect, FCM::U_Int8 precision);
         
         static FCM::StringRep16 ToString16(const std::string& str, FCM::PIFCMCallback pCallback);
 
@@ -147,6 +161,8 @@ namespace SnapSVGAnimator
         static std::string ToString(const DOM::Utils::COLOR& color);
 
         static bool ToBool(const std::string& str);
+
+        static DataPrecision ToPrecision(const std::string& str);
 
         static void TransformPoint(
             const DOM::Utils::MATRIX2D& matrix, 
@@ -210,6 +226,7 @@ namespace SnapSVGAnimator
 
         static void InitSockAddr(sockaddr_in* sockAddr);
 
+        static void RemoveTrailingZeroes(char *str);
 #endif
 	
     };
