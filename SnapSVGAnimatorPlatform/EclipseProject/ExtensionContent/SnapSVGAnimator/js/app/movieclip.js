@@ -23,7 +23,8 @@ define(function (require) {
 
 		this.m_timeline = commandTimeline;
 		this.m_currentFrameNo = 0;
-		this.m_frameCount = this.m_timeline.Frame.length;
+		//this.m_frameCount = this.m_timeline.Frame.length;
+		this.m_frameCount = this.m_timeline.frameCount;
 
 		this.children = [];
         this.isMask = false;
@@ -141,11 +142,23 @@ define(function (require) {
 
         this.m_currentFrameNo = 0;
 
+        /*
         frame = this.m_timeline.Frame[this.m_currentFrameNo];	
-
         if (!frame) {
             return;
         }
+        */
+        ////////////////
+        for (i = 0; i < this.m_timeline.Frame.length; i += 1) {
+            if (parseInt(this.m_timeline.Frame[i].num) == this.m_currentFrameNo) {
+                frame = this.m_timeline.Frame[i];
+                break;
+            } else if (i >= this.m_timeline.Frame.length - 1) {
+                return;
+            }
+        }
+        ////////////////
+
 
         //Get the commands for the first frame
         commands = frame.Command;	
@@ -204,10 +217,23 @@ define(function (require) {
             this.loop(commandList);
         }
 
+        /*
 		frame = this.m_timeline.Frame[this.m_currentFrameNo];
 	  	if (!frame) {
 	  		return;
     	}
+        */
+        ////////////////
+        for (i = 0; i < this.m_timeline.Frame.length; i += 1) {
+            if (parseInt(this.m_timeline.Frame[i].num) == this.m_currentFrameNo) {
+                frame = this.m_timeline.Frame[i];
+                break;
+            } else if (i >= this.m_timeline.Frame.length - 1) {
+                this.m_currentFrameNo += 1;
+                return;
+            }
+        }
+        ////////////////
 
 		commands = frame.Command;
 		for(c = 0; c < commands.length; c += 1)
