@@ -2,26 +2,6 @@ define(function (require) {
 	
     var Shape;
 
-	function hexToRgb(hex) {
-    	var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    	return result ? {
-        	r: parseInt(result[1], 16),
-        	g: parseInt(result[2], 16),
-        	b: parseInt(result[3], 16)
-    	} : null;
-	}
-
-    function newPattern(src, resourceImg) {
-        var image,
-            pattern;
-
-        image = s.image(src);
-        pattern = image.pattern(0, 0, resourceImg.width, resourceImg.height);
-        pattern.attr({x: mat.e, y: mat.f});
-
-        return pattern;
-    }
-
     Shape = function (parentMC,resourceManager,charId,ObjectId,placeAfter,transform) {
         var instance = this,
             parentEl = parentMC.el;
@@ -120,10 +100,10 @@ define(function (require) {
                 if (exists.attr('href') == src) {	//check if image href matches as well as other props
                     fillImage = exists.parent();
                 } else {
-                    fillImage = newPattern(src, resourceImg);
+                    fillImage = newPattern(src, resourceImg, mat);
                 }
             } else {
-                fillImage = newPattern(src, resourceImg);
+                fillImage = newPattern(src, resourceImg, mat);
             }
 
             return fillImage;
@@ -233,6 +213,26 @@ define(function (require) {
                 shape.attr({stroke: colStr, strokeWidth: resourcePath.strokeWidth});
             }
         };
+
+        function hexToRgb(hex) {
+            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+
+        function newPattern(src, resourceImg, mat) {
+            var image,
+                pattern;
+
+            image = instance.el.image(src);
+            pattern = image.pattern(0, 0, resourceImg.width, resourceImg.height);
+            pattern.attr({x: mat.e, y: mat.f});
+
+            return pattern;
+        }
 
         this.create();
     };
