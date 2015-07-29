@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common/ThirdParty">
+      <UniqueIdentifier>{91BCCDFC-230F-D6B8-4BAF-96F3AD37459D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source">
+      <UniqueIdentifier>{A6511C25-0F00-D36F-ED11-92E5CEA62871}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SnapSVGAnimatorPlugin">
+      <UniqueIdentifier>{12212D0A-DB66-8E26-2FF1-64B746E5A190}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SnapSVGAnimatorPlugin\src">
+      <UniqueIdentifier>{F50807DB-6135-EFB9-3F4D-ADBEAA47DE0D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common/ThirdParty\mongoose">
+      <UniqueIdentifier>{6a3bc4be-e111-4dd8-9937-b9d1b78a7b7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SnapSVGAnimatorPlugin\project">
+      <UniqueIdentifier>{d47bc02c-8b27-4587-8c91-373cc46233e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SnapSVGAnimatorPlugin\project\win">
+      <UniqueIdentifier>{53ee98af-0e70-4c2e-a6b7-3ff4cc66a96c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONWorker.cpp">
+      <Filter>Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONValidator.cpp">
+      <Filter>Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\libjson.cpp">
+      <Filter>Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONChildren.cpp">
+      <Filter>Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONWriter.cpp">
+      <Filter>Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONAllocator.cpp">
+      <Filter>Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONStream.cpp">
+      <Filter>Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\DocType.cpp">
+      <Filter>SnapSVGAnimatorPlugin\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\OutputWriter.cpp">
+      <Filter>SnapSVGAnimatorPlugin\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Publisher.cpp">
+      <Filter>SnapSVGAnimatorPlugin\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONNode.cpp">
+      <Filter>Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONNode_Mutex.cpp">
+      <Filter>Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\internalJSONNode.cpp">
+      <Filter>Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONPreparse.cpp">
+      <Filter>Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\MyXmlParser.cpp">
+      <Filter>SnapSVGAnimatorPlugin\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONMemory.cpp">
+      <Filter>Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Main.cpp">
+      <Filter>SnapSVGAnimatorPlugin\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONIterators.cpp">
+      <Filter>Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Utils.cpp">
+      <Filter>SnapSVGAnimatorPlugin\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\ThirdParty\libjson_7.6.1\libjson\_internal\Source\JSONDebug.cpp">
+      <Filter>Common/ThirdParty\libjson_7.6.1/libjson/_internal/Source</Filter>
+    </ClCompile>
+    <ClCompile Include="SnapSVGAnimatorPlugin_mp_precomp_64.cpp">
+      <Filter>SnapSVGAnimatorPlugin\project\win</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\HTTPServer.cpp">
+      <Filter>SnapSVGAnimatorPlugin\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\ThirdParty\mongoose\mongoose.c">
+      <Filter>Common/ThirdParty\mongoose</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
