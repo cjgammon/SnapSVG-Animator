@@ -144,9 +144,6 @@ define(function (require) {
 
         /*
         frame = this.m_timeline.Frame[this.m_currentFrameNo];	
-        if (!frame) {
-            return;
-        }
         */
         ////////////////
         for (i = 0; i < this.m_timeline.Frame.length; i += 1) {
@@ -158,7 +155,9 @@ define(function (require) {
             }
         }
         ////////////////
-
+        if (!frame) {
+            return;
+        }
 
         //Get the commands for the first frame
         commands = frame.Command;	
@@ -219,9 +218,6 @@ define(function (require) {
 
         /*
 		frame = this.m_timeline.Frame[this.m_currentFrameNo];
-	  	if (!frame) {
-	  		return;
-    	}
         */
         ////////////////
         for (i = 0; i < this.m_timeline.Frame.length; i += 1) {
@@ -234,6 +230,9 @@ define(function (require) {
             }
         }
         ////////////////
+        if (!frame) {
+	  		return;
+    	}
 
 		commands = frame.Command;
 		for(c = 0; c < commands.length; c += 1)
