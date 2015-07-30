@@ -11,6 +11,8 @@ define(function (require) {
             script,
             callbackName = 'jsonp_callback_' + jsonfile.replace('.json', '');
 
+        console.log("TESTING DEV");
+
         if (jsonfile) {
 			//JSONP_Req(jsonfile);
 			AJAX_JSON_Req(jsonfile);
