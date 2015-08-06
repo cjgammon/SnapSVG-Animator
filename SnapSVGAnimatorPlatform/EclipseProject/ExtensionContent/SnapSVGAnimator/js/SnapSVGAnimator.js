@@ -1142,10 +1142,6 @@ ResourceManager.prototype.getText = function(id) {
     return this.m_text[id];
 };
 
-SVGAnim.prototype.toString = function () {
-    console.log('hi3');
-    return "SnapSVGAnimator v" + this.version;
-};
 
 /**
  * SVGAnim
