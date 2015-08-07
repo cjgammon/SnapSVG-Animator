@@ -67,17 +67,41 @@ namespace SnapSVGAnimator
         </head> \n\
         \n\
         <body> \n\
-            <script type=\"text/javascript\"> \n\
-                var jsonfile = \"%s\",\n\
-                    fps = %d,\n\
-                    width = %d,\n\
-                    height = %d;\n\
-                \n\
-                function ready(c) {\n\
-                    c.play();\n\
-                }\n\
+    <script src=\"./SnapSVGAnimator/js/vendor/snap.svg.js\"></script>\n\
+    <script src=\"./SnapSVGAnimator/js/SVGAnimator.js\"></script>\n\
+\n\
+    <script type=\"text/javascript\"> \n\
+        var jsonfile = \"%s\",\n\
+            fps = %d,\n\
+            width = %d,\n\
+            height = %d,\n\
+            AJAX_req;\n\
+\n\
+    function handle_AJAX_Complete() {\n\
+        if( AJAX_req.readyState == 4 && AJAX_req.status == 200 )\n\
+        {\n\
+            json = JSON.parse(AJAX_req.responseText);\n\
+            comp = new SVGAnim(\n\
+                           json,\n\
+                           width,\n\
+                           height\n\
+                           );\n\
+            \n\
+            comp.play();\n\
+        }\n\
+    }\n\
+\n\
+    function AJAX_JSON_Req( url )\n\
+    {\n\
+        AJAX_req = new XMLHttpRequest();\n\
+        AJAX_req.open(\"GET\", url, true);\n\
+        AJAX_req.setRequestHeader(\"Content-type\", \"application/json\");\n\
+        \n\
+        AJAX_req.onreadystatechange = handle_AJAX_Complete;\n\
+        AJAX_req.send();\n\
+    }\n\
+\n\
             </script>\n\
-            <script src=\"./%s/%s\" %s></script> \n\
         </body>\n\
         </html>";
 
