@@ -720,30 +720,44 @@ namespace SnapSVGAnimator
         Utils::GetParent(sourceFolder, sourceFolder);
 
         // First let us remove the existing runtime folder (if any)
-        Utils::Remove(outputFolder + RUNTIME_FOLDER_NAME, GetCallback());
+        Utils::Remove(outputFolder + RUNTIME_ROOT_FOLDER_NAME, GetCallback());
 
         if (m_minify)
         {
             // Copy the minified runtime
-            std::string srcFilePath = sourceFolder + RUNTIME_FOLDER_NAME + "/" + 
-                RUNTIME_MINIFIED_SUBFOLDER_NAME + "/" + RUNTIME_MINIFIED_FILE_NAME;
-            std::string dstFilePath = outputFolder + RUNTIME_FOLDER_NAME + "/";
+            std::string srcFolder = sourceFolder + RUNTIME_ROOT_FOLDER_NAME + "/" + 
+                RUNTIME_COMMON_SUBFOLDER_NAME + "/";
 
-            Utils::CreateDir(dstFilePath, GetCallback());
+            std::string srcFilePath = srcFolder + RUNTIME_MINIFIED_FILE_NAME;
+            std::string dstFileFolder = outputFolder + RUNTIME_ROOT_FOLDER_NAME + "/";
 
-            dstFilePath += RUNTIME_MINIFIED_SUBFOLDER_NAME;
-            dstFilePath += "/";
-            Utils::CreateDir(dstFilePath, GetCallback());
+            Utils::CreateDir(dstFileFolder, GetCallback());
 
-            dstFilePath += RUNTIME_MINIFIED_FILE_NAME;
+            dstFileFolder += RUNTIME_COMMON_SUBFOLDER_NAME;
+            dstFileFolder += "/";
+            Utils::CreateDir(dstFileFolder, GetCallback());
 
-            std::string dstFolder = outputFolder + RUNTIME_FOLDER_NAME + "/";
+            std::string dstFilePath = dstFileFolder + RUNTIME_MINIFIED_FILE_NAME;
+
+            res = Utils::CopyAFile(srcFilePath, dstFilePath, GetCallback());
+
+            // Copy the snap.svg library
+            srcFilePath = srcFolder + THIRD_PARTY_SUBFOLDER_NAME + "/" + SNAP_SVG_SUBFOLDER_NAME + "/" + 
+                SNAP_SVG_MINIFIED_LIB_FILE_NAME;
+
+            dstFileFolder = dstFileFolder + THIRD_PARTY_SUBFOLDER_NAME + "/";
+            Utils::CreateDir(dstFileFolder, GetCallback());
+
+            dstFileFolder = dstFileFolder + SNAP_SVG_SUBFOLDER_NAME + "/";
+            Utils::CreateDir(dstFileFolder, GetCallback());
+
+            dstFilePath = dstFileFolder + SNAP_SVG_MINIFIED_LIB_FILE_NAME;
             res = Utils::CopyAFile(srcFilePath, dstFilePath, GetCallback());
         }
         else
         {
             // Copy the runtime folder
-            res = Utils::CopyDir(sourceFolder + RUNTIME_FOLDER_NAME, outputFolder, GetCallback());
+            res = Utils::CopyDir(sourceFolder + RUNTIME_ROOT_FOLDER_NAME, outputFolder, GetCallback());
         }
 
         return res;

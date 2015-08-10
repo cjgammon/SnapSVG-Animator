@@ -67,8 +67,8 @@ namespace SnapSVGAnimator
         </head> \n\
         \n\
         <body> \n\
-    <script src=\"./SnapSVGAnimator/js/vendor/snap.svg.js\"></script>\n\
-    <script src=\"./SnapSVGAnimator/js/SVGAnimator.js\"></script>\n\
+    <script src=\"./%s\"></script>\n\
+    <script src=\"./%s\"></script>\n\
 \n\
     <script type=\"text/javascript\"> \n\
         var jsonfile = \"%s\",\n\
@@ -105,13 +105,6 @@ namespace SnapSVGAnimator
         </body>\n\
         </html>";
 
-    // scriptSrcPath and dataMain are needed only for non-minified versions of the runtime
-    static const char* scriptSrcPathUnMinified = "js/vendor/requirejs/require.js";
-    static const char* dataMainUnMinified = "data-main=\"%s/js/main\"";
-
-    static const char* scriptSrcPathMinified = "%s/%s";
-    static const char* dataMainMinified = "";
-
     /* -------------------------------------------------- JSONOutputWriter */
 
     FCM::Result JSONOutputWriter::StartOutput(std::string& outputFileName)
@@ -144,9 +137,6 @@ namespace SnapSVGAnimator
         FCM::U_Int32 stageWidth,
         FCM::U_Int32 fps)
     {
-        char scriptSrcPath[256];
-        char dataMainPath[256];
-
         m_HTMLOutput = new char[strlen(htmlOutput) + 2 * FILENAME_MAX + 50];
         if (m_HTMLOutput == NULL)
         {
@@ -156,15 +146,27 @@ namespace SnapSVGAnimator
         std::string outputFileName;
         Utils::GetFileNameWithoutExtension(m_outputJSONFileName, outputFileName);
 
+        std::string runtimePath;
+        std::string svgLibPath;
+        runtimePath = RUNTIME_ROOT_FOLDER_NAME;
+        runtimePath += "/";
+        runtimePath += RUNTIME_COMMON_SUBFOLDER_NAME;
+        runtimePath += "/";
+        svgLibPath = runtimePath;
+        svgLibPath += THIRD_PARTY_SUBFOLDER_NAME;
+        svgLibPath += "/";
+        svgLibPath += SNAP_SVG_SUBFOLDER_NAME;
+        svgLibPath += "/";
+
         if (!m_minify)
         {
-            strcpy(scriptSrcPath, scriptSrcPathUnMinified);
-            sprintf(dataMainPath, dataMainUnMinified, RUNTIME_FOLDER_NAME);
+            svgLibPath += SNAP_SVG_LIB_FILE_NAME;
+            runtimePath += RUNTIME_FILE_NAME;
         }
         else
         {
-            sprintf(scriptSrcPath, scriptSrcPathMinified, RUNTIME_MINIFIED_SUBFOLDER_NAME, RUNTIME_MINIFIED_FILE_NAME);
-            strcpy(dataMainPath, dataMainMinified);
+            svgLibPath += SNAP_SVG_MINIFIED_LIB_FILE_NAME;
+            runtimePath += RUNTIME_MINIFIED_FILE_NAME;
         }
 
         sprintf(m_HTMLOutput, 
@@ -173,13 +175,12 @@ namespace SnapSVGAnimator
             background.red,
             background.green,
             background.blue,
+            svgLibPath.c_str(),
+            runtimePath.c_str(),
             m_outputJSONFileName.c_str(), 
             fps, 
             stageWidth, 
-            stageHeight,
-            RUNTIME_FOLDER_NAME,
-            scriptSrcPath,
-            dataMainPath);
+            stageHeight);
 
         return FCM_SUCCESS;
     }

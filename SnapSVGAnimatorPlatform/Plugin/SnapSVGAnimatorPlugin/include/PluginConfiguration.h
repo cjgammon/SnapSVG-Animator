@@ -41,13 +41,28 @@
 #define DOCTYPE_DESCRIPTION					"This document can be used to author content for SnapSVG animator."
 
 /* The value of RUNTIME_FOLDER_NAME must be the name of the runtime folder present in EclipseProject/ExtensionContent. */
-#define RUNTIME_FOLDER_NAME                 "SnapSVGAnimator"
+#define RUNTIME_ROOT_FOLDER_NAME            "SnapSVGAnimator"
 
-/* Sub-folder within RUNTIME_FOLDER_NAME where the minified runtime resides */
-#define RUNTIME_MINIFIED_SUBFOLDER_NAME     "js"
+/* Sub-folder within RUNTIME_ROOT_FOLDER_NAME where the minified runtime resides */
+#define RUNTIME_COMMON_SUBFOLDER_NAME       "js"
+
+/* Sub-folder within RUNTIME_COMMON_SUBFOLDER_NAME where the third party code for runtime resides */
+#define THIRD_PARTY_SUBFOLDER_NAME          "vendor"
+
+/* Sub-folder within THIRD_PARTY_SUBFOLDER_NAME where the Snap.SVG runtime resides */
+#define SNAP_SVG_SUBFOLDER_NAME             "snap.svg"
+
+/* Runtime file name */
+#define RUNTIME_FILE_NAME                   "SnapSVGAnimator.js"
 
 /* Minified runtime file name */
-#define RUNTIME_MINIFIED_FILE_NAME          "main.min.js"
+#define RUNTIME_MINIFIED_FILE_NAME          "SnapSVGAnimator.min.js"
+
+/* Snap.SVG file name */
+#define SNAP_SVG_LIB_FILE_NAME              "snap.svg.js"
+
+/* Snap.SVG minified file name */
+#define SNAP_SVG_MINIFIED_LIB_FILE_NAME     "snap.svg-min.js"
 
 namespace SnapSVGAnimator
 {
