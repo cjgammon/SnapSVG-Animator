@@ -77,6 +77,8 @@ namespace SnapSVGAnimator
             height = %d,\n\
             AJAX_req;\n\
 \n\
+    AJAX_JSON_Req(jsonfile);\n\
+\n\
     function handle_AJAX_Complete() {\n\
         if( AJAX_req.readyState == 4 && AJAX_req.status == 200 )\n\
         {\n\
