@@ -852,7 +852,9 @@ namespace SnapSVGAnimator
         pCalloc->Free(folderStr);
 
 #else
-        remove(folder.c_str());
+        std::string delFolder = folder + "/";
+        std::string cmd = "rm -rf " + delFolder;
+        std::system(cmd.c_str());
 #endif
 
         return FCM_SUCCESS;
