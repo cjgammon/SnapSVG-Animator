@@ -1148,16 +1148,18 @@ ResourceManager.prototype.getText = function(id) {
  * initialize animation component
  *
  */
-function SVGAnim(data, w, h) {
+function SVGAnim(data, w, h, parameters) {
     var instance = this,
+        params = parameters || {},
         timeline,
         cbk;
+
+    autoplay = params.autoplay;    
 
     w = w || 100;
     h = h || 100;
 
     SVGAnim.prototype.toString = function () {
-        console.log('hi');
         return "SnapSVGAnimator v" + this.version;
     };
 
@@ -1287,6 +1289,12 @@ function SVGAnim(data, w, h) {
 
     function reset() {
 
+    }
+
+    if (autoplay) {
+        instance.play();
+    } else {
+        loop();
     }
 
 }
