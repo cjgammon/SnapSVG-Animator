@@ -1039,8 +1039,8 @@ MovieClip.prototype.play = function (resourceManager) {
                 child.el.after(currentMaskGroup);
                 currentMaskGroup.attr({mask: currentMaskEl});
 
-                gp.addEmpty(currentMaskGroup);
-                gp.addRef(currentMaskEl, [currentMaskGroup]);
+                GP.addEmpty(currentMaskGroup);
+                GP.addRef(currentMaskEl, [currentMaskGroup]);
 
                 if (child.id == child.maskTill) {
                     insideMask = false;
