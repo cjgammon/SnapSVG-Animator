@@ -4,16 +4,18 @@
  * initialize animation component
  *
  */
-function SVGAnim(data, w, h, parameters) {
+function SVGAnim(data, w, h, fps, params) {
     var instance = this,
-        params = parameters || {},
         timeline,
+        autoplay,
         cbk;
 
-    autoplay = params.autoplay;    
-
+    params = params|| {};
+    fps = fps || 24;
     w = w || 100;
     h = h || 100;
+    
+    autoplay = params.autoplay;    
 
     SVGAnim.prototype.toString = function () {
         return "SnapSVGAnimator v" + this.version;
