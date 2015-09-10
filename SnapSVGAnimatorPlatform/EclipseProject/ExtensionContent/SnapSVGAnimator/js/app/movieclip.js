@@ -135,19 +135,19 @@ MovieClip.prototype.loop = function (commandList) {
 
     this.m_currentFrameNo = 0;
 
-    /*
-    frame = this.m_timeline.Frame[this.m_currentFrameNo];	
-    */
-    ////////////////
+    //loop through keyframes to find first frame
     for (i = 0; i < this.m_timeline.Frame.length; i += 1) {
+
         if (parseInt(this.m_timeline.Frame[i].num) == this.m_currentFrameNo) {
             frame = this.m_timeline.Frame[i];
             break;
         } else if (i >= this.m_timeline.Frame.length - 1) {
+            //the first frame is empty
+            this.clearChildren(commandList);
             return;
         }
     }
-    ////////////////
+
     if (!frame) {
         return;
     }
@@ -181,6 +181,18 @@ MovieClip.prototype.loop = function (commandList) {
     }
 };
 
+MovieClip.prototype.clearChildren = function (commandList) {
+    var i,
+        child,
+        command;
+
+    for (i = 0; i < this.children.length; i += 1) {
+        child = this.children[i];
+        command = new CMD.RemoveObjectCommand(child.id);
+        commandList.push(command);
+    }
+};
+
 MovieClip.prototype.play = function (resourceManager) {
     var commandList = [],
         frame,
@@ -209,20 +221,19 @@ MovieClip.prototype.play = function (resourceManager) {
         this.loop(commandList);
     }
 
-    /*
-    frame = this.m_timeline.Frame[this.m_currentFrameNo];
-    */
-    ////////////////
     for (i = 0; i < this.m_timeline.Frame.length; i += 1) {
         if (parseInt(this.m_timeline.Frame[i].num) == this.m_currentFrameNo) {
             frame = this.m_timeline.Frame[i];
             break;
         } else if (i >= this.m_timeline.Frame.length - 1) {
+            if (this.m_currentFrameNo === 0) { //first frame is empty (execute any remove commands)
+                this.executeCommands(commandList, resourceManager); 
+            }
             this.m_currentFrameNo += 1;
             return;
         }
     }
-    ////////////////
+    
     if (!frame) {
         return;
     }
@@ -284,15 +295,21 @@ MovieClip.prototype.play = function (resourceManager) {
         commandList.push(command);
     }
 
+    this.executeCommands(commandList, resourceManager);
+
+    this.m_currentFrameNo++;
+
+    GP.purge();
+};
+
+MovieClip.prototype.executeCommands = function (commandList, resourceManager) {
+    var i;
+
     for (i = 0; i < commandList.length ; i++)
     {
         if (commandList[i] !== undefined) {
              commandList[i].execute(this, resourceManager);
         }
     }
-
-    this.m_currentFrameNo++;
-
-    GP.purge();
 };
 

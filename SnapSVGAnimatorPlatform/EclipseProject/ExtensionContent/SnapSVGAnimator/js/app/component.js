@@ -16,6 +16,8 @@ function SVGAnim(data, w, h, fps, params) {
     h = h || 100;
     
     autoplay = params.autoplay;    
+    
+    instance.debug = false;
 
     SVGAnim.prototype.toString = function () {
         return "SnapSVGAnimator v" + this.version;
