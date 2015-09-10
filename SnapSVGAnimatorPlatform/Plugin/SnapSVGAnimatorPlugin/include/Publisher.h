@@ -146,7 +146,9 @@ namespace SnapSVGAnimator
 
         FCM::Result Init();
 
-        FCM::Result ShowPreview(const std::string& outFile);
+        FCM::Result StartPreview(const std::string& outFile);
+        
+        FCM::Result StopPreview();
 
         FCM::Result ExportLibraryItems(FCM::FCMListPtr pLibraryItemList);
 

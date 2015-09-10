@@ -385,6 +385,9 @@ namespace SnapSVGAnimator
             res = pOutputWriter->EndOutput();
             ASSERT(FCM_SUCCESS_CODE(res));
         }
+        
+        // Stop preview
+        StopPreview();
 
 #ifdef USE_RUNTIME
 
@@ -398,7 +401,7 @@ namespace SnapSVGAnimator
 #endif
         if (IsPreviewNeeded(pDictConfig))
         {
-            ShowPreview(outFile);
+            StartPreview(outFile);
         }
 
 #endif
@@ -526,9 +529,29 @@ namespace SnapSVGAnimator
         }
         return res;
     }
+    
+    FCM::Result CPublisher::StopPreview()
+    {
+        FCM::Result res = FCM_SUCCESS;
+        
+#ifdef USE_HTTP_SERVER
+
+        HTTPServer* server;
+        
+        server = HTTPServer::GetInstance();
+        if (server)
+        {
+            // Stop the web server just in case it is running
+            server->Stop();
+        }
+        
+#endif // USE_HTTP_SERVER
+        
+        return res;
+    }
 
 
-    FCM::Result CPublisher::ShowPreview(const std::string& outFile)
+    FCM::Result CPublisher::StartPreview(const std::string& outFile)
     {
         FCM::Result res = FCM_SUCCESS;
 
@@ -542,11 +565,6 @@ namespace SnapSVGAnimator
         Utils::GetFileName(outFile, fileName);
 
         server = HTTPServer::GetInstance();
-        if (server)
-        {
-            // Stop the web server just in case it is running
-            server->Stop();
-        }
 
         int numTries = 0;
         while (numTries < MAX_RETRY_ATTEMPT)
