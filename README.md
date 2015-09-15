@@ -11,14 +11,8 @@ There are two ways to install the plug-in.
 ###Adobe Add-Ons Portal
 Install the plug-in from the [Adobe add-ons site](https://creative.adobe.com/addons/products/12329).
 
-###Command Line Tool
-Download the Adobe Extension Command Line Tool for your platform:
-- [Mac OS](http://www.adobeexchange.com/ExManCmd_mac.zip)
-- [Windows](http://www.adobeexchange.com/ExManCmd_win.zip)
-
-Then run the command:
-- Mac OS: ```./Contents/MacOS/ExManCmd --install myaddon.zxp```
-- Windows: ```ExManCmd.exe /install myaddon.zxp```
+###Manage Extensions Utility
+Install and run the Manage Extensions Utility following the instruction for your platform found [here](http://blogs.adobe.com/flashpro/installing-zxp-extensions-using-the-manage-extensions-utility/).
 
 Once it is installed you can create a new 'SnapSVGAnimator' document and publish like normal.
 
