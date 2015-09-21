@@ -29,6 +29,9 @@ function SVGAnim(data, w, h, fps, params) {
     instance.s = new Snap(w, h);
     id = instance.s.id;
     instance.s.attr('id', id);
+    instance.s.attr('viewBox', "0 0 " + w + " " + h);
+    instance.s.attr('preserveAspectRatio', 'xMidYMid meet');  //TODO::make this adjustable
+    //TODO:: set bg color here
 
     create(instance.s);
     
