@@ -60,7 +60,7 @@ namespace SnapSVGAnimator
         <html>\n\
         <head>\n\
         <style>\n\
-        #%s{\n\
+        svg{\n\
             background-color: #%02X%02X%02X;\n\
         }\n\
         </style>\n\
@@ -86,7 +86,8 @@ namespace SnapSVGAnimator
             comp = new SVGAnim(\n\
                            json,\n\
                            width,\n\
-                           height\n\
+                           height,\n\
+                           fps\n\
                            );\n\
             \n\
             comp.play();\n\
@@ -173,7 +174,6 @@ namespace SnapSVGAnimator
 
         sprintf(m_HTMLOutput, 
             htmlOutput, 
-            outputFileName.c_str(), 
             background.red,
             background.green,
             background.blue,
