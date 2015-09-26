@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<ExtensionManifest Version="4.0" ExtensionBundleId="com.example.SnapPlatform" ExtensionBundleVersion="1.2.0"
+<ExtensionManifest Version="4.0" ExtensionBundleId="com.example.SnapPlatform" ExtensionBundleVersion="1.2.1"
 		ExtensionBundleName="SnapSVGAnimator" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<ExtensionList>
-		<Extension Id="com.svg.SnapSVGAnimator.Plugin" Version="1.2" />
-		<Extension Id="com.svg.SnapSVGAnimator.PublishSettings" Version="1.2" />
+		<Extension Id="com.svg.SnapSVGAnimator.Plugin" Version="1.2.1" />
+		<Extension Id="com.svg.SnapSVGAnimator.PublishSettings" Version="1.2.1" />
 	</ExtensionList>
 	<ExecutionEnvironment>
 		<HostList>
@@ -52,7 +52,7 @@
 					<Menu>SnapSVG Animator Publish Settings</Menu>
 					<Geometry>
 						<Size>
-							<Height>170</Height>
+							<Height>200</Height>
 							<Width>486</Width>
 						</Size>
 					</Geometry>

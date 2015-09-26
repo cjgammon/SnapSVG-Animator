@@ -187,9 +187,21 @@ namespace SnapSVGAnimator
         FCM::U_Int32 stageWidth;
         FCM::Double fps;
         FCM::U_Int32 framesPerSec;
+        FCM::Boolean overwriteHTML = true;
         AutoPtr<ITimelineBuilderFactory> pTimelineBuilderFactory;
         FCM::FCMListPtr pTimelineList;
         FCM::U_Int32 timelineCount;
+
+        
+        // Read the overwriteHTML option from the publish settings
+        {
+            std::string str;
+            Utils::ReadString(pDictPublishSettings, (FCM::StringRep8)DICT_OVERWRITE_HTML_FILE_KEY, str);
+            if (!str.empty())
+            {
+                overwriteHTML = Utils::ToBool(str);
+            }
+        }
 
         // Read the minify option from the publish settings
         {
@@ -225,7 +237,7 @@ namespace SnapSVGAnimator
         }
 
         // Create a output writer
-        std::auto_ptr<IOutputWriter> pOutputWriter(new JSONOutputWriter(GetCallback(), m_minify, precision));
+        std::auto_ptr<IOutputWriter> pOutputWriter(new JSONOutputWriter(GetCallback(), m_minify, precision, overwriteHTML));
         if (pOutputWriter.get() == NULL)
         {
             return FCM_MEM_NOT_AVAILABLE;

@@ -49,16 +49,6 @@ function scripttime_minmax(value, min, max)
     else return value;
 }
 
-function checkvalue() { 
-    var mystring = document.getElementById('of').value; 
-    if(!mystring.match(/\S/)) {
-        alert ('Output file path cannot be empty');
-        return false;
-    } else {
-        return true;
-    }
-}
-
 function setUI(uiState)
 {
 	//alert(JSON.stringify(uiState.data["PublishSettings.SnapSvgAnimator.OutFile"]));
@@ -66,6 +56,15 @@ function setUI(uiState)
 	{
 		document.getElementById("of").value = uiState.data["PublishSettings.SnapSvgAnimator.OutFile"];
 		
+        if (uiState.data["PublishSettings.SnapSvgAnimator.OverwriteHTML"] == "true")
+        {
+            document.getElementById("OverwriteHTML").checked = true;
+        }
+        else
+		{
+			document.getElementById("OverwriteHTML").checked = false;
+        }     
+
 		if (uiState.data["PublishSettings.IncludeInvisibleLayer"] == "true")
 		{
 			document.getElementById("HiddenLayer").checked = true;
@@ -124,6 +123,15 @@ function serializeUI()
     var pubSettings = new Object();
     pubSettings["PublishSettings.SnapSvgAnimator.OutFile"] = document.getElementById("of").value.toString();
 		
+    if(document.getElementById("OverwriteHTML").checked == true)
+	{
+		pubSettings["PublishSettings.SnapSvgAnimator.OverwriteHTML"] = "true";
+	}
+	else
+	{
+		pubSettings["PublishSettings.SnapSvgAnimator.OverwriteHTML"] = "false";
+    }
+
 	if(document.getElementById("HiddenLayer").checked == true)
 	{
 		pubSettings["PublishSettings.IncludeInvisibleLayer"] = "true";
@@ -160,8 +168,6 @@ function serializeUI()
     event.data = JSON.stringify(pubSettings);
 	event.extensionId = "com.svg.SnapSVGAnimator.PublishSettings";
 	csInterface.dispatchEvent(event);
-
-	evalScript("fl.getDocumentDOM().publish();",publish_callback);
 }
 
 function onLoaded() {
@@ -222,9 +228,12 @@ function onAppThemeColorChanged(event) {
 }
 
 function onPublish() {
-	var retVal = checkvalue();
-	if(retVal)
-	serializeUI();
+    serializeUI();
+    evalScript("fl.getDocumentDOM().publish();",publish_callback);
+}
+
+function onSave() {
+    serializeUI();
 }
 
 function opsd() {
@@ -261,24 +270,33 @@ function imsd() {
         <input id="OPShowOpenDialog" type="image" src="folderOpen.png" style="left:10px" onclick="opsd()" >
 
         <br/>
+
+        <label class="overwriteHTMLLabel"> <input type="checkbox" id="OverwriteHTML" checked>Overwrite HTML</label> 
 	</p>
 	
 	<p>
 		<details open>
 			<summary>ADVANCED</summary>
 				<p>
+                <label class="advancedOptions">
 					<input type="checkbox" id="HiddenLayer" checked>Include hidden layers<br>
+                </label>                        
+                <label class="advancedOptions">
                     <input type="checkbox" id="Minify" checked>Minify<br>
+                </label>                        
+                <label class="advancedOptions">
 			        <input type="checkbox" id="CompactData" onchange="compactDataChanged()" checked>Compact data</label>
 						<select id="CompactDataOptions" class="myList">
 							<option value = "Low">Low</option>
 							<option value = "Medium">Medium</option>
 							<option value = "High" selected>High</option>
 							<option value = "VeryHigh">Very High</option>
-						</select><br>
+                        </select><br>
+                </label>                        
 				</p>
 	</div>
 
+    <button id="save" onclick="onSave()">Save</button>
     <button id="publish" onclick="onPublish()">Publish</button>
     
 </body>
