@@ -671,6 +671,19 @@ namespace SnapSVGAnimator
 #endif
     }
 
+    FCM::Boolean Utils::FileExists(const std::string& path, FCM::PIFCMCallback pCallback)
+    {
+        std::fstream file;
+
+        // TBD: This is a work-around. Use direct OS calls to determine if file exists.
+        Utils::OpenFStream(path, file, std::ios_base::in, pCallback);
+        if (file.is_open())
+        {
+            file.close();
+            return true;
+        }
+        return false;
+    }
 
     // Creates a directory. If the directory already exists or is successfully created, success
     // is returned; otherwise an error code is returned.

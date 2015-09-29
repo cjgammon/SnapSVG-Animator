@@ -140,6 +140,15 @@ namespace SnapSVGAnimator
         FCM::U_Int32 stageWidth,
         FCM::U_Int32 fps)
     {
+        // Write the HTML output only if the HTML file does not exist or
+        // overwrite is on.
+        FCM::Boolean fileExists = Utils::FileExists(m_outputHTMLFile, m_pCallback);
+        if (fileExists && !m_overwriteHTML)
+        {
+            m_HTMLOutput = NULL;
+            return FCM_SUCCESS;
+        }
+
         m_HTMLOutput = new char[strlen(htmlOutput) + 2 * FILENAME_MAX + 50];
         if (m_HTMLOutput == NULL)
         {
@@ -216,13 +225,16 @@ namespace SnapSVGAnimator
         
         file.close();
 
-        // Write the HTML file (overwrite file if it already exists)
-        Utils::OpenFStream(m_outputHTMLFile, file, std::ios_base::trunc|std::ios_base::out, m_pCallback);
+        if (m_HTMLOutput != NULL)
+        {
+            // Write the HTML file (overwrite file if it already exists)
+            Utils::OpenFStream(m_outputHTMLFile, file, std::ios_base::trunc|std::ios_base::out, m_pCallback);
 
-        file << m_HTMLOutput;
-        file.close();
+            file << m_HTMLOutput;
+            file.close();
 
-        delete [] m_HTMLOutput;
+            delete [] m_HTMLOutput;
+        }
 
         return FCM_SUCCESS;
     }
@@ -1028,8 +1040,9 @@ namespace SnapSVGAnimator
 
     JSONOutputWriter::JSONOutputWriter(
         FCM::PIFCMCallback pCallback, 
-        bool minify, 
-        DataPrecision dataPrecision)
+        FCM::Boolean minify, 
+        DataPrecision dataPrecision,
+        FCM::Boolean overwriteHTML)
         : m_pCallback(pCallback),
           m_shapeElem(NULL),
           m_pathArray(NULL),
@@ -1041,7 +1054,8 @@ namespace SnapSVGAnimator
           m_imageFolderCreated(false),
           m_soundFolderCreated(false),
           m_minify(minify),
-          m_dataPrecision(dataPrecision)
+          m_dataPrecision(dataPrecision),
+          m_overwriteHTML(overwriteHTML)
     {
         m_pRootNode = new JSONNode(JSON_NODE);
         ASSERT(m_pRootNode);

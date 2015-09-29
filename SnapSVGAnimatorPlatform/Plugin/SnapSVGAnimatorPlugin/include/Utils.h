@@ -95,6 +95,7 @@ namespace SnapSVGAnimator
 #endif
 
 #define DICT_OUT_FILE_KEY               "PublishSettings.SnapSvgAnimator.OutFile"
+#define DICT_OVERWRITE_HTML_FILE_KEY    "PublishSettings.SnapSvgAnimator.OverwriteHTML"
 #define DICT_MINIFY_KEY                 "PublishSettings.SnapSvgAnimator.Minify"
 #define DICT_COMPACT_DATA_KEY           "PublishSettings.SnapSvgAnimator.CompactData"
 #define DICT_COMPACT_DATA_OPT_KEY       "PublishSettings.SnapSvgAnimator.CompactDataOptions"
@@ -178,6 +179,8 @@ namespace SnapSVGAnimator
         static void GetFileExtension(const std::string& path, std::string& extension);
 
         static void GetModuleFilePath(std::string& path, FCM::PIFCMCallback pCallback);
+
+        static FCM::Boolean FileExists(const std::string& path, FCM::PIFCMCallback pCallback);
         
         static FCM::Result CreateDir(const std::string& path, FCM::PIFCMCallback pCallback);
 
