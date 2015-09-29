@@ -121,7 +121,13 @@ var Bitmap = function (parentMC,resourceManager,charId,ObjectId,placeAfter,trans
 
         if (placeAfter && parseInt(placeAfter) !== 0) {
             afterMC = parentMC.getChildById(parseInt(placeAfter));
-            afterMC.el.before(instance.el);
+
+            if (afterMC.isMasked) {  //if masked add outside mask group
+                afterMC.el.parent().before(instance.el);
+            } else {
+                afterMC.el.before(instance.el);
+            }
+
         } else {
             parentEl.add(instance.el); //TODO:: handle after
         }
@@ -165,7 +171,13 @@ var Text = function (parentMC,resourceManager,charId,ObjectId,placeAfter,transfo
 
         if (placeAfter && parseInt(placeAfter) !== 0) {
             afterMC = parentMC.getChildById(parseInt(placeAfter));
-            afterMC.el.before(instance.el);
+
+            if (afterMC.isMasked) {  //if masked add outside mask group
+                afterMC.el.parent().before(instance.el);
+            } else {
+                afterMC.el.before(instance.el);
+            }
+
         } else {
             parentEl.add(instance.el);
         }
@@ -341,7 +353,12 @@ var Shape = function (parentMC,resourceManager,charId,ObjectId,placeAfter,transf
 
         if (placeAfter && parseInt(placeAfter) !== 0) {
             afterMC = parentMC.getChildById(parseInt(placeAfter));
-            afterMC.el.before(instance.el);
+
+            if (afterMC.isMasked) {  //if masked add outside mask group
+                afterMC.el.parent().before(instance.el);
+            } else {
+                afterMC.el.before(instance.el);
+            }
         } else {
             parentEl.add(instance.el); //TODO:: handle after
         }
@@ -577,7 +594,13 @@ var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, 
 
     if (placeAfter && parseInt(placeAfter) !== 0) {
         afterMC = parentMC.getChildById(parseInt(placeAfter));
-        afterMC.el.before(this.el);
+
+        if (afterMC.isMasked) {  //if masked add outside mask group
+            afterMC.el.parent().before(this.el);
+        } else {
+            afterMC.el.before(this.el);
+        }
+
     } else {
         parentEl.add(this.el);         
     }
@@ -1190,6 +1213,9 @@ function SVGAnim(data, w, h, fps, params) {
     instance.s = new Snap(w, h);
     id = instance.s.id;
     instance.s.attr('id', id);
+    instance.s.attr('viewBox', "0 0 " + w + " " + h);
+    instance.s.attr('preserveAspectRatio', 'xMidYMid meet');  //TODO::make this adjustable
+    //TODO:: set bg color here
 
     create(instance.s);
     

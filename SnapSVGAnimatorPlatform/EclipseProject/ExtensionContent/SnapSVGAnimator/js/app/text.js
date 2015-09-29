@@ -33,7 +33,13 @@ var Text = function (parentMC,resourceManager,charId,ObjectId,placeAfter,transfo
 
         if (placeAfter && parseInt(placeAfter) !== 0) {
             afterMC = parentMC.getChildById(parseInt(placeAfter));
-            afterMC.el.before(instance.el);
+
+            if (afterMC.isMasked) {  //if masked add outside mask group
+                afterMC.el.parent().before(instance.el);
+            } else {
+                afterMC.el.before(instance.el);
+            }
+
         } else {
             parentEl.add(instance.el);
         }

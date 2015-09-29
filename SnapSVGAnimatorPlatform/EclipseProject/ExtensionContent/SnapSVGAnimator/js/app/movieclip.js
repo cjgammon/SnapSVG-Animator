@@ -37,7 +37,13 @@ var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, 
 
     if (placeAfter && parseInt(placeAfter) !== 0) {
         afterMC = parentMC.getChildById(parseInt(placeAfter));
-        afterMC.el.before(this.el);
+
+        if (afterMC.isMasked) {  //if masked add outside mask group
+            afterMC.el.parent().before(this.el);
+        } else {
+            afterMC.el.before(this.el);
+        }
+
     } else {
         parentEl.add(this.el);         
     }
