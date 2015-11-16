@@ -2147,34 +2147,33 @@ namespace SnapSVGAnimator
 
     FCM::Result JSONTimelineWriter::AddFrameScript(FCM::CStringRep16 pScript, FCM::U_Int32 layerNum)
     {
-        // As frame script is not supported, let us disable it.
-#if 0
         std::string script = Utils::ToString(pScript, m_pCallback);
 
-        std::string scriptWithLayerNumber = "script Layer" +  Utils::ToString(layerNum);
-
+#if 0 
         std::string find = "\n";
         std::string replace = "\\n";
-        std::string::size_type i =0;
-        JSONNode textElem(JSON_NODE);
+        std::string::size_type index = 0;
 
-        while (true) {
-            /* Locate the substring to replace. */
-            i = script.find(find, i);
-           
-            if (i == std::string::npos) break;
+        index = script.find(find, index);
+
+        while (index != std::string::npos) 
+        {
             /* Make the replacement. */
-            script.replace(i, find.length(), replace);
+            script.replace(index, find.length(), replace);
 
             /* Advance index forward so the next iteration doesn't pick it up as well. */
-            i += replace.length();
+            index += replace.length();
+
+            index = script.find(find, index);
         }
-
-        
-        Utils::Trace(m_pCallback, "[AddFrameScript] (Layer: %d): %s\n", layerNum, script.c_str());
-
-        m_pFrameElement->push_back(JSONNode(scriptWithLayerNumber,script));
 #endif
+        JSONNode commandElement(JSON_NODE);
+
+        commandElement.push_back(JSONNode("cmdType", "AddFrameScript"));
+        commandElement.push_back(JSONNode("scriptId", SnapSVGAnimator::Utils::ToString(layerNum)));
+        commandElement.push_back(JSONNode("script", script));
+
+        m_pCommandArray->push_back(commandElement);
 
         return FCM_SUCCESS;
     }
@@ -2182,24 +2181,32 @@ namespace SnapSVGAnimator
 
     FCM::Result JSONTimelineWriter::RemoveFrameScript(FCM::U_Int32 layerNum)
     {
-        Utils::Trace(m_pCallback, "[RemoveFrameScript] (Layer: %d)\n", layerNum);
+        JSONNode commandElement(JSON_NODE);
+
+        commandElement.push_back(JSONNode("cmdType", "RemoveFrameScript"));
+        commandElement.push_back(JSONNode("scriptId", SnapSVGAnimator::Utils::ToString(layerNum)));
+
+        m_pCommandArray->push_back(commandElement);
 
         return FCM_SUCCESS;
     }
 
+
     FCM::Result JSONTimelineWriter::SetFrameLabel(FCM::StringRep16 pLabel, DOM::KeyFrameLabelType labelType)
     {
         std::string label = Utils::ToString(pLabel, m_pCallback);
-        Utils::Trace(m_pCallback, "[SetFrameLabel] (Type: %d): %s\n", labelType, label.c_str());
 
-        if(labelType == 1)
-             m_pFrameElement->push_back(JSONNode("LabelType:Name",label));
-        else if(labelType == 2)
-             m_pFrameElement->push_back(JSONNode("labelType:Comment",label));
-        else if(labelType == 3)
-             m_pFrameElement->push_back(JSONNode("labelType:Ancor",label));
-        else if(labelType == 0)
-             m_pFrameElement->push_back(JSONNode("labelType","None"));
+        if (labelType == 1)
+        {
+            JSONNode commandElement(JSON_NODE);
+
+            commandElement.push_back(JSONNode("cmdType", "SetFrameLabel"));
+            commandElement.push_back(JSONNode("Name", label));
+
+            m_pCommandArray->push_back(commandElement);
+        }
+
+        // Ignore rest of the label types
 
         return FCM_SUCCESS;
     }

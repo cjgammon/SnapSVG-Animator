@@ -139,7 +139,7 @@
 	<Feature name="AdjustColorFilter" supported="false"/>
 	<Feature name="Compiler" supported="false"/>
 	<Feature name="Video" supported="false"/>
-	<Feature name="FrameScript" supported="false"/>
+	<Feature name="FrameScript" supported="true"/>
 	<Feature name="RuntimeSharedLibraries" supported="false"/>
 	<Feature name="Accessibility" supported="false"/>
 	<Feature name="Sound" supported="false">
