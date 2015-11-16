@@ -27,7 +27,7 @@ var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, 
     this.maskTill = null;
     this.loops = true;
 
-    if(this.transform !== undefined) 
+    if(this.transform !== undefined)
     {
         transformData = this.transform;
         transformArray = transformData.split(",");
@@ -45,7 +45,7 @@ var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, 
         }
 
     } else {
-        parentEl.add(this.el);         
+        parentEl.add(this.el);
     }
 };
 
@@ -159,10 +159,10 @@ MovieClip.prototype.loop = function (commandList) {
     }
 
     //Get the commands for the first frame
-    commands = frame.Command;	
+    commands = frame.Command;
 
     // Iterate through all the elements in the display list
-    // check if same instance exists in the first frame 
+    // check if same instance exists in the first frame
     for (i = 0; i < this.children.length; i += 1) {
 
         found = false;
@@ -219,7 +219,7 @@ MovieClip.prototype.play = function (resourceManager) {
     }
 
     //check to handle looping of movieclip
-    if(this.m_currentFrameNo == this.m_frameCount) 
+    if(this.m_currentFrameNo == this.m_frameCount)
     {
         if (!this.loops) {
             return;
@@ -233,13 +233,13 @@ MovieClip.prototype.play = function (resourceManager) {
             break;
         } else if (i >= this.m_timeline.Frame.length - 1) {
             if (this.m_currentFrameNo === 0) { //first frame is empty (execute any remove commands)
-                this.executeCommands(commandList, resourceManager); 
+                this.executeCommands(commandList, resourceManager);
             }
             this.m_currentFrameNo += 1;
             return;
         }
     }
-    
+
     if (!frame) {
         return;
     }
@@ -292,6 +292,18 @@ MovieClip.prototype.play = function (resourceManager) {
                 command = new CMD.UpdateMaskCommand(cmdData.objectId , cmdData.maskTill);
                 commandList.push(command);
             break;
+            case "AddFrameScript":
+              command = new CMD.AddFrameScriptCommand(cmdData.scriptId, cmdData.script);
+              commandList.push(command);
+            break;
+            case "RemoveFrameScript":
+              command = new CMD.RemoveFrameScriptCommand(cmdData.scriptId);
+              commandList.push(command);
+            break;
+            case "SetFrameLabel":
+              command = new CMD.SetFrameLabelCommand(cmdData.Name);
+              commandList.push(command);
+            break;
         }
 
     }
@@ -318,4 +330,3 @@ MovieClip.prototype.executeCommands = function (commandList, resourceManager) {
         }
     }
 };
-

@@ -1,9 +1,9 @@
 
 	var CMD = {};
-    
+
 
     //PlaceObjectCommand Class
-    CMD.PlaceObjectCommand = function(charID, objectID, placeAfter, transform, bounds) 
+    CMD.PlaceObjectCommand = function(charID, objectID, placeAfter, transform, bounds)
     {
         this.m_charID = charID;
         this.m_objectID = objectID;
@@ -30,13 +30,13 @@
         {
             shapeObject = new Shape(parentMC, resourceManager, this.m_charID, this.m_objectID, this.m_placeAfter, this.m_transform);
             parentMC.insertAtIndex(shapeObject, this.m_placeAfter);
-        } 
+        }
         else if(bitmap !== null && bitmap !== undefined)
         {
             bmpObject = new Bitmap(parentMC, resourceManager, this.m_charID, this.m_objectID, this.m_placeAfter, this.m_transform);
             parentMC.insertAtIndex(bmpObject, this.m_placeAfter);
         }
-        else if (text !== null && text !== undefined) 
+        else if (text !== null && text !== undefined)
         {
             textObject = new Text(parentMC, resourceManager, this.m_charID, this.m_objectID, this.m_placeAfter, this.m_transform, this.m_bounds);
             parentMC.insertAtIndex(textObject, this.m_placeAfter);
@@ -54,10 +54,10 @@
     };
 
     //MoveObjectCommand Class
-    CMD.MoveObjectCommand = function(objectID, transform) 
+    CMD.MoveObjectCommand = function(objectID, transform)
     {
         this.m_objectID = objectID;
-        this.m_transform = transform;	
+        this.m_transform = transform;
     };
 
     //Execute function for PlaceObjectCommand
@@ -68,7 +68,7 @@
         var transform,
             transformArray,
             transformMat;
-            
+
         transform =  this.m_transform;
         transformArray = transform.split(",");
         transformMat = new Snap.Matrix(transformArray[0],transformArray[1],transformArray[2],transformArray[3],transformArray[4],transformArray[5]);
@@ -78,7 +78,7 @@
     };
 
     //UpdateObjectCommand Class
-    CMD.UpdateObjectCommand = function(objectID, placeAfter) 
+    CMD.UpdateObjectCommand = function(objectID, placeAfter)
     {
         this.m_objectID = objectID;
         this.m_placeAfter = placeAfter;
@@ -91,9 +91,9 @@
     };
 
     //RemoveObjectCommand Class
-    CMD.RemoveObjectCommand = function(objectID) 
+    CMD.RemoveObjectCommand = function(objectID)
     {
-        this.m_objectID = objectID;	
+        this.m_objectID = objectID;
     };
 
     //Execute function for RemoveObjectCommand
@@ -107,9 +107,9 @@
     };
 
     //UpdateVisbilityCommand Class
-    CMD.UpdateVisibilityCommand = function(objectID,visibility) 
+    CMD.UpdateVisibilityCommand = function(objectID,visibility)
     {
-        this.m_objectID = objectID;	
+        this.m_objectID = objectID;
         this.m_visibility = visibility;
     };
 
@@ -123,8 +123,8 @@
         visibleValue = this.m_visibility == "true" ? "visible" : "hidden";
         child.el.attr({'visibility': visibleValue});
     };
-    
-    CMD.UpdateMaskCommand = function (objectID,maskTill) 
+
+    CMD.UpdateMaskCommand = function (objectID,maskTill)
     {
         this.m_objectID = objectID;
         this.m_maskTill = maskTill;
@@ -142,7 +142,7 @@
         def.append(clone);
     }
 
-    CMD.UpdateMaskCommand.prototype.execute = function (parentMC, resourceManager) 
+    CMD.UpdateMaskCommand.prototype.execute = function (parentMC, resourceManager)
     {
         //console.log('updatemask', this.m_objectID, this.m_maskTill);
 
@@ -183,7 +183,7 @@
             currentMaskEl = null,
             currentTill = null,
             currentMaskGroup;
-        
+
         for (i = 0; i < parentMC.children.length; i += 1) {
             child = parentMC.children[i];
 
@@ -231,7 +231,7 @@
         this.m_colorMatrix = colorMatrix;
     };
 
-    CMD.UpdateColorTransformCommand.prototype.execute = function (parentMC, resourceManager) 
+    CMD.UpdateColorTransformCommand.prototype.execute = function (parentMC, resourceManager)
     {
         var child,
             matrix;
@@ -240,3 +240,28 @@
         matrix = this.m_colorMatrix.split(',', 7);
         child.el.attr({opacity: parseFloat(matrix[6])}); //currently only alpha
     };
+
+		CMD.AddFrameScriptCommand = function (scriptID, script) {
+			this.m_scriptID = scriptID;
+			this.m_script = script;
+		}
+
+		CMD.AddFrameScriptCommand.prototype.execute = function (parentMC, resourceManager)
+
+		}
+
+		CMD.RemoveFrameScriptCommand = function (scriptID) {
+			this.m_scriptID = scriptID;
+		}
+
+		CMD.RemoveFrameScriptCommand.prototype.execute = function (parentMC, resourceManager)
+
+		}
+
+		CMD.SetFrameLabelCommand = function (name) {
+			this.m_labelName = name;
+		}
+
+		CMD.SetFrameLabelCommand.prototype.execute = function (parentMC, resourceManager)
+
+		}
