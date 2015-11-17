@@ -241,27 +241,33 @@
         child.el.attr({opacity: parseFloat(matrix[6])}); //currently only alpha
     };
 
-		CMD.AddFrameScriptCommand = function (scriptID, script) {
+		CMD.AddFrameScriptCommand = function (scriptID, script)
+		{
 			this.m_scriptID = scriptID;
 			this.m_script = script;
 		}
 
 		CMD.AddFrameScriptCommand.prototype.execute = function (parentMC, resourceManager)
-
+		{
+			eval("(function () {" + this.m_script + "}).call(this);");
 		}
 
-		CMD.RemoveFrameScriptCommand = function (scriptID) {
+		CMD.RemoveFrameScriptCommand = function (scriptID)
+		{
 			this.m_scriptID = scriptID;
 		}
 
 		CMD.RemoveFrameScriptCommand.prototype.execute = function (parentMC, resourceManager)
+		{
 
 		}
 
-		CMD.SetFrameLabelCommand = function (name) {
+		CMD.SetFrameLabelCommand = function (name)
+		{
 			this.m_labelName = name;
 		}
 
 		CMD.SetFrameLabelCommand.prototype.execute = function (parentMC, resourceManager)
+		{
 
 		}
