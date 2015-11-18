@@ -16,7 +16,6 @@ var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, 
 
     this.m_timeline = commandTimeline;
     this.m_currentFrameNo = 0;
-    //this.m_frameCount = this.m_timeline.Frame.length;
     this.m_frameCount = this.m_timeline.frameCount;
 
     this._scripts = {};
