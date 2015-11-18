@@ -245,29 +245,29 @@
 		{
 			this.m_scriptID = scriptID;
 			this.m_script = script;
-		}
+		};
 
 		CMD.AddFrameScriptCommand.prototype.execute = function (parentMC, resourceManager)
 		{
-			eval("(function () {" + this.m_script + "}).call(this);");
-		}
+			parentMC.addFrameScript(this.m_scriptID, this.m_script);
+		};
 
 		CMD.RemoveFrameScriptCommand = function (scriptID)
 		{
 			this.m_scriptID = scriptID;
-		}
+		};
 
 		CMD.RemoveFrameScriptCommand.prototype.execute = function (parentMC, resourceManager)
 		{
-
-		}
+			parentMC.removeFrameScript(this.m_scriptID);
+		};
 
 		CMD.SetFrameLabelCommand = function (name)
 		{
 			this.m_labelName = name;
-		}
+		};
 
 		CMD.SetFrameLabelCommand.prototype.execute = function (parentMC, resourceManager)
 		{
 
-		}
+		};

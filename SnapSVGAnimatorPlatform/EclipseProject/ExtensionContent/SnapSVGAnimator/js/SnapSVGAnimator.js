@@ -576,6 +576,7 @@ var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, 
     //this.m_frameCount = this.m_timeline.Frame.length;
     this.m_frameCount = this.m_timeline.frameCount;
 
+    this._scripts = {};
     this.children = [];
     this.isMask = false;
     this.isMasked = false;
@@ -584,7 +585,7 @@ var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, 
     this.maskTill = null;
     this.loops = true;
 
-    if(this.transform !== undefined) 
+    if(this.transform !== undefined)
     {
         transformData = this.transform;
         transformArray = transformData.split(",");
@@ -602,7 +603,7 @@ var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, 
         }
 
     } else {
-        parentEl.add(this.el);         
+        parentEl.add(this.el);
     }
 };
 
@@ -687,6 +688,18 @@ MovieClip.prototype.containsMask = function () {
     return false;
 };
 
+MovieClip.prototype.executeFrameScript = function (script) {
+  eval("(function () {" + script + "}).call(this);");
+};
+
+MovieClip.prototype.removeFrameScript = function (id) {
+  delete this._scripts[id];
+};
+
+MovieClip.prototype.addFrameScript = function (id, script) {
+  this._scripts[id] = script;
+};
+
 MovieClip.prototype.loop = function (commandList) {
     var frame,
         commands,
@@ -716,10 +729,10 @@ MovieClip.prototype.loop = function (commandList) {
     }
 
     //Get the commands for the first frame
-    commands = frame.Command;	
+    commands = frame.Command;
 
     // Iterate through all the elements in the display list
-    // check if same instance exists in the first frame 
+    // check if same instance exists in the first frame
     for (i = 0; i < this.children.length; i += 1) {
 
         found = false;
@@ -757,13 +770,13 @@ MovieClip.prototype.clearChildren = function (commandList) {
 };
 
 MovieClip.prototype.play = function (resourceManager) {
-    var commandList = [],
-        frame,
+    var frame,
+        commandList = [],
         i,
-        c,
-        found,
         commands,
+        found,
         command,
+        c,
         cmdData,
         type;
 
@@ -776,7 +789,7 @@ MovieClip.prototype.play = function (resourceManager) {
     }
 
     //check to handle looping of movieclip
-    if(this.m_currentFrameNo == this.m_frameCount) 
+    if(this.m_currentFrameNo == this.m_frameCount)
     {
         if (!this.loops) {
             return;
@@ -790,13 +803,13 @@ MovieClip.prototype.play = function (resourceManager) {
             break;
         } else if (i >= this.m_timeline.Frame.length - 1) {
             if (this.m_currentFrameNo === 0) { //first frame is empty (execute any remove commands)
-                this.executeCommands(commandList, resourceManager); 
+                this.executeCommands(commandList, resourceManager);
             }
             this.m_currentFrameNo += 1;
             return;
         }
     }
-    
+
     if (!frame) {
         return;
     }
@@ -849,6 +862,18 @@ MovieClip.prototype.play = function (resourceManager) {
                 command = new CMD.UpdateMaskCommand(cmdData.objectId , cmdData.maskTill);
                 commandList.push(command);
             break;
+            case "AddFrameScript":
+              command = new CMD.AddFrameScriptCommand(cmdData.scriptId, cmdData.script);
+              commandList.push(command);
+            break;
+            case "RemoveFrameScript":
+              command = new CMD.RemoveFrameScriptCommand(cmdData.scriptId);
+              commandList.push(command);
+            break;
+            case "SetFrameLabel":
+              command = new CMD.SetFrameLabelCommand(cmdData.Name);
+              commandList.push(command);
+            break;
         }
 
     }
@@ -862,8 +887,56 @@ MovieClip.prototype.play = function (resourceManager) {
 
     this.m_currentFrameNo++;
 
+
+    this.step_1_animTimeline();
+    this.step_2_enterFrame();
+    //this.step_3_addPending();
+    this.step_4_frameConstructed();
+    this.step_5_frameScripts();
+    this.step_6_exitFrame();
+
     GP.purge();
 };
+
+MovieClip.prototype.step_1_animTimeline = function () {
+
+}
+
+MovieClip.prototype.step_2_enterFrame = function () {
+  //dispatch enter frame event
+  //trigger on children
+  console.log('enter frame');
+}
+
+MovieClip.prototype.step_3_addPending = function () {
+
+}
+
+MovieClip.prototype.step_4_frameConstructed = function () {
+  //dispatch frame constructed event
+  //trigger on children
+  console.log('frame constructed');
+}
+
+MovieClip.prototype.step_5_frameScripts = function () {
+  //trigger framescripts
+  //trigger on children
+  /*
+  var scripts = this.getFrameScripts(this.m_currentFrameNo);
+  */
+
+  for (i in this._scripts) {
+    this.executeFrameScript(this._scripts[i]);
+  }
+  console.log('trigger frame scripts');
+}
+
+MovieClip.prototype.step_6_exitFrame = function () {
+  //dispatch exit frame event
+  //trigger on children
+  console.log('exit frame');
+}
+
 
 MovieClip.prototype.executeCommands = function (commandList, resourceManager) {
     var i;
@@ -877,12 +950,11 @@ MovieClip.prototype.executeCommands = function (commandList, resourceManager) {
 };
 
 
-
 	var CMD = {};
-    
+
 
     //PlaceObjectCommand Class
-    CMD.PlaceObjectCommand = function(charID, objectID, placeAfter, transform, bounds) 
+    CMD.PlaceObjectCommand = function(charID, objectID, placeAfter, transform, bounds)
     {
         this.m_charID = charID;
         this.m_objectID = objectID;
@@ -909,13 +981,13 @@ MovieClip.prototype.executeCommands = function (commandList, resourceManager) {
         {
             shapeObject = new Shape(parentMC, resourceManager, this.m_charID, this.m_objectID, this.m_placeAfter, this.m_transform);
             parentMC.insertAtIndex(shapeObject, this.m_placeAfter);
-        } 
+        }
         else if(bitmap !== null && bitmap !== undefined)
         {
             bmpObject = new Bitmap(parentMC, resourceManager, this.m_charID, this.m_objectID, this.m_placeAfter, this.m_transform);
             parentMC.insertAtIndex(bmpObject, this.m_placeAfter);
         }
-        else if (text !== null && text !== undefined) 
+        else if (text !== null && text !== undefined)
         {
             textObject = new Text(parentMC, resourceManager, this.m_charID, this.m_objectID, this.m_placeAfter, this.m_transform, this.m_bounds);
             parentMC.insertAtIndex(textObject, this.m_placeAfter);
@@ -933,10 +1005,10 @@ MovieClip.prototype.executeCommands = function (commandList, resourceManager) {
     };
 
     //MoveObjectCommand Class
-    CMD.MoveObjectCommand = function(objectID, transform) 
+    CMD.MoveObjectCommand = function(objectID, transform)
     {
         this.m_objectID = objectID;
-        this.m_transform = transform;	
+        this.m_transform = transform;
     };
 
     //Execute function for PlaceObjectCommand
@@ -947,7 +1019,7 @@ MovieClip.prototype.executeCommands = function (commandList, resourceManager) {
         var transform,
             transformArray,
             transformMat;
-            
+
         transform =  this.m_transform;
         transformArray = transform.split(",");
         transformMat = new Snap.Matrix(transformArray[0],transformArray[1],transformArray[2],transformArray[3],transformArray[4],transformArray[5]);
@@ -957,7 +1029,7 @@ MovieClip.prototype.executeCommands = function (commandList, resourceManager) {
     };
 
     //UpdateObjectCommand Class
-    CMD.UpdateObjectCommand = function(objectID, placeAfter) 
+    CMD.UpdateObjectCommand = function(objectID, placeAfter)
     {
         this.m_objectID = objectID;
         this.m_placeAfter = placeAfter;
@@ -970,9 +1042,9 @@ MovieClip.prototype.executeCommands = function (commandList, resourceManager) {
     };
 
     //RemoveObjectCommand Class
-    CMD.RemoveObjectCommand = function(objectID) 
+    CMD.RemoveObjectCommand = function(objectID)
     {
-        this.m_objectID = objectID;	
+        this.m_objectID = objectID;
     };
 
     //Execute function for RemoveObjectCommand
@@ -986,9 +1058,9 @@ MovieClip.prototype.executeCommands = function (commandList, resourceManager) {
     };
 
     //UpdateVisbilityCommand Class
-    CMD.UpdateVisibilityCommand = function(objectID,visibility) 
+    CMD.UpdateVisibilityCommand = function(objectID,visibility)
     {
-        this.m_objectID = objectID;	
+        this.m_objectID = objectID;
         this.m_visibility = visibility;
     };
 
@@ -1002,8 +1074,8 @@ MovieClip.prototype.executeCommands = function (commandList, resourceManager) {
         visibleValue = this.m_visibility == "true" ? "visible" : "hidden";
         child.el.attr({'visibility': visibleValue});
     };
-    
-    CMD.UpdateMaskCommand = function (objectID,maskTill) 
+
+    CMD.UpdateMaskCommand = function (objectID,maskTill)
     {
         this.m_objectID = objectID;
         this.m_maskTill = maskTill;
@@ -1021,7 +1093,7 @@ MovieClip.prototype.executeCommands = function (commandList, resourceManager) {
         def.append(clone);
     }
 
-    CMD.UpdateMaskCommand.prototype.execute = function (parentMC, resourceManager) 
+    CMD.UpdateMaskCommand.prototype.execute = function (parentMC, resourceManager)
     {
         //console.log('updatemask', this.m_objectID, this.m_maskTill);
 
@@ -1062,7 +1134,7 @@ MovieClip.prototype.executeCommands = function (commandList, resourceManager) {
             currentMaskEl = null,
             currentTill = null,
             currentMaskGroup;
-        
+
         for (i = 0; i < parentMC.children.length; i += 1) {
             child = parentMC.children[i];
 
@@ -1110,7 +1182,7 @@ MovieClip.prototype.executeCommands = function (commandList, resourceManager) {
         this.m_colorMatrix = colorMatrix;
     };
 
-    CMD.UpdateColorTransformCommand.prototype.execute = function (parentMC, resourceManager) 
+    CMD.UpdateColorTransformCommand.prototype.execute = function (parentMC, resourceManager)
     {
         var child,
             matrix;
@@ -1119,6 +1191,37 @@ MovieClip.prototype.executeCommands = function (commandList, resourceManager) {
         matrix = this.m_colorMatrix.split(',', 7);
         child.el.attr({opacity: parseFloat(matrix[6])}); //currently only alpha
     };
+
+		CMD.AddFrameScriptCommand = function (scriptID, script)
+		{
+			this.m_scriptID = scriptID;
+			this.m_script = script;
+		};
+
+		CMD.AddFrameScriptCommand.prototype.execute = function (parentMC, resourceManager)
+		{
+			parentMC.addFrameScript(this.m_scriptID, this.m_script);
+		};
+
+		CMD.RemoveFrameScriptCommand = function (scriptID)
+		{
+			this.m_scriptID = scriptID;
+		};
+
+		CMD.RemoveFrameScriptCommand.prototype.execute = function (parentMC, resourceManager)
+		{
+			parentMC.removeFrameScript(this.m_scriptID);
+		};
+
+		CMD.SetFrameLabelCommand = function (name)
+		{
+			this.m_labelName = name;
+		};
+
+		CMD.SetFrameLabelCommand.prototype.execute = function (parentMC, resourceManager)
+		{
+
+		};
 
 
 var ResourceManager = function (data) {

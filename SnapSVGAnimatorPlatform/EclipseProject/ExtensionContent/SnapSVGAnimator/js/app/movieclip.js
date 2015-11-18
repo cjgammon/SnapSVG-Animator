@@ -131,16 +131,16 @@ MovieClip.prototype.containsMask = function () {
     return false;
 };
 
-/*
-MovieClip.prototype.getFrameScripts = function (frameNum) {
-  if (this._scripts[frameNum + 1])
-        return this._scripts[frameNum + 1];
-    else
-        return [];
-};
-*/
 MovieClip.prototype.executeFrameScript = function (script) {
+  eval("(function () {" + script + "}).call(this);");
+};
 
+MovieClip.prototype.removeFrameScript = function (id) {
+  delete this._scripts[id];
+};
+
+MovieClip.prototype.addFrameScript = function (id, script) {
+  this._scripts[id] = script;
 };
 
 MovieClip.prototype.loop = function (commandList) {
@@ -213,13 +213,13 @@ MovieClip.prototype.clearChildren = function (commandList) {
 };
 
 MovieClip.prototype.play = function (resourceManager) {
-    var commandList = [],
-        frame,
+    var frame,
+        commandList = [],
         i,
-        c,
-        found,
         commands,
+        found,
         command,
+        c,
         cmdData,
         type;
 
@@ -257,7 +257,81 @@ MovieClip.prototype.play = function (resourceManager) {
         return;
     }
 
-    this.step_1_animTimeline(frame);
+    commands = frame.Command;
+    for(c = 0; c < commands.length; c += 1)
+    {
+        cmdData = commands[c];
+        type = cmdData.cmdType;
+        command = null;
+
+        switch(type)
+        {
+            case "Place":
+
+                found = this.getChildById(cmdData.objectId);
+
+                if (!found) {
+                    command = new CMD.PlaceObjectCommand(cmdData.charid, cmdData.objectId, cmdData.placeAfter, cmdData.transformMatrix, cmdData.bounds);
+                    commandList.push(command);
+                } else {
+                    command = new CMD.MoveObjectCommand(cmdData.objectId, cmdData.transformMatrix);
+                    commandList.push(command);
+                    command = new CMD.UpdateObjectCommand(cmdData.objectId, cmdData.placeAfter);
+                    commandList.push(command);
+                }
+
+            break;
+            case "Move":
+                command = new CMD.MoveObjectCommand(cmdData.objectId, cmdData.transformMatrix);
+                commandList.push(command);
+            break;
+            case "Remove":
+                command = new CMD.RemoveObjectCommand(cmdData.objectId);
+                commandList.push(command);
+            break;
+            case "UpdateZOrder":
+                command = new CMD.UpdateObjectCommand(cmdData.objectId , cmdData.placeAfter);
+                commandList.push(command);
+            break;
+            case "UpdateVisibility":
+                command = new CMD.UpdateVisibilityCommand(cmdData.objectId , cmdData.visibility);
+                commandList.push(command);
+            break;
+            case "UpdateColorTransform":
+                command = new CMD.UpdateColorTransformCommand(cmdData.objectId , cmdData.colorMatrix);
+                commandList.push(command);
+            break;
+            case "UpdateMask":
+                command = new CMD.UpdateMaskCommand(cmdData.objectId , cmdData.maskTill);
+                commandList.push(command);
+            break;
+            case "AddFrameScript":
+              command = new CMD.AddFrameScriptCommand(cmdData.scriptId, cmdData.script);
+              commandList.push(command);
+            break;
+            case "RemoveFrameScript":
+              command = new CMD.RemoveFrameScriptCommand(cmdData.scriptId);
+              commandList.push(command);
+            break;
+            case "SetFrameLabel":
+              command = new CMD.SetFrameLabelCommand(cmdData.Name);
+              commandList.push(command);
+            break;
+        }
+
+    }
+
+    if (this.containsMask) {
+        command = new CMD.ApplyMaskCommand();
+        commandList.push(command);
+    }
+
+    this.executeCommands(commandList, resourceManager);
+
+    this.m_currentFrameNo++;
+
+
+    this.step_1_animTimeline();
     this.step_2_enterFrame();
     //this.step_3_addPending();
     this.step_4_frameConstructed();
@@ -267,85 +341,8 @@ MovieClip.prototype.play = function (resourceManager) {
     GP.purge();
 };
 
-MovieClip.prototype.step_1_animTimeline = function (frame) {
+MovieClip.prototype.step_1_animTimeline = function () {
 
-  var commands,
-      c,
-      cmdData,
-      type;
-
-  commands = frame.Command;
-  for(c = 0; c < commands.length; c += 1)
-  {
-      cmdData = commands[c];
-      type = cmdData.cmdType;
-      command = null;
-
-      switch(type)
-      {
-          case "Place":
-
-              found = this.getChildById(cmdData.objectId);
-
-              if (!found) {
-                  command = new CMD.PlaceObjectCommand(cmdData.charid, cmdData.objectId, cmdData.placeAfter, cmdData.transformMatrix, cmdData.bounds);
-                  commandList.push(command);
-              } else {
-                  command = new CMD.MoveObjectCommand(cmdData.objectId, cmdData.transformMatrix);
-                  commandList.push(command);
-                  command = new CMD.UpdateObjectCommand(cmdData.objectId, cmdData.placeAfter);
-                  commandList.push(command);
-              }
-
-          break;
-          case "Move":
-              command = new CMD.MoveObjectCommand(cmdData.objectId, cmdData.transformMatrix);
-              commandList.push(command);
-          break;
-          case "Remove":
-              command = new CMD.RemoveObjectCommand(cmdData.objectId);
-              commandList.push(command);
-          break;
-          case "UpdateZOrder":
-              command = new CMD.UpdateObjectCommand(cmdData.objectId , cmdData.placeAfter);
-              commandList.push(command);
-          break;
-          case "UpdateVisibility":
-              command = new CMD.UpdateVisibilityCommand(cmdData.objectId , cmdData.visibility);
-              commandList.push(command);
-          break;
-          case "UpdateColorTransform":
-              command = new CMD.UpdateColorTransformCommand(cmdData.objectId , cmdData.colorMatrix);
-              commandList.push(command);
-          break;
-          case "UpdateMask":
-              command = new CMD.UpdateMaskCommand(cmdData.objectId , cmdData.maskTill);
-              commandList.push(command);
-          break;
-          case "AddFrameScript":
-            command = new CMD.AddFrameScriptCommand(cmdData.scriptId, cmdData.script);
-            commandList.push(command);
-          break;
-          case "RemoveFrameScript":
-            command = new CMD.RemoveFrameScriptCommand(cmdData.scriptId);
-            commandList.push(command);
-          break;
-          case "SetFrameLabel":
-            command = new CMD.SetFrameLabelCommand(cmdData.Name);
-            commandList.push(command);
-          break;
-      }
-
-  }
-
-  if (this.containsMask) {
-      command = new CMD.ApplyMaskCommand();
-      commandList.push(command);
-  }
-
-  this.executeCommands(commandList, resourceManager);
-
-  this.m_currentFrameNo++;
 }
 
 MovieClip.prototype.step_2_enterFrame = function () {
@@ -367,11 +364,16 @@ MovieClip.prototype.step_4_frameConstructed = function () {
 MovieClip.prototype.step_5_frameScripts = function () {
   //trigger framescripts
   //trigger on children
-
+  /*
   var scripts = this.getFrameScripts(this.m_currentFrameNo);
-  for (var i = 0; i < scripts.length; ++i) {
-      this.executeFrameScript(scripts[i]);
+  */
+
+  console.log('////////////');
+  console.log('trigger frame scripts');
+  for (i in this._scripts) {
+    this.executeFrameScript(this._scripts[i]);
   }
+  console.log('////////////');
 }
 
 MovieClip.prototype.step_6_exitFrame = function () {
