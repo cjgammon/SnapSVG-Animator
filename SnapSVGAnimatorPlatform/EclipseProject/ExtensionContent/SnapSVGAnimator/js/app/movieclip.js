@@ -248,6 +248,7 @@ MovieClip.prototype.play = function (resourceManager) {
             if (this.m_currentFrameNo === 0) { //first frame is empty (execute any remove commands)
                 this.executeCommands(commandList, resourceManager);
             }
+            this.stepFrame();
             this.m_currentFrameNo += 1;
             return;
         }
@@ -328,22 +329,25 @@ MovieClip.prototype.play = function (resourceManager) {
 
     this.executeCommands(commandList, resourceManager);
 
+    this.stepFrame();
+
     this.m_currentFrameNo++;
-
-
-    this.step_1_animTimeline();
-    this.step_2_enterFrame();
-    //this.step_3_addPending();
-    this.step_4_frameConstructed();
-    this.step_5_frameScripts();
-    this.step_6_exitFrame();
 
     GP.purge();
 };
 
+MovieClip.prototype.stepFrame = function () {
+  this.step_1_animTimeline();
+  this.step_2_enterFrame();
+  //this.step_3_addPending();
+  this.step_4_frameConstructed();
+  this.step_5_frameScripts();
+  this.step_6_exitFrame();
+};
+
 MovieClip.prototype.step_1_animTimeline = function () {
 
-}
+};
 
 MovieClip.prototype.step_2_enterFrame = function () {
   //dispatch enter frame event
@@ -364,13 +368,10 @@ MovieClip.prototype.step_4_frameConstructed = function () {
 MovieClip.prototype.step_5_frameScripts = function () {
   //trigger framescripts
   //trigger on children
-  /*
-  var scripts = this.getFrameScripts(this.m_currentFrameNo);
-  */
 
   console.log('////////////');
-  console.log('trigger frame scripts');
-  for (i in this._scripts) {
+  console.log('trigger frame scripts', this.m_currentFrameNo);
+  for (var i in this._scripts) {
     this.executeFrameScript(this._scripts[i]);
   }
   console.log('////////////');
