@@ -352,8 +352,14 @@ namespace SnapSVGAnimator
             FCM::U_Int32 objectId,
             FCM::U_Int32 placeAfterObjectId,
             const DOM::Utils::MATRIX2D* pMatrix,
-            FCM::Boolean loop,
             FCM::PIFCMUnknown pUnknown);
+
+        virtual FCM::Result PlaceObject(
+            FCM::U_Int32 resId,
+            FCM::U_Int32 objectId,
+            FCM::U_Int32 placeAfterObjectId,
+            const DOM::Utils::MATRIX2D* pMatrix,
+            FCM::CStringRep16 pName);
 
         virtual FCM::Result PlaceObject(
             FCM::U_Int32 resId,

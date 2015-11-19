@@ -1259,7 +1259,6 @@ namespace SnapSVGAnimator
         FCM::U_Int32 objectId,
         FCM::U_Int32 placeAfterObjectId,
         const DOM::Utils::MATRIX2D* pMatrix,
-        FCM::Boolean loop,
         FCM::PIFCMUnknown pUnknown)
     {
         JSONNode commandElement(JSON_NODE);
@@ -1274,12 +1273,40 @@ namespace SnapSVGAnimator
             commandElement.push_back(JSONNode("transformMatrix", Utils::ToString(*pMatrix, m_dataPrecision).c_str()));
         }
 
-        commandElement.push_back(JSONNode("loop", loop ? "true" : "false"));
         m_pCommandArray->push_back(commandElement);
 
         return FCM_SUCCESS;
     }
 
+    FCM::Result JSONTimelineWriter::PlaceObject(
+        FCM::U_Int32 resId,
+        FCM::U_Int32 objectId,
+        FCM::U_Int32 placeAfterObjectId,
+        const DOM::Utils::MATRIX2D* pMatrix,
+        FCM::CStringRep16 pName)
+    {
+        JSONNode commandElement(JSON_NODE);
+
+        commandElement.push_back(JSONNode("cmdType", "Place"));
+        commandElement.push_back(JSONNode("charid", SnapSVGAnimator::Utils::ToString(resId)));
+        commandElement.push_back(JSONNode("objectId", SnapSVGAnimator::Utils::ToString(objectId)));
+        commandElement.push_back(JSONNode("placeAfter", SnapSVGAnimator::Utils::ToString(placeAfterObjectId)));
+
+        if (pMatrix)
+        {
+            commandElement.push_back(JSONNode("transformMatrix", Utils::ToString(*pMatrix, m_dataPrecision).c_str()));
+        }
+
+        std::string name = Utils::ToString(pName, m_pCallback);
+        if (!name.empty())
+        {
+            commandElement.push_back(JSONNode("name", name));
+        }
+
+        m_pCommandArray->push_back(commandElement);
+
+        return FCM_SUCCESS;
+    }
 
     FCM::Result JSONTimelineWriter::PlaceObject(
         FCM::U_Int32 resId,
@@ -2267,6 +2294,15 @@ namespace SnapSVGAnimator
         m_pTimelineElement->push_back(
                 JSONNode(("frameCount"), 
                 SnapSVGAnimator::Utils::ToString(m_FrameCount)));
+
+        if (pName != NULL)
+        {
+            std::string str = Utils::ToString(pName, m_pCallback);
+            if (!str.empty())
+            {
+                m_pTimelineElement->push_back(JSONNode("name", str));
+            }
+        }
 
         m_pTimelineElement->push_back(*m_pFrameArray);
     }

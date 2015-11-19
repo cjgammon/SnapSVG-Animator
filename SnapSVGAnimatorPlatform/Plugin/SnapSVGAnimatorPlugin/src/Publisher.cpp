@@ -949,7 +949,7 @@ namespace SnapSVGAnimator
     {
         FCM::Result res;
         DOM::AutoPtr<DOM::FrameElement::IClassicText> pTextItem;
-        FCM::StringRep16 textDisplay;
+        FCM::StringRep16 textDisplay = NULL;
         std::string displayText;
         TEXT_BEHAVIOUR textBehaviour;
         FCMListPtr pParagraphsList;
@@ -1051,6 +1051,13 @@ namespace SnapSVGAnimator
                 ASSERT(FCM_SUCCESS_CODE(res));
             }
         }
+
+        // Free up resources
+        FCM::AutoPtr<FCM::IFCMUnknown> pUnkCalloc;
+        res = GetCallback()->GetService(SRVCID_Core_Memory, pUnkCalloc.m_Ptr);
+        AutoPtr<FCM::IFCMCalloc> callocService = pUnkCalloc;
+
+        callocService->Free((FCM::PVoid)textDisplay);
 
         // End define text
         res = m_pOutputWriter->EndDefineClassicText();
@@ -1920,13 +1927,27 @@ namespace SnapSVGAnimator
         LOG(("[AddMovieClip] ObjId: %d ResId: %d PlaceAfter: %d\n", 
             objectId, pMovieClipInfo->resourceId, pMovieClipInfo->placeAfterObjectId));
 
+        // Instance name
+        FCM::StringRep16 pMovieName;
+        res = pMovieClip->GetName(&pMovieName);
+        if (!FCM_SUCCESS_CODE(res))
+        {
+            return res;
+        }
+
         res = m_pTimelineWriter->PlaceObject(
             pMovieClipInfo->resourceId, 
             objectId, 
             pMovieClipInfo->placeAfterObjectId, 
             &pMovieClipInfo->matrix,
-            true,
-            pUnknown);
+            pMovieName);
+
+        // Cleanup
+        FCM::AutoPtr<FCM::IFCMUnknown> pUnkCalloc;
+        res = GetCallback()->GetService(SRVCID_Core_Memory, pUnkCalloc.m_Ptr);
+        AutoPtr<FCM::IFCMCalloc> callocService  = pUnkCalloc;
+
+        callocService->Free((FCM::PVoid)pMovieName);
 
         return res;
     }
@@ -1934,6 +1955,7 @@ namespace SnapSVGAnimator
     FCM::Result TimelineBuilder::AddGraphic(FCM::U_Int32 objectId, GRAPHIC_INFO* pGraphicInfo)
     {
         FCM::Result res;
+        FCM::AutoPtr<FCM::IFCMUnknown> pUnknown = NULL;
 
         ASSERT(pGraphicInfo);
         ASSERT(pGraphicInfo->structSize >= sizeof(GRAPHIC_INFO));
@@ -1946,8 +1968,7 @@ namespace SnapSVGAnimator
             objectId, 
             pGraphicInfo->placeAfterObjectId, 
             &pGraphicInfo->matrix,
-            false,
-            NULL);
+            pUnknown);
 
         return res;
     }
