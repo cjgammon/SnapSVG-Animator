@@ -556,7 +556,7 @@ var Shape = function (parentMC,resourceManager,charId,ObjectId,placeAfter,transf
 };
 
 
-var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, placeAfter, transform) {
+var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, name, placeAfter, transform) {
     var i,
         transformMat,
         transformData,
@@ -567,13 +567,18 @@ var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, 
     if (objectID) {
         this.id = objectID;
     }
+    if (name) {
+      this.name = name;
+      parentMC[this.name] = this;
+      console.log(this.name);
+    }
+
     this.el = parentEl.g();
     this.el.attr({'class': 'movieclip', 'token': this.id});
     this.transform = transform;
 
     this.m_timeline = commandTimeline;
     this.m_currentFrameNo = 0;
-    //this.m_frameCount = this.m_timeline.Frame.length;
     this.m_frameCount = this.m_timeline.frameCount;
 
     this._scripts = {};
@@ -829,7 +834,7 @@ MovieClip.prototype.play = function (resourceManager) {
                 found = this.getChildById(cmdData.objectId);
 
                 if (!found) {
-                    command = new CMD.PlaceObjectCommand(cmdData.charid, cmdData.objectId, cmdData.placeAfter, cmdData.transformMatrix, cmdData.bounds);
+                    command = new CMD.PlaceObjectCommand(cmdData.charid, cmdData.objectId, cmdData.name, cmdData.placeAfter, cmdData.transformMatrix, cmdData.bounds);
                     commandList.push(command);
                 } else {
                     command = new CMD.MoveObjectCommand(cmdData.objectId, cmdData.transformMatrix);
@@ -957,10 +962,11 @@ MovieClip.prototype.executeCommands = function (commandList, resourceManager) {
 
 
     //PlaceObjectCommand Class
-    CMD.PlaceObjectCommand = function(charID, objectID, placeAfter, transform, bounds)
+    CMD.PlaceObjectCommand = function(charID, objectID, name, placeAfter, transform, bounds)
     {
         this.m_charID = charID;
         this.m_objectID = objectID;
+				this.m_name = name;
         this.m_placeAfter = placeAfter;
         this.m_transform = transform;
         this.m_bounds = bounds;
@@ -1000,7 +1006,7 @@ MovieClip.prototype.executeCommands = function (commandList, resourceManager) {
             movieclipTimeline = resourceManager.getMovieClip(this.m_charID);
             if(movieclipTimeline)
             {
-                movieclip = new MovieClip(parentMC, movieclipTimeline, resourceManager, this.m_objectID, this.m_placeAfter, this.m_transform);
+                movieclip = new MovieClip(parentMC, movieclipTimeline, resourceManager, this.m_objectID, this.m_name, this.m_placeAfter, this.m_transform);
                 parentMC.insertAtIndex(movieclip, this.m_placeAfter);
                 movieclip.play(resourceManager);
             }

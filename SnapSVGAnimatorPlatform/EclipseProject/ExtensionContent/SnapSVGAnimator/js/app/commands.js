@@ -3,10 +3,11 @@
 
 
     //PlaceObjectCommand Class
-    CMD.PlaceObjectCommand = function(charID, objectID, placeAfter, transform, bounds)
+    CMD.PlaceObjectCommand = function(charID, objectID, name, placeAfter, transform, bounds)
     {
         this.m_charID = charID;
         this.m_objectID = objectID;
+				this.m_name = name;
         this.m_placeAfter = placeAfter;
         this.m_transform = transform;
         this.m_bounds = bounds;
@@ -46,7 +47,7 @@
             movieclipTimeline = resourceManager.getMovieClip(this.m_charID);
             if(movieclipTimeline)
             {
-                movieclip = new MovieClip(parentMC, movieclipTimeline, resourceManager, this.m_objectID, this.m_placeAfter, this.m_transform);
+                movieclip = new MovieClip(parentMC, movieclipTimeline, resourceManager, this.m_objectID, this.m_name, this.m_placeAfter, this.m_transform);
                 parentMC.insertAtIndex(movieclip, this.m_placeAfter);
                 movieclip.play(resourceManager);
             }

@@ -1,5 +1,5 @@
 
-var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, placeAfter, transform) {
+var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, name, placeAfter, transform) {
     var i,
         transformMat,
         transformData,
@@ -10,6 +10,12 @@ var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, 
     if (objectID) {
         this.id = objectID;
     }
+    if (name) {
+      this.name = name;
+      parentMC[this.name] = this;
+      console.log(this.name);
+    }
+
     this.el = parentEl.g();
     this.el.attr({'class': 'movieclip', 'token': this.id});
     this.transform = transform;
@@ -271,7 +277,7 @@ MovieClip.prototype.play = function (resourceManager) {
                 found = this.getChildById(cmdData.objectId);
 
                 if (!found) {
-                    command = new CMD.PlaceObjectCommand(cmdData.charid, cmdData.objectId, cmdData.placeAfter, cmdData.transformMatrix, cmdData.bounds);
+                    command = new CMD.PlaceObjectCommand(cmdData.charid, cmdData.objectId, cmdData.name, cmdData.placeAfter, cmdData.transformMatrix, cmdData.bounds);
                     commandList.push(command);
                 } else {
                     command = new CMD.MoveObjectCommand(cmdData.objectId, cmdData.transformMatrix);
