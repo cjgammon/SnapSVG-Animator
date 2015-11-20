@@ -31,6 +31,8 @@ var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, 
     this.maskElement = null;
     this.maskTill = null;
     this.loops = true;
+    this.playing = true;
+    this.resourceManager = resourceManager;
 
     if(this.transform !== undefined)
     {
@@ -240,7 +242,7 @@ MovieClip.prototype.clearChildren = function (commandList) {
     }
 };
 
-MovieClip.prototype.play = function (resourceManager) {
+MovieClip.prototype.runFrame = function () {
     var frame,
         commandList = [],
         i,
@@ -254,13 +256,17 @@ MovieClip.prototype.play = function (resourceManager) {
     //play movieclips
     for(i = 0; i < this.children.length; i += 1)
     {
-        if (this.children[i].play) {
-            this.children[i].play(resourceManager);
+        if (this.children[i].runFrame) {
+            this.children[i].runFrame();
         }
     }
 
+    if (!this.playing) {
+      return;
+    }
+
     //check to handle looping of movieclip
-    if(this.m_currentFrameNo == this.m_frameCount)
+    if(this.m_currentFrameNo == this.m_frameCount + 1)
     {
         if (!this.loops) {
             return;
@@ -274,7 +280,7 @@ MovieClip.prototype.play = function (resourceManager) {
             break;
         } else if (i >= this.m_timeline.Frame.length - 1) {
             if (this.m_currentFrameNo === 0) { //first frame is empty (execute any remove commands)
-                this.executeCommands(commandList, resourceManager);
+                this.executeCommands(commandList, this.resourceManager);
             }
             this.stepFrame();
             this.m_currentFrameNo += 1;
@@ -355,7 +361,7 @@ MovieClip.prototype.play = function (resourceManager) {
         commandList.push(command);
     }
 
-    this.executeCommands(commandList, resourceManager);
+    this.executeCommands(commandList, this.resourceManager);
 
     this.stepFrame();
 
@@ -380,16 +386,16 @@ MovieClip.prototype.step_1_animTimeline = function () {
 MovieClip.prototype.step_2_enterFrame = function () {
   //dispatch enter frame event
   //trigger on children
-}
+};
 
 MovieClip.prototype.step_3_addPending = function () {
 
-}
+};
 
 MovieClip.prototype.step_4_frameConstructed = function () {
   //dispatch frame constructed event
   //trigger on children
-}
+};
 
 MovieClip.prototype.step_5_frameScripts = function () {
   //trigger framescripts
@@ -398,13 +404,32 @@ MovieClip.prototype.step_5_frameScripts = function () {
   for (var i in this._scripts) {
     this.executeFrameScript(this._scripts[i]);
   }
-}
+};
 
 MovieClip.prototype.step_6_exitFrame = function () {
   //dispatch exit frame event
   //trigger on children
+};
+
+MovieClip.prototype.play = function () {
+  this.playing = true;
 }
 
+MovieClip.prototype.stop = function () {
+  this.playing = false;
+};
+
+MovieClip.prototype.gotoAndStop = function (num) {
+  console.log('gotoandstop', num);
+  //not working plays instead
+  this.m_currentFrameNo = num;
+  this.playing = false;
+};
+
+MovieClip.prototype.gotoAndPlay = function (num) {
+  this.m_currentFrameNo = num;
+  this.playing = true;
+};
 
 MovieClip.prototype.executeCommands = function (commandList, resourceManager) {
     var i;

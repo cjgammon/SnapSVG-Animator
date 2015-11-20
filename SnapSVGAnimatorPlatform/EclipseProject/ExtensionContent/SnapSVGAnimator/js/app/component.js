@@ -14,9 +14,9 @@ function SVGAnim(data, w, h, fps, params) {
     fps = fps || 24;
     w = w || 100;
     h = h || 100;
-    
-    autoplay = params.autoplay;    
-    
+
+    autoplay = params.autoplay;
+
     instance.debug = false;
 
     SVGAnim.prototype.toString = function () {
@@ -34,7 +34,7 @@ function SVGAnim(data, w, h, fps, params) {
     //TODO:: set bg color here
 
     create(instance.s);
-    
+
     if (instance.debug) {
         window.addEventListener('keydown', handleKeyDown);
     }
@@ -42,12 +42,12 @@ function SVGAnim(data, w, h, fps, params) {
     function create(s) {
         var maintimelineIndex,
             mainTimeline;
-        
-        if(instance.rootAnimator !== undefined) 
+
+        if(instance.rootAnimator !== undefined)
         {
             instance.rootAnimator.dispose();
         }
-        
+
         maintimelineIndex = instance.resourceManager.m_data.DOMDocument.Timeline.length - 1;
         mainTimeline = instance.resourceManager.m_data.DOMDocument.Timeline[maintimelineIndex];
         instance.movieclip = new MovieClip(instance.s, mainTimeline, instance.resourceManager, id);
@@ -64,11 +64,11 @@ function SVGAnim(data, w, h, fps, params) {
     this.pause = function () {
         instance.playing = false;
 
-        if(cbk !== undefined) 
+        if(cbk !== undefined)
         {
             clearTimeout(cbk);
             cbk = undefined;
-        }	
+        }
     };
 
     this.stop = function () {
@@ -82,7 +82,7 @@ function SVGAnim(data, w, h, fps, params) {
 
     function loop() {
 
-        instance.movieclip.play(instance.resourceManager);
+        instance.movieclip.runFrame();
 
         if (instance.playing) {
             clearTimeout(cbk);
@@ -108,7 +108,7 @@ function SVGAnim(data, w, h, fps, params) {
         var debug = document.getElementById('debug'),
             str = '';
 
-        if (!debug) { 
+        if (!debug) {
             debug = document.createElement('div');
             debug.id = 'debug';
             debug.style.position = 'absolute';
@@ -130,20 +130,20 @@ function SVGAnim(data, w, h, fps, params) {
                     str += '-';
                 }
                 str += el.children[i].id + ':' + el.children[i].children.length;
-                
+
                 if (el.children[i].isMask) {
-                    str += ' (MASK till:' + el.children[i].maskTill + ')'; 
+                    str += ' (MASK till:' + el.children[i].maskTill + ')';
                 }
 
                 if (el.children[i].isMasked) {
-                    str += ' (masked by: ' + el.children[i].mask + ')'; 
+                    str += ' (masked by: ' + el.children[i].mask + ')';
                 }
 
                 str += '<br/>';
                 traceChildren(j + 5, el.children[i]);
             }
         }
-     
+
         str += instance.movieclip.id + '<br/>';
         traceChildren(2, instance.movieclip);
 
@@ -161,4 +161,3 @@ function SVGAnim(data, w, h, fps, params) {
     }
 
 }
-
