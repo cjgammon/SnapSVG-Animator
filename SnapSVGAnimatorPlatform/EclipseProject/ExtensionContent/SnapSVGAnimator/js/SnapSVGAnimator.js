@@ -570,7 +570,6 @@ var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, 
     if (name) {
       this.name = name;
       parentMC[this.name] = this;
-      console.log(this.name);
     }
 
     this.el = parentEl.g();
@@ -612,6 +611,7 @@ var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, 
     }
 };
 
+//manage children methods
 MovieClip.prototype.getChildById = function (id) {
     var i;
 
@@ -693,6 +693,28 @@ MovieClip.prototype.containsMask = function () {
     return false;
 };
 
+//mouse event handlers
+MovieClip.prototype.mouseover = function (cb) {
+  this.el.mouseover(cb);
+};
+
+MovieClip.prototype.mouseout = function (cb) {
+  this.el.mouseout(cb);
+};
+
+MovieClip.prototype.mousedown = function (cb) {
+  this.el.mousedown(cb);
+};
+
+MovieClip.prototype.mousemove = function (cb) {
+  this.el.mousemove(cb);
+};
+
+MovieClip.prototype.click = function (cb) {
+  this.el.click(cb);
+};
+
+//script methods
 MovieClip.prototype.executeFrameScript = function (script) {
   eval("(function () {" + script + "}).call(this);");
 };
@@ -705,6 +727,7 @@ MovieClip.prototype.addFrameScript = function (id, script) {
   this._scripts[id] = script;
 };
 
+//playback methods
 MovieClip.prototype.loop = function (commandList) {
     var frame,
         commands,
@@ -914,7 +937,6 @@ MovieClip.prototype.step_1_animTimeline = function () {
 MovieClip.prototype.step_2_enterFrame = function () {
   //dispatch enter frame event
   //trigger on children
-  console.log('enter frame');
 }
 
 MovieClip.prototype.step_3_addPending = function () {
@@ -924,25 +946,20 @@ MovieClip.prototype.step_3_addPending = function () {
 MovieClip.prototype.step_4_frameConstructed = function () {
   //dispatch frame constructed event
   //trigger on children
-  console.log('frame constructed');
 }
 
 MovieClip.prototype.step_5_frameScripts = function () {
   //trigger framescripts
   //trigger on children
 
-  console.log('////////////');
-  console.log('trigger frame scripts', this.m_currentFrameNo);
   for (var i in this._scripts) {
     this.executeFrameScript(this._scripts[i]);
   }
-  console.log('////////////');
 }
 
 MovieClip.prototype.step_6_exitFrame = function () {
   //dispatch exit frame event
   //trigger on children
-  console.log('exit frame');
 }
 
 
