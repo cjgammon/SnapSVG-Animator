@@ -265,8 +265,10 @@ MovieClip.prototype.runFrame = function () {
       return;
     }
 
+    //TODO:: need better loop/goto management when goto frame where items need to be removed
+
     //check to handle looping of movieclip
-    if(this.m_currentFrameNo == this.m_frameCount + 1)
+    if(this.m_currentFrameNo == this.m_frameCount)
     {
         if (!this.loops) {
             return;
@@ -420,9 +422,8 @@ MovieClip.prototype.stop = function () {
 };
 
 MovieClip.prototype.gotoAndStop = function (num) {
-  console.log('gotoandstop', num);
-  //not working plays instead
   this.m_currentFrameNo = num;
+  this.runFrame();
   this.playing = false;
 };
 

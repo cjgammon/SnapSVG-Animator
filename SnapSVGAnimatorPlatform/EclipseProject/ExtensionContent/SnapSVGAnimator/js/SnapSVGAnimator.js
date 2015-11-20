@@ -823,7 +823,7 @@ MovieClip.prototype.runFrame = function () {
     }
 
     //check to handle looping of movieclip
-    if(this.m_currentFrameNo == this.m_frameCount + 1)
+    if(this.m_currentFrameNo == this.m_frameCount)
     {
         if (!this.loops) {
             return;
@@ -980,11 +980,11 @@ MovieClip.prototype.gotoAndStop = function (num) {
   console.log('gotoandstop', num);
   //not working plays instead
   this.m_currentFrameNo = num;
+  this.runFrame();
   this.playing = false;
 };
 
 MovieClip.prototype.gotoAndPlay = function (num) {
-  //this works
   this.m_currentFrameNo = num;
   this.playing = true;
 };
