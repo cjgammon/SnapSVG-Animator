@@ -17,7 +17,7 @@ function SVGAnim(data, w, h, fps, params) {
 
     autoplay = params.autoplay;
 
-    instance.debug = false;
+    instance.debug = true;
 
     SVGAnim.prototype.toString = function () {
         return "SnapSVGAnimator v" + this.version;
@@ -57,7 +57,7 @@ function SVGAnim(data, w, h, fps, params) {
         instance.playing = true;
 
         if (cbk === undefined) {
-            cbk = setTimeout(loop, 1000 / fps);
+            cbk = setTimeout(interval, 1000 / fps);
         }
     };
 
@@ -80,24 +80,24 @@ function SVGAnim(data, w, h, fps, params) {
         instance.movieclip.loops = l;
     };
 
-    function loop() {
+    function interval() {
 
-        instance.movieclip.runFrame();
+        instance.movieclip._animate();
 
         if (instance.playing) {
             clearTimeout(cbk);
-            cbk = setTimeout(loop, 1000 / fps);
-        }
-
-        if (instance.debug) {
-            traceDisplayList();
+            cbk = setTimeout(interval, 1000 / fps);
         }
     }
 
     function handleKeyDown(e) {
         if (e.keyCode == 39) { //right key press
-            loop();
+            interval();
         }
+    }
+
+    if (instance.debug) {
+      setInterval(traceDisplayList, 100)
     }
 
     /**
@@ -145,6 +145,7 @@ function SVGAnim(data, w, h, fps, params) {
         }
 
         str += instance.movieclip.id + '<br/>';
+        str += instance.movieclip.m_currentFrameNo + '<br/>';
         traceChildren(2, instance.movieclip);
 
         debug.innerHTML = str;
@@ -157,7 +158,7 @@ function SVGAnim(data, w, h, fps, params) {
     if (autoplay) {
         instance.play();
     } else {
-        loop();
+        interval();
     }
 
 }

@@ -1,15 +1,16 @@
 
 var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, name, placeAfter, transform) {
     var i,
-        transformMat,
+        matrix,
         transformData,
         transformArray,
         afterEl,
         parentEl = parentMC.type == 'svg' ? parentMC : parentMC.el;  //parent is stage if svg
 
     if (objectID) {
-        this.id = objectID;
+      this.id = objectID;
     }
+
     if (name) {
       this.name = name;
       parentMC[this.name] = this;
@@ -33,13 +34,14 @@ var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, 
     this.loops = true;
     this.playing = true;
     this.resourceManager = resourceManager;
+    this.commandList = [];
 
     if(this.transform !== undefined)
     {
         transformData = this.transform;
         transformArray = transformData.split(",");
-        transformMat = new Snap.Matrix(transformArray[0],transformArray[1],transformArray[2],transformArray[3],transformArray[4],transformArray[5]);
-        this.el.transform(transformMat);
+        matrix = new Snap.Matrix(transformArray[0],transformArray[1],transformArray[2],transformArray[3],transformArray[4],transformArray[5]);
+        this.el.transform(matrix);
     }
 
     if (placeAfter && parseInt(placeAfter) !== 0) {
@@ -138,6 +140,36 @@ MovieClip.prototype.containsMask = function () {
     return false;
 };
 
+MovieClip.prototype.matrix = function (newM) {
+  //TODO:: set to newM if exists
+
+  if (matrix) {
+    return matrix;
+  } else {
+    return new Snap.Matrix();
+  }
+}
+
+MovieClip.prototype.x = function (newX) {
+  var _x = 0;
+
+  if (matrix) {
+    _x = martix.x();
+  }
+
+  return _x;
+};
+
+MovieClip.prototype.y = function (newY) {
+  var _y = 0;
+
+  if (matrix) {
+    _y = martix.y();
+  }
+
+  return _y;
+};
+
 //mouse event handlers
 MovieClip.prototype.mouseover = function (cb) {
   this.el.mouseover(cb);
@@ -172,8 +204,18 @@ MovieClip.prototype.addFrameScript = function (id, script) {
   this._scripts[id] = script;
 };
 
+MovieClip.prototype.getFrame = function (num) {
+  var i;
+
+  for (i = 0; i < this.m_timeline.Frame.length; i += 1) {
+    if (this.m_timeline.Frame[i].num == num) {
+      return this.m_timeline.Frame[i];
+    }
+  }
+};
+
 //playback methods
-MovieClip.prototype.loop = function (commandList) {
+MovieClip.prototype._loop = function () {
     var frame,
         commands,
         children,
@@ -182,23 +224,14 @@ MovieClip.prototype.loop = function (commandList) {
         cmData,
         type;
 
+    console.log('LOOOP!!!');
     this.m_currentFrameNo = 0;
 
-    //loop through keyframes to find first frame
-    for (i = 0; i < this.m_timeline.Frame.length; i += 1) {
-
-        if (parseInt(this.m_timeline.Frame[i].num) == this.m_currentFrameNo) {
-            frame = this.m_timeline.Frame[i];
-            break;
-        } else if (i >= this.m_timeline.Frame.length - 1) {
-            //the first frame is empty
-            this.clearChildren(commandList);
-            return;
-        }
-    }
+    frame = this.getFrame(this.m_currentFrameNo);
 
     if (!frame) {
-        return;
+      this.clearChildren();
+      return;
     }
 
     //Get the commands for the first frame
@@ -225,12 +258,12 @@ MovieClip.prototype.loop = function (commandList) {
 
         if (found === false) {
             command = new CMD.RemoveObjectCommand(child.id);
-            commandList.push(command);
+            this.commandList.push(command);
         }
     }
 };
 
-MovieClip.prototype.clearChildren = function (commandList) {
+MovieClip.prototype.clearChildren = function () {
     var i,
         child,
         command;
@@ -238,34 +271,25 @@ MovieClip.prototype.clearChildren = function (commandList) {
     for (i = 0; i < this.children.length; i += 1) {
         child = this.children[i];
         command = new CMD.RemoveObjectCommand(child.id);
-        commandList.push(command);
+        this.commandList.push(command);
     }
 };
 
-MovieClip.prototype.runFrame = function () {
+MovieClip.prototype._animate = function () {
     var frame,
-        commandList = [],
         i,
         commands,
-        found,
+        cmData,
+        type,
         command,
-        c,
-        cmdData,
-        type;
+        found,
+        c;
 
-    //play movieclips
-    for(i = 0; i < this.children.length; i += 1)
-    {
-        if (this.children[i].runFrame) {
-            this.children[i].runFrame();
-        }
-    }
+    this.commandList = [];
 
     if (!this.playing) {
       return;
     }
-
-    //TODO:: need better loop/goto management when goto frame where items need to be removed
 
     //check to handle looping of movieclip
     if(this.m_currentFrameNo == this.m_frameCount)
@@ -273,115 +297,143 @@ MovieClip.prototype.runFrame = function () {
         if (!this.loops) {
             return;
         }
-        this.loop(commandList);
+        this._loop();
     }
 
-    for (i = 0; i < this.m_timeline.Frame.length; i += 1) {
-        if (parseInt(this.m_timeline.Frame[i].num) == this.m_currentFrameNo) {
-            frame = this.m_timeline.Frame[i];
-            break;
-        } else if (i >= this.m_timeline.Frame.length - 1) {
-            if (this.m_currentFrameNo === 0) { //first frame is empty (execute any remove commands)
-                this.executeCommands(commandList, this.resourceManager);
-            }
-            this.stepFrame();
-            this.m_currentFrameNo += 1;
-            return;
-        }
-    }
+    console.log('...run clip:' + this.id, this.m_currentFrameNo);
 
-    if (!frame) {
-        return;
-    }
+    this.step_1_animTimeline();
+    this.step_2_enterFrame();
+    //this.step_3_addPending();
+    this.step_4_frameConstructed();
+    this.step_5_frameScripts();
+    this.step_6_exitFrame();
 
-    commands = frame.Command;
-    for(c = 0; c < commands.length; c += 1)
+
+    /*
+    for(i = 0; i < this.children.length; i += 1)
     {
-        cmdData = commands[c];
-        type = cmdData.cmdType;
-        command = null;
-
-        switch(type)
-        {
-            case "Place":
-
-                found = this.getChildById(cmdData.objectId);
-
-                if (!found) {
-                    command = new CMD.PlaceObjectCommand(cmdData.charid, cmdData.objectId, cmdData.name, cmdData.placeAfter, cmdData.transformMatrix, cmdData.bounds);
-                    commandList.push(command);
-                } else {
-                    command = new CMD.MoveObjectCommand(cmdData.objectId, cmdData.transformMatrix);
-                    commandList.push(command);
-                    command = new CMD.UpdateObjectCommand(cmdData.objectId, cmdData.placeAfter);
-                    commandList.push(command);
-                }
-
-            break;
-            case "Move":
-                command = new CMD.MoveObjectCommand(cmdData.objectId, cmdData.transformMatrix);
-                commandList.push(command);
-            break;
-            case "Remove":
-                command = new CMD.RemoveObjectCommand(cmdData.objectId);
-                commandList.push(command);
-            break;
-            case "UpdateZOrder":
-                command = new CMD.UpdateObjectCommand(cmdData.objectId , cmdData.placeAfter);
-                commandList.push(command);
-            break;
-            case "UpdateVisibility":
-                command = new CMD.UpdateVisibilityCommand(cmdData.objectId , cmdData.visibility);
-                commandList.push(command);
-            break;
-            case "UpdateColorTransform":
-                command = new CMD.UpdateColorTransformCommand(cmdData.objectId , cmdData.colorMatrix);
-                commandList.push(command);
-            break;
-            case "UpdateMask":
-                command = new CMD.UpdateMaskCommand(cmdData.objectId , cmdData.maskTill);
-                commandList.push(command);
-            break;
-            case "AddFrameScript":
-              command = new CMD.AddFrameScriptCommand(cmdData.scriptId, cmdData.script);
-              commandList.push(command);
-            break;
-            case "RemoveFrameScript":
-              command = new CMD.RemoveFrameScriptCommand(cmdData.scriptId);
-              commandList.push(command);
-            break;
-            case "SetFrameLabel":
-              command = new CMD.SetFrameLabelCommand(cmdData.Name);
-              commandList.push(command);
-            break;
+        if (this.children[i]._animate) {
+            this.children[i]._animate();
         }
-
     }
+    */
 
-    if (this.containsMask) {
-        command = new CMD.ApplyMaskCommand();
-        commandList.push(command);
-    }
-
-    this.executeCommands(commandList, this.resourceManager);
-
-    this.stepFrame();
-
-    this.m_currentFrameNo++;
 
     GP.purge();
 };
 
-MovieClip.prototype.stepFrame = function () {
-  this.step_1_animTimeline();
-  this.step_2_enterFrame();
-  //this.step_3_addPending();
-  this.step_4_frameConstructed();
-  this.step_5_frameScripts();
-  this.step_6_exitFrame();
-};
+MovieClip.prototype._runCommands = function (commands) {
+  var c,
+      cmdData,
+      command,
+      type,
+      found;
 
-MovieClip.prototype.step_1_animTimeline = function () {
+  for(c = 0; c < commands.length; c += 1)
+  {
+      cmdData = commands[c];
+      type = cmdData.cmdType;
+      command = null;
+
+      switch(type)
+      {
+          case "Place":
+
+              found = this.getChildById(cmdData.objectId);
+
+              if (!found) {
+                  command = new CMD.PlaceObjectCommand(cmdData.charid, cmdData.objectId, cmdData.name, cmdData.placeAfter, cmdData.transformMatrix, cmdData.bounds);
+                  this.commandList.push(command);
+              } else {
+                  command = new CMD.MoveObjectCommand(cmdData.objectId, cmdData.transformMatrix);
+                  this.commandList.push(command);
+                  command = new CMD.UpdateObjectCommand(cmdData.objectId, cmdData.placeAfter);
+                  this.commandList.push(command);
+              }
+
+          break;
+          case "Move":
+              command = new CMD.MoveObjectCommand(cmdData.objectId, cmdData.transformMatrix);
+              this.commandList.push(command);
+          break;
+          case "Remove":
+              command = new CMD.RemoveObjectCommand(cmdData.objectId);
+              this.commandList.push(command);
+          break;
+          case "UpdateZOrder":
+              command = new CMD.UpdateObjectCommand(cmdData.objectId , cmdData.placeAfter);
+              this.commandList.push(command);
+          break;
+          case "UpdateVisibility":
+              command = new CMD.UpdateVisibilityCommand(cmdData.objectId , cmdData.visibility);
+              this.commandList.push(command);
+          break;
+          case "UpdateColorTransform":
+              command = new CMD.UpdateColorTransformCommand(cmdData.objectId , cmdData.colorMatrix);
+              this.commandList.push(command);
+          break;
+          case "UpdateBlendMode":
+            //  command = new CMD.UpdateBlendMode(cmdData.objectId , cmdData.blendMode);
+            //  this.commandList.push(command);
+          break;
+          case "UpdateMask":
+              command = new CMD.UpdateMaskCommand(cmdData.objectId , cmdData.maskTill);
+              this.commandList.push(command);
+          break;
+          case "AddFrameScript":
+            command = new CMD.AddFrameScriptCommand(cmdData.scriptId, cmdData.script);
+            this.commandList.push(command);
+          break;
+          case "RemoveFrameScript":
+            command = new CMD.RemoveFrameScriptCommand(cmdData.scriptId);
+            this.commandList.push(command);
+          break;
+          case "SetFrameLabel":
+            command = new CMD.SetFrameLabelCommand(cmdData.Name);
+            this.commandList.push(command);
+          break;
+      }
+
+  }
+
+  if (this.containsMask) {
+      command = new CMD.ApplyMaskCommand();
+      this.commandList.push(command);
+  }
+
+  this.executeCommands(this.commandList, this.resourceManager);
+}
+
+//update timelien animations
+MovieClip.prototype.step_1_animTimeline = function (seekMode, seekEnd) {
+
+  if (typeof seekMode === "undefined") { seekMode = false; }
+  if (typeof seekEnd === "undefined") { seekEnd = false; }
+
+  var commands,
+      frame;
+
+  frame = this.getFrame(this.m_currentFrameNo);
+  this.m_currentFrameNo++;
+
+  if (!frame) {
+    return;
+  }
+
+  commands = frame.Command;
+  console.log(commands);
+  this._runCommands(commands);
+
+  //TODO:: need to explore children events not firing
+  // Recurse
+  if (!seekMode) {
+      for (var i = 0; i < this.children.length; i++) {
+        if (this.children[i] instanceof MovieClip) {
+          this.children[i].step_1_animTimeline(seekMode);
+        }
+      }
+  }
 
 };
 
@@ -421,16 +473,88 @@ MovieClip.prototype.stop = function () {
   this.playing = false;
 };
 
-MovieClip.prototype.gotoAndStop = function (num) {
-  this.m_currentFrameNo = num;
-  this.runFrame();
-  this.playing = false;
+MovieClip.prototype.gotoAndStop = function (fr) {
+  this._gotoAndPlayStop(fr, true);
 };
 
-MovieClip.prototype.gotoAndPlay = function (num) {
-  this.m_currentFrameNo = num;
-  this.playing = true;
+MovieClip.prototype.gotoAndPlay = function (fr) {
+  this._gotoAndPlayStop(fr, false);
 };
+
+MovieClip.prototype._gotoAndPlayStop = function (frame, bStop) {
+
+  //TODO::handle labels
+  if (typeof frame === "string") {
+    var bFound = false;
+
+    if (bFound == false) {
+      return
+    }
+  }
+
+  //if frame number is invalid, don't do anything
+  if (frame < 1 || frame > this.m_frameCount) {
+    return;
+  }
+
+  // If we are already at the destination frame, don't do anythin
+  if (frame == this.m_currentFrameNo + 1) {
+    if (bStop === false) {
+        this.play();
+    } else {
+        this.stop();
+    }
+    return;
+  }
+
+  // First ensure that the timeline is in a good state to start jumping around
+  //this.step_3_addPending(true);
+  this.play();
+
+  // Loop around if necessary
+  if (frame < this.m_currentFrameNo + 1) {
+    var bSeekEnd = (frame == 1);
+    this._loopAround(true, bSeekEnd);
+    //this.step_3_addPending(!bSeekEnd);
+  }
+
+  while (this.m_currentFrameNo < frame) {
+    var bSeekEnd = (frame == this.m_currentFrameNo + 1);
+    this.step_1_animTimeline(true, bSeekEnd);
+    //this.step_3_addPending(!bSeekEnd);
+  }
+
+  if (bStop === false) {
+      this.play();
+  } else {
+      this.stop();
+  }
+
+  this.step_4_frameConstructed();
+  this.step_5_frameScripts();
+  this.step_6_exitFrame();
+}
+
+
+MovieClip.prototype._loopAround = function (seekMode, seekEnd) {
+  if (typeof seekMode === "undefined") { seekMode = false; }
+  if (typeof seekEnd === "undefined") { seekEnd = false; }
+
+  console.log('////////LOOP AROUND');
+
+  this.m_currentFrameNo = 0;
+
+  frame = this.getFrame(this.m_currentFrameNo);
+
+  if (!frame) {
+    return;
+  }
+
+  //Get the commands for the first frame
+  commands = frame.Command;
+
+
+}
 
 MovieClip.prototype.executeCommands = function (commandList, resourceManager) {
     var i;
