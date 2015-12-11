@@ -16,9 +16,6 @@
     //Execute function for PlaceObjectCommand
     CMD.PlaceObjectCommand.prototype.execute = function(parentMC, resourceManager)
     {
-			if (parentMC.id.indexOf('svg') > -1) { //only on main timeline
-				console.log('place', 'id:' + this.m_objectID, 'place after:' + this.m_placeAfter);
-			}
 
         var shape = resourceManager.getShape(this.m_charID),
             bitmap = resourceManager.getBitmap(this.m_charID),

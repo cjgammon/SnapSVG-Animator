@@ -970,6 +970,10 @@ MovieClip.prototype.step_1_animTimeline = function (seekMode, seekEnd) {
   var commands,
       frame;
 
+  if (!this.playing) {
+    return;
+  }
+
   frame = this.getFrame(this.m_currentFrameNo);
   this.m_currentFrameNo++;
 
@@ -1052,7 +1056,6 @@ MovieClip.prototype._gotoAndPlayStop = function (frame, bStop) {
     } else {
         this.stop();
     }
-    this.log('b')
     return;
   }
 
@@ -1088,7 +1091,7 @@ MovieClip.prototype._gotoAndPlayStop = function (frame, bStop) {
   } else {
       this.stop();
   }
-  this.log('e');
+  this.log('e', this.playing);
 
   this.step_4_frameConstructed();
   this.step_5_frameScripts();
@@ -1119,10 +1122,6 @@ MovieClip.prototype._loopAround = function (seekMode, seekEnd) {
 MovieClip.prototype.executeCommands = function (commandList, resourceManager) {
     var i;
 
-    if (this.id.indexOf('svg') > -1) { //only on main timeline
-      console.log('LIST', commandList);
-    }
-
     for (i = 0; i < commandList.length ; i++)
     {
         if (commandList[i] !== undefined) {
@@ -1133,7 +1132,9 @@ MovieClip.prototype.executeCommands = function (commandList, resourceManager) {
 
 MovieClip.prototype.log = function () {
   if (this.id.indexOf('svg') > -1) { //only on main timeline
-    console.log.apply(console, arguments);
+    var args = Array.prototype.slice.call(arguments);
+    args.unshift(this.id.toUpperCase());
+    console.log.apply(console, args);
   }
 }
 
@@ -1155,9 +1156,6 @@ MovieClip.prototype.log = function () {
     //Execute function for PlaceObjectCommand
     CMD.PlaceObjectCommand.prototype.execute = function(parentMC, resourceManager)
     {
-			if (parentMC.id.indexOf('svg') > -1) { //only on main timeline
-				console.log('place', 'id:' + this.m_objectID, 'place after:' + this.m_placeAfter);
-			}
 
         var shape = resourceManager.getShape(this.m_charID),
             bitmap = resourceManager.getBitmap(this.m_charID),
@@ -1531,16 +1529,22 @@ function SVGAnim(data, w, h, fps, params) {
         maintimelineIndex = instance.resourceManager.m_data.DOMDocument.Timeline.length - 1;
         mainTimeline = instance.resourceManager.m_data.DOMDocument.Timeline[maintimelineIndex];
         instance.movieclip = new MovieClip(instance.s, mainTimeline, instance.resourceManager, id);
+
+        cbk = setTimeout(interval, 1000 / fps);
     }
 
     this.play = function () {
+      instance.movieclip.play();
+        /*
         instance.playing = true;
 
         if (cbk === undefined) {
             cbk = setTimeout(interval, 1000 / fps);
         }
+        */
     };
 
+    /*
     this.pause = function () {
         instance.playing = false;
 
@@ -1550,10 +1554,12 @@ function SVGAnim(data, w, h, fps, params) {
             cbk = undefined;
         }
     };
+    */
 
     this.stop = function () {
-        this.pause();
-        reset();
+      instance.movieclip.stop();
+      //  this.pause();
+      //  reset();
     };
 
     this.setLoop = function (l) {
@@ -1565,10 +1571,10 @@ function SVGAnim(data, w, h, fps, params) {
 
         instance.movieclip._animate();
 
-        if (instance.playing) {
-            clearTimeout(cbk);
-            cbk = setTimeout(interval, 1000 / fps);
-        }
+        //if (instance.playing) {
+        clearTimeout(cbk);
+        cbk = setTimeout(interval, 1000 / fps);
+        //}
     }
 
     function handleKeyDown(e) {

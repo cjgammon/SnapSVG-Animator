@@ -51,29 +51,16 @@ function SVGAnim(data, w, h, fps, params) {
         maintimelineIndex = instance.resourceManager.m_data.DOMDocument.Timeline.length - 1;
         mainTimeline = instance.resourceManager.m_data.DOMDocument.Timeline[maintimelineIndex];
         instance.movieclip = new MovieClip(instance.s, mainTimeline, instance.resourceManager, id);
+
+        cbk = setTimeout(interval, 1000 / fps);
     }
 
     this.play = function () {
-        instance.playing = true;
-
-        if (cbk === undefined) {
-            cbk = setTimeout(interval, 1000 / fps);
-        }
-    };
-
-    this.pause = function () {
-        instance.playing = false;
-
-        if(cbk !== undefined)
-        {
-            clearTimeout(cbk);
-            cbk = undefined;
-        }
+      instance.movieclip.play();
     };
 
     this.stop = function () {
-        this.pause();
-        reset();
+      instance.movieclip.stop();
     };
 
     this.setLoop = function (l) {
@@ -81,14 +68,12 @@ function SVGAnim(data, w, h, fps, params) {
     };
 
     function interval() {
-        console.log('interval');
-
         instance.movieclip._animate();
 
-        if (instance.playing) {
-            clearTimeout(cbk);
-            cbk = setTimeout(interval, 1000 / fps);
-        }
+        //if (instance.playing) {
+        clearTimeout(cbk);
+        cbk = setTimeout(interval, 1000 / fps);
+        //}
     }
 
     function handleKeyDown(e) {

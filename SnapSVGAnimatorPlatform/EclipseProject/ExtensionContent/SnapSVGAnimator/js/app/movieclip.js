@@ -285,8 +285,6 @@ MovieClip.prototype._animate = function () {
         found,
         c;
 
-    this.log('animate');
-
     if (!this.playing) {
       return;
     }
@@ -300,15 +298,12 @@ MovieClip.prototype._animate = function () {
         this._loop();
     }
 
-    this.log('...run clip:', this.m_currentFrameNo);
-
     this.step_1_animTimeline();
     this.step_2_enterFrame();
     //this.step_3_addPending();
     this.step_4_frameConstructed();
     this.step_5_frameScripts();
     this.step_6_exitFrame();
-
 
     for(i = 0; i < this.children.length; i += 1)
     {
@@ -413,6 +408,10 @@ MovieClip.prototype.step_1_animTimeline = function (seekMode, seekEnd) {
   var commands,
       frame;
 
+  if (!this.playing) {
+    return;
+  }
+
   frame = this.getFrame(this.m_currentFrameNo);
   this.m_currentFrameNo++;
 
@@ -495,7 +494,6 @@ MovieClip.prototype._gotoAndPlayStop = function (frame, bStop) {
     } else {
         this.stop();
     }
-    this.log('b')
     return;
   }
 
@@ -531,7 +529,7 @@ MovieClip.prototype._gotoAndPlayStop = function (frame, bStop) {
   } else {
       this.stop();
   }
-  this.log('e');
+  this.log('e', this.playing);
 
   this.step_4_frameConstructed();
   this.step_5_frameScripts();
@@ -572,6 +570,8 @@ MovieClip.prototype.executeCommands = function (commandList, resourceManager) {
 
 MovieClip.prototype.log = function () {
   if (this.id.indexOf('svg') > -1) { //only on main timeline
-    console.log.apply(console, arguments);
+    var args = Array.prototype.slice.call(arguments);
+    args.unshift(this.id.toUpperCase());
+    console.log.apply(console, args);
   }
 }
