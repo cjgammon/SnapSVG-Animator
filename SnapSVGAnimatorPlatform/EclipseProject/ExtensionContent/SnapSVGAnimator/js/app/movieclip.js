@@ -224,7 +224,7 @@ MovieClip.prototype._loop = function () {
         cmData,
         type;
 
-    console.log('LOOOP!!!');
+    this.log('LOOOP!!!');
     this.m_currentFrameNo = 0;
 
     frame = this.getFrame(this.m_currentFrameNo);
@@ -285,7 +285,7 @@ MovieClip.prototype._animate = function () {
         found,
         c;
 
-    this.commandList = [];
+    this.log('animate');
 
     if (!this.playing) {
       return;
@@ -300,7 +300,7 @@ MovieClip.prototype._animate = function () {
         this._loop();
     }
 
-    console.log('...run clip:' + this.id, this.m_currentFrameNo);
+    this.log('...run clip:', this.m_currentFrameNo);
 
     this.step_1_animTimeline();
     this.step_2_enterFrame();
@@ -310,15 +310,12 @@ MovieClip.prototype._animate = function () {
     this.step_6_exitFrame();
 
 
-    /*
     for(i = 0; i < this.children.length; i += 1)
     {
         if (this.children[i]._animate) {
             this.children[i]._animate();
         }
     }
-    */
-
 
     GP.purge();
 };
@@ -329,6 +326,8 @@ MovieClip.prototype._runCommands = function (commands) {
       command,
       type,
       found;
+
+  this.commandList = [];
 
   for(c = 0; c < commands.length; c += 1)
   {
@@ -417,23 +416,15 @@ MovieClip.prototype.step_1_animTimeline = function (seekMode, seekEnd) {
   frame = this.getFrame(this.m_currentFrameNo);
   this.m_currentFrameNo++;
 
+  this.log('step_1_animTimeline:', this.m_currentFrameNo);
+
   if (!frame) {
     return;
   }
 
   commands = frame.Command;
-  console.log(commands);
-  this._runCommands(commands);
 
-  //TODO:: need to explore children events not firing
-  // Recurse
-  if (!seekMode) {
-      for (var i = 0; i < this.children.length; i++) {
-        if (this.children[i] instanceof MovieClip) {
-          this.children[i].step_1_animTimeline(seekMode);
-        }
-      }
-  }
+  this._runCommands(commands);
 
 };
 
@@ -454,6 +445,7 @@ MovieClip.prototype.step_4_frameConstructed = function () {
 MovieClip.prototype.step_5_frameScripts = function () {
   //trigger framescripts
   //trigger on children
+  this.log('step_5_frameScripts');
 
   for (var i in this._scripts) {
     this.executeFrameScript(this._scripts[i]);
@@ -474,36 +466,36 @@ MovieClip.prototype.stop = function () {
 };
 
 MovieClip.prototype.gotoAndStop = function (fr) {
+  this.log('gotoandstop')
   this._gotoAndPlayStop(fr, true);
 };
 
 MovieClip.prototype.gotoAndPlay = function (fr) {
+  this.log('gotoandplay')
   this._gotoAndPlayStop(fr, false);
 };
 
 MovieClip.prototype._gotoAndPlayStop = function (frame, bStop) {
 
   //TODO::handle labels
-  if (typeof frame === "string") {
-    var bFound = false;
-
-    if (bFound == false) {
-      return
-    }
-  }
 
   //if frame number is invalid, don't do anything
+
+  this.log('GOTOANDPLAYSTOP::', frame, this.m_currentFrameNo, this.m_frameCount);
+
   if (frame < 1 || frame > this.m_frameCount) {
+    this.log('a')
     return;
   }
 
   // If we are already at the destination frame, don't do anythin
-  if (frame == this.m_currentFrameNo + 1) {
+  if (frame == this.m_currentFrameNo) {
     if (bStop === false) {
         this.play();
     } else {
         this.stop();
     }
+    this.log('b')
     return;
   }
 
@@ -512,15 +504,25 @@ MovieClip.prototype._gotoAndPlayStop = function (frame, bStop) {
   this.play();
 
   // Loop around if necessary
-  if (frame < this.m_currentFrameNo + 1) {
+  if (frame < this.m_currentFrameNo) {
+    this.log('c');
     var bSeekEnd = (frame == 1);
     this._loopAround(true, bSeekEnd);
     //this.step_3_addPending(!bSeekEnd);
   }
 
   while (this.m_currentFrameNo < frame) {
-    var bSeekEnd = (frame == this.m_currentFrameNo + 1);
+    this.log('d');
+    var bSeekEnd = (frame == this.m_currentFrameNo);
     this.step_1_animTimeline(true, bSeekEnd);
+
+    for(var i = 0; i < this.children.length; i += 1)
+    {
+        if (this.children[i].step_1_animTimeline) {
+            this.children[i].step_1_animTimeline(true, bSeekEnd);
+        }
+    }
+
     //this.step_3_addPending(!bSeekEnd);
   }
 
@@ -529,6 +531,7 @@ MovieClip.prototype._gotoAndPlayStop = function (frame, bStop) {
   } else {
       this.stop();
   }
+  this.log('e');
 
   this.step_4_frameConstructed();
   this.step_5_frameScripts();
@@ -540,7 +543,7 @@ MovieClip.prototype._loopAround = function (seekMode, seekEnd) {
   if (typeof seekMode === "undefined") { seekMode = false; }
   if (typeof seekEnd === "undefined") { seekEnd = false; }
 
-  console.log('////////LOOP AROUND');
+  this.log('////////LOOP AROUND');
 
   this.m_currentFrameNo = 0;
 
@@ -566,3 +569,9 @@ MovieClip.prototype.executeCommands = function (commandList, resourceManager) {
         }
     }
 };
+
+MovieClip.prototype.log = function () {
+  if (this.id.indexOf('svg') > -1) { //only on main timeline
+    console.log.apply(console, arguments);
+  }
+}

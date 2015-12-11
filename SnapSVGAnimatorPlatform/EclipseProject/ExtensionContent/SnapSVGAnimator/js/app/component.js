@@ -81,6 +81,7 @@ function SVGAnim(data, w, h, fps, params) {
     };
 
     function interval() {
+        console.log('interval');
 
         instance.movieclip._animate();
 

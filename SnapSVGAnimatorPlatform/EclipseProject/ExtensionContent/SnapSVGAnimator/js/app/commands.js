@@ -16,7 +16,9 @@
     //Execute function for PlaceObjectCommand
     CMD.PlaceObjectCommand.prototype.execute = function(parentMC, resourceManager)
     {
-        //console.log('place', this.m_objectID, this.m_placeAfter);
+			if (parentMC.id.indexOf('svg') > -1) { //only on main timeline
+				console.log('place', 'id:' + this.m_objectID, 'place after:' + this.m_placeAfter);
+			}
 
         var shape = resourceManager.getShape(this.m_charID),
             bitmap = resourceManager.getBitmap(this.m_charID),
@@ -64,7 +66,9 @@
     //Execute function for PlaceObjectCommand
     CMD.MoveObjectCommand.prototype.execute = function(parentMC, resourceManager)
     {
-        //console.log('move', this.m_objectID);
+			if (parentMC.id.indexOf('svg') > -1) { //only on main timeline
+				console.log('move', 'id:' + this.m_objectID);
+			}
 
         var transform,
             transformArray,
