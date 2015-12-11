@@ -214,6 +214,16 @@ MovieClip.prototype.getFrame = function (num) {
   }
 };
 
+MovieClip.prototype._checkLoop = function () {
+  if(this.m_currentFrameNo == this.m_frameCount)
+  {
+      if (!this.loops) {
+          return;
+      }
+      this._loop();
+  }
+};
+
 //playback methods
 MovieClip.prototype._loop = function () {
     var frame,
@@ -394,18 +404,9 @@ MovieClip.prototype.step_1_animTimeline = function (seekMode, seekEnd) {
     return;
   }
 
-  ////////////////////////
-    this.commandList = [];
+  this.commandList = [];
 
-    //check to handle looping of movieclip
-    if(this.m_currentFrameNo == this.m_frameCount)
-    {
-        if (!this.loops) {
-            return;
-        }
-        this._loop();
-    }
-  ////////////////////////
+  this._checkLoop();
 
   frame = this.getFrame(this.m_currentFrameNo);
   this.m_currentFrameNo++;
@@ -526,27 +527,14 @@ MovieClip.prototype._gotoAndPlayStop = function (frame, bStop) {
   this.step_6_exitFrame();
 }
 
-
 MovieClip.prototype._loopAround = function (seekMode, seekEnd) {
   if (typeof seekMode === "undefined") { seekMode = false; }
   if (typeof seekEnd === "undefined") { seekEnd = false; }
 
   console.log(this.id, '////////LOOP AROUND!');
 
-  ////////////////////////
-    this.commandList = [];
-
-    //check to handle looping of movieclip
-    if(this.m_currentFrameNo == this.m_frameCount)
-    {
-        if (!this.loops) {
-            return;
-        }
-        this._loop();
-    }
-  ////////////////////////
-
-
+  this.commandList = [];
+  this._checkLoop();
   this.m_currentFrameNo = 0;
 
   frame = this.getFrame(this.m_currentFrameNo);
