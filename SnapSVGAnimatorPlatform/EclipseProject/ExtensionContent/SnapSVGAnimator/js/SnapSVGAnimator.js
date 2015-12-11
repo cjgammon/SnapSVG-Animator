@@ -1034,7 +1034,6 @@ MovieClip.prototype._gotoAndPlayStop = function (frame, bStop) {
   this.log('GOTOANDPLAYSTOP::', frame, this.m_currentFrameNo, this.m_frameCount);
 
   if (frame < 1 || frame > this.m_frameCount) {
-    this.log('a')
     return;
   }
 
@@ -1054,14 +1053,12 @@ MovieClip.prototype._gotoAndPlayStop = function (frame, bStop) {
 
   // Loop around if necessary
   if (frame < this.m_currentFrameNo) {
-    this.log('c');
     var bSeekEnd = (frame == 1);
     this._loopAround(true, bSeekEnd);
     //this.step_3_addPending(!bSeekEnd);
   }
 
   while (this.m_currentFrameNo < frame) {
-    this.log('d');
     var bSeekEnd = (frame == this.m_currentFrameNo);
     this.step_1_animTimeline(true, bSeekEnd);
 
@@ -1080,7 +1077,6 @@ MovieClip.prototype._gotoAndPlayStop = function (frame, bStop) {
   } else {
       this.stop();
   }
-  this.log('e', this.playing);
 
   this.step_4_frameConstructed();
   this.step_5_frameScripts();
@@ -1094,6 +1090,20 @@ MovieClip.prototype._loopAround = function (seekMode, seekEnd) {
 
   console.log(this.id, '////////LOOP AROUND!');
 
+  ////////////////////////
+    this.commandList = [];
+
+    //check to handle looping of movieclip
+    if(this.m_currentFrameNo == this.m_frameCount)
+    {
+        if (!this.loops) {
+            return;
+        }
+        this._loop();
+    }
+  ////////////////////////
+
+
   this.m_currentFrameNo = 0;
 
   frame = this.getFrame(this.m_currentFrameNo);
@@ -1102,9 +1112,10 @@ MovieClip.prototype._loopAround = function (seekMode, seekEnd) {
     return;
   }
 
+
   //Get the commands for the first frame
   commands = frame.Command;
-
+  this._runCommands(commands);
 
 }
 

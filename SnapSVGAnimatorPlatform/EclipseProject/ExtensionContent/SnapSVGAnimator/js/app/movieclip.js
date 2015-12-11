@@ -545,7 +545,7 @@ MovieClip.prototype._loopAround = function (seekMode, seekEnd) {
         this._loop();
     }
   ////////////////////////
-  
+
 
   this.m_currentFrameNo = 0;
 
@@ -558,7 +558,7 @@ MovieClip.prototype._loopAround = function (seekMode, seekEnd) {
 
   //Get the commands for the first frame
   commands = frame.Command;
-
+  this._runCommands(commands);
 
 }
 
