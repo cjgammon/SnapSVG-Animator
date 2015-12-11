@@ -224,7 +224,7 @@ MovieClip.prototype._loop = function () {
         cmData,
         type;
 
-    this.log('LOOOP!!!');
+    console.log(this.id, 'LOOOP!!!');
     this.m_currentFrameNo = 0;
 
     frame = this.getFrame(this.m_currentFrameNo);
@@ -276,26 +276,10 @@ MovieClip.prototype.clearChildren = function () {
 };
 
 MovieClip.prototype._animate = function () {
-    var frame,
-        i,
-        commands,
-        cmData,
-        type,
-        command,
-        found,
-        c;
+    var i;
 
     if (!this.playing) {
       return;
-    }
-
-    //check to handle looping of movieclip
-    if(this.m_currentFrameNo == this.m_frameCount)
-    {
-        if (!this.loops) {
-            return;
-        }
-        this._loop();
     }
 
     this.step_1_animTimeline();
@@ -321,8 +305,6 @@ MovieClip.prototype._runCommands = function (commands) {
       command,
       type,
       found;
-
-  this.commandList = [];
 
   for(c = 0; c < commands.length; c += 1)
   {
@@ -412,6 +394,19 @@ MovieClip.prototype.step_1_animTimeline = function (seekMode, seekEnd) {
     return;
   }
 
+  ////////////////////////
+    this.commandList = [];
+
+    //check to handle looping of movieclip
+    if(this.m_currentFrameNo == this.m_frameCount)
+    {
+        if (!this.loops) {
+            return;
+        }
+        this._loop();
+    }
+  ////////////////////////
+
   frame = this.getFrame(this.m_currentFrameNo);
   this.m_currentFrameNo++;
 
@@ -422,7 +417,6 @@ MovieClip.prototype.step_1_animTimeline = function (seekMode, seekEnd) {
   }
 
   commands = frame.Command;
-
   this._runCommands(commands);
 
 };
@@ -541,7 +535,7 @@ MovieClip.prototype._loopAround = function (seekMode, seekEnd) {
   if (typeof seekMode === "undefined") { seekMode = false; }
   if (typeof seekEnd === "undefined") { seekEnd = false; }
 
-  this.log('////////LOOP AROUND');
+  console.log(this.id, '////////LOOP AROUND!');
 
   this.m_currentFrameNo = 0;
 
@@ -572,6 +566,6 @@ MovieClip.prototype.log = function () {
   if (this.id.indexOf('svg') > -1) { //only on main timeline
     var args = Array.prototype.slice.call(arguments);
     args.unshift(this.id.toUpperCase());
-    console.log.apply(console, args);
+    //console.log.apply(console, args);
   }
 }

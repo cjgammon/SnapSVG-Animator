@@ -77,8 +77,20 @@ function SVGAnim(data, w, h, fps, params) {
     }
 
     function handleKeyDown(e) {
-        if (e.keyCode == 39) { //right key press
-            interval();
+
+        switch (e.keyCode) {
+          case 39:
+            instance.play();
+            instance.movieclip._animate();
+            instance.stop();
+          break;
+          case 32:
+            if (instance.movieclip.playing) {
+              instance.stop();
+            } else {
+              instance.play();
+            }
+          break;
         }
     }
 

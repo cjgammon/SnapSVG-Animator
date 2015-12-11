@@ -781,7 +781,7 @@ MovieClip.prototype._loop = function () {
         cmData,
         type;
 
-    this.log('LOOOP!!!');
+    console.log(this.id, 'LOOOP!!!');
     this.m_currentFrameNo = 0;
 
     frame = this.getFrame(this.m_currentFrameNo);
@@ -833,31 +833,11 @@ MovieClip.prototype.clearChildren = function () {
 };
 
 MovieClip.prototype._animate = function () {
-    var frame,
-        i,
-        commands,
-        cmData,
-        type,
-        command,
-        found,
-        c;
-
-    this.log('animate');
+    var i;
 
     if (!this.playing) {
       return;
     }
-
-    //check to handle looping of movieclip
-    if(this.m_currentFrameNo == this.m_frameCount)
-    {
-        if (!this.loops) {
-            return;
-        }
-        this._loop();
-    }
-
-    this.log('...run clip:', this.m_currentFrameNo);
 
     this.step_1_animTimeline();
     this.step_2_enterFrame();
@@ -865,7 +845,6 @@ MovieClip.prototype._animate = function () {
     this.step_4_frameConstructed();
     this.step_5_frameScripts();
     this.step_6_exitFrame();
-
 
     for(i = 0; i < this.children.length; i += 1)
     {
@@ -883,8 +862,6 @@ MovieClip.prototype._runCommands = function (commands) {
       command,
       type,
       found;
-
-  this.commandList = [];
 
   for(c = 0; c < commands.length; c += 1)
   {
@@ -974,6 +951,19 @@ MovieClip.prototype.step_1_animTimeline = function (seekMode, seekEnd) {
     return;
   }
 
+  ////////////////////////
+    this.commandList = [];
+
+    //check to handle looping of movieclip
+    if(this.m_currentFrameNo == this.m_frameCount)
+    {
+        if (!this.loops) {
+            return;
+        }
+        this._loop();
+    }
+  ////////////////////////
+
   frame = this.getFrame(this.m_currentFrameNo);
   this.m_currentFrameNo++;
 
@@ -984,7 +974,6 @@ MovieClip.prototype.step_1_animTimeline = function (seekMode, seekEnd) {
   }
 
   commands = frame.Command;
-
   this._runCommands(commands);
 
 };
@@ -1103,7 +1092,7 @@ MovieClip.prototype._loopAround = function (seekMode, seekEnd) {
   if (typeof seekMode === "undefined") { seekMode = false; }
   if (typeof seekEnd === "undefined") { seekEnd = false; }
 
-  this.log('////////LOOP AROUND');
+  console.log(this.id, '////////LOOP AROUND!');
 
   this.m_currentFrameNo = 0;
 
@@ -1134,7 +1123,7 @@ MovieClip.prototype.log = function () {
   if (this.id.indexOf('svg') > -1) { //only on main timeline
     var args = Array.prototype.slice.call(arguments);
     args.unshift(this.id.toUpperCase());
-    console.log.apply(console, args);
+    //console.log.apply(console, args);
   }
 }
 
@@ -1203,9 +1192,6 @@ MovieClip.prototype.log = function () {
     //Execute function for PlaceObjectCommand
     CMD.MoveObjectCommand.prototype.execute = function(parentMC, resourceManager)
     {
-			if (parentMC.id.indexOf('svg') > -1) { //only on main timeline
-				console.log('move', 'id:' + this.m_objectID);
-			}
 
         var transform,
             transformArray,
@@ -1535,31 +1521,10 @@ function SVGAnim(data, w, h, fps, params) {
 
     this.play = function () {
       instance.movieclip.play();
-        /*
-        instance.playing = true;
-
-        if (cbk === undefined) {
-            cbk = setTimeout(interval, 1000 / fps);
-        }
-        */
     };
-
-    /*
-    this.pause = function () {
-        instance.playing = false;
-
-        if(cbk !== undefined)
-        {
-            clearTimeout(cbk);
-            cbk = undefined;
-        }
-    };
-    */
 
     this.stop = function () {
       instance.movieclip.stop();
-      //  this.pause();
-      //  reset();
     };
 
     this.setLoop = function (l) {
@@ -1567,8 +1532,6 @@ function SVGAnim(data, w, h, fps, params) {
     };
 
     function interval() {
-        console.log('interval');
-
         instance.movieclip._animate();
 
         //if (instance.playing) {
@@ -1578,8 +1541,20 @@ function SVGAnim(data, w, h, fps, params) {
     }
 
     function handleKeyDown(e) {
-        if (e.keyCode == 39) { //right key press
-            interval();
+
+        switch (e.keyCode) {
+          case 39:
+            instance.play();
+            instance.movieclip._animate();
+            instance.stop();
+          break;
+          case 32:
+            if (instance.movieclip.playing) {
+              instance.stop();
+            } else {
+              instance.play();
+            }
+          break;
         }
     }
 

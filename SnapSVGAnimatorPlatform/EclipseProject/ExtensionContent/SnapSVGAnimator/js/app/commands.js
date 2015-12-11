@@ -63,9 +63,6 @@
     //Execute function for PlaceObjectCommand
     CMD.MoveObjectCommand.prototype.execute = function(parentMC, resourceManager)
     {
-			if (parentMC.id.indexOf('svg') > -1) { //only on main timeline
-				console.log('move', 'id:' + this.m_objectID);
-			}
 
         var transform,
             transformArray,
