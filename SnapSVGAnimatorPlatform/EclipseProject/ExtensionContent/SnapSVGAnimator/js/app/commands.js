@@ -63,7 +63,6 @@
     //Execute function for PlaceObjectCommand
     CMD.MoveObjectCommand.prototype.execute = function(parentMC, resourceManager)
     {
-
         var transform,
             transformArray,
             transformMat;

@@ -558,7 +558,6 @@ var Shape = function (parentMC,resourceManager,charId,ObjectId,placeAfter,transf
 
 var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, name, placeAfter, transform) {
     var i,
-        matrix,
         transformData,
         transformArray,
         afterEl,
@@ -592,13 +591,14 @@ var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, 
     this.playing = true;
     this.resourceManager = resourceManager;
     this.commandList = [];
+    this.matrix = new Snap.Matrix();
 
     if(this.transform !== undefined)
     {
         transformData = this.transform;
         transformArray = transformData.split(",");
-        matrix = new Snap.Matrix(transformArray[0],transformArray[1],transformArray[2],transformArray[3],transformArray[4],transformArray[5]);
-        this.el.transform(matrix);
+        this.matrix = new Snap.Matrix(transformArray[0],transformArray[1],transformArray[2],transformArray[3],transformArray[4],transformArray[5]);
+        this.el.transform(this.matrix);
     }
 
     if (placeAfter && parseInt(placeAfter) !== 0) {
@@ -697,31 +697,31 @@ MovieClip.prototype.containsMask = function () {
     return false;
 };
 
-MovieClip.prototype.matrix = function (newM) {
+MovieClip.prototype.getMatrix = function () {
   //TODO:: set to newM if exists
 
-  if (matrix) {
-    return matrix;
+  if (this.matrix) {
+    return this.matrix;
   } else {
     return new Snap.Matrix();
   }
 }
 
-MovieClip.prototype.x = function (newX) {
+MovieClip.prototype.x = function () {
   var _x = 0;
 
-  if (matrix) {
-    _x = martix.x();
+  if (this.matrix) {
+    _x = this.martix.x();
   }
 
   return _x;
 };
 
-MovieClip.prototype.y = function (newY) {
+MovieClip.prototype.y = function () {
   var _y = 0;
 
-  if (matrix) {
-    _y = martix.y();
+  if (this.matrix) {
+    _y = this.martix.y();
   }
 
   return _y;
@@ -1191,7 +1191,6 @@ MovieClip.prototype.log = function () {
     //Execute function for PlaceObjectCommand
     CMD.MoveObjectCommand.prototype.execute = function(parentMC, resourceManager)
     {
-
         var transform,
             transformArray,
             transformMat;
