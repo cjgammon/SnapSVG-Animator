@@ -288,6 +288,13 @@ MovieClip.prototype.clearChildren = function () {
 MovieClip.prototype._animate = function () {
     var i;
 
+    for(i = 0; i < this.children.length; i += 1)
+    {
+        if (this.children[i]._animate) {
+            this.children[i]._animate();
+        }
+    }
+
     if (!this.playing) {
       return;
     }
@@ -298,13 +305,6 @@ MovieClip.prototype._animate = function () {
     this.step_4_frameConstructed();
     this.step_5_frameScripts();
     this.step_6_exitFrame();
-
-    for(i = 0; i < this.children.length; i += 1)
-    {
-        if (this.children[i]._animate) {
-            this.children[i]._animate();
-        }
-    }
 
     GP.purge();
 };
@@ -411,7 +411,6 @@ MovieClip.prototype.step_1_animTimeline = function (seekMode, seekEnd) {
   frame = this.getFrame(this.m_currentFrameNo);
   this.m_currentFrameNo++;
 
-  this.log('step_1_animTimeline:', this.m_currentFrameNo);
 
   if (!frame) {
     return;
@@ -460,12 +459,10 @@ MovieClip.prototype.stop = function () {
 };
 
 MovieClip.prototype.gotoAndStop = function (fr) {
-  this.log('gotoandstop')
   this._gotoAndPlayStop(fr, true);
 };
 
 MovieClip.prototype.gotoAndPlay = function (fr) {
-  this.log('gotoandplay')
   this._gotoAndPlayStop(fr, false);
 };
 
@@ -474,9 +471,6 @@ MovieClip.prototype._gotoAndPlayStop = function (frame, bStop) {
   //TODO::handle labels
 
   //if frame number is invalid, don't do anything
-
-  this.log('GOTOANDPLAYSTOP::', frame, this.m_currentFrameNo, this.m_frameCount);
-
   if (frame < 1 || frame > this.m_frameCount) {
     return;
   }
@@ -531,8 +525,6 @@ MovieClip.prototype._loopAround = function (seekMode, seekEnd) {
   if (typeof seekMode === "undefined") { seekMode = false; }
   if (typeof seekEnd === "undefined") { seekEnd = false; }
 
-  console.log(this.id, '////////LOOP AROUND!');
-
   this.commandList = [];
   this._checkLoop();
   this.m_currentFrameNo = 0;
@@ -543,11 +535,9 @@ MovieClip.prototype._loopAround = function (seekMode, seekEnd) {
     return;
   }
 
-
   //Get the commands for the first frame
   commands = frame.Command;
   this._runCommands(commands);
-
 }
 
 MovieClip.prototype.executeCommands = function (commandList, resourceManager) {
