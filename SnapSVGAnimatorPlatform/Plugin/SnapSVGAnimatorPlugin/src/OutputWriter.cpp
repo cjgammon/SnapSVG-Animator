@@ -90,7 +90,6 @@ namespace SnapSVGAnimator
                            fps\n\
                            );\n\
             \n\
-            comp.play();\n\
         }\n\
     }\n\
 \n\
