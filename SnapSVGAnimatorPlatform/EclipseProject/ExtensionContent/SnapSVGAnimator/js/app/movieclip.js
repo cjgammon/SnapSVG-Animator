@@ -234,7 +234,6 @@ MovieClip.prototype._loop = function () {
         cmData,
         type;
 
-    console.log(this.id, 'LOOOP!!!');
     this.m_currentFrameNo = 0;
 
     frame = this.getFrame(this.m_currentFrameNo);
@@ -411,7 +410,6 @@ MovieClip.prototype.step_1_animTimeline = function (seekMode, seekEnd) {
   frame = this.getFrame(this.m_currentFrameNo);
   this.m_currentFrameNo++;
 
-
   if (!frame) {
     return;
   }
@@ -438,7 +436,6 @@ MovieClip.prototype.step_4_frameConstructed = function () {
 MovieClip.prototype.step_5_frameScripts = function () {
   //trigger framescripts
   //trigger on children
-  this.log('step_5_frameScripts');
 
   for (var i in this._scripts) {
     this.executeFrameScript(this._scripts[i]);

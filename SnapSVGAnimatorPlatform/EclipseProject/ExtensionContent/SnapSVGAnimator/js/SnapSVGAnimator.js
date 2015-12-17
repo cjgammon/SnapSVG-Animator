@@ -791,7 +791,6 @@ MovieClip.prototype._loop = function () {
         cmData,
         type;
 
-    console.log(this.id, 'LOOOP!!!');
     this.m_currentFrameNo = 0;
 
     frame = this.getFrame(this.m_currentFrameNo);
@@ -968,7 +967,6 @@ MovieClip.prototype.step_1_animTimeline = function (seekMode, seekEnd) {
   frame = this.getFrame(this.m_currentFrameNo);
   this.m_currentFrameNo++;
 
-
   if (!frame) {
     return;
   }
@@ -1008,10 +1006,12 @@ MovieClip.prototype.step_6_exitFrame = function () {
 };
 
 MovieClip.prototype.play = function () {
+  this.log('play');
   this.playing = true;
 }
 
 MovieClip.prototype.stop = function () {
+  this.log('stop');
   this.playing = false;
 };
 
@@ -1026,6 +1026,7 @@ MovieClip.prototype.gotoAndPlay = function (fr) {
 MovieClip.prototype._gotoAndPlayStop = function (frame, bStop) {
 
   //TODO::handle labels
+  this.log('gotoAndPlayStop', bStop);
 
   //if frame number is invalid, don't do anything
   if (frame < 1 || frame > this.m_frameCount) {
@@ -1522,10 +1523,8 @@ function SVGAnim(data, w, h, fps, params) {
     function interval() {
         instance.movieclip._animate();
 
-        //if (instance.playing) {
         clearTimeout(cbk);
         cbk = setTimeout(interval, 1000 / fps);
-        //}
     }
 
     function handleKeyDown(e) {

@@ -70,10 +70,8 @@ function SVGAnim(data, w, h, fps, params) {
     function interval() {
         instance.movieclip._animate();
 
-        //if (instance.playing) {
         clearTimeout(cbk);
         cbk = setTimeout(interval, 1000 / fps);
-        //}
     }
 
     function handleKeyDown(e) {
