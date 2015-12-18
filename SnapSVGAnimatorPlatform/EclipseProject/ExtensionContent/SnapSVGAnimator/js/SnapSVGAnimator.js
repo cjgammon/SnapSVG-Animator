@@ -993,7 +993,6 @@ MovieClip.prototype.step_4_frameConstructed = function () {
 MovieClip.prototype.step_5_frameScripts = function () {
   //trigger framescripts
   //trigger on children
-  this.log('step_5_frameScripts');
 
   for (var i in this._scripts) {
     this.executeFrameScript(this._scripts[i]);
@@ -1006,12 +1005,10 @@ MovieClip.prototype.step_6_exitFrame = function () {
 };
 
 MovieClip.prototype.play = function () {
-  this.log('play');
   this.playing = true;
 }
 
 MovieClip.prototype.stop = function () {
-  this.log('stop');
   this.playing = false;
 };
 
@@ -1026,7 +1023,6 @@ MovieClip.prototype.gotoAndPlay = function (fr) {
 MovieClip.prototype._gotoAndPlayStop = function (frame, bStop) {
 
   //TODO::handle labels
-  this.log('gotoAndPlayStop', bStop);
 
   //if frame number is invalid, don't do anything
   if (frame < 1 || frame > this.m_frameCount) {
@@ -1191,6 +1187,7 @@ MovieClip.prototype.log = function () {
         transformMat = new Snap.Matrix(transformArray[0],transformArray[1],transformArray[2],transformArray[3],transformArray[4],transformArray[5]);
 
         child = parentMC.getChildById(this.m_objectID);
+				child.matrix = transformMat;
         child.el.transform(transformMat);
     };
 

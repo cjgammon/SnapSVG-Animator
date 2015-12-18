@@ -72,6 +72,7 @@
         transformMat = new Snap.Matrix(transformArray[0],transformArray[1],transformArray[2],transformArray[3],transformArray[4],transformArray[5]);
 
         child = parentMC.getChildById(this.m_objectID);
+				child.matrix = transformMat;
         child.el.transform(transformMat);
     };
 
