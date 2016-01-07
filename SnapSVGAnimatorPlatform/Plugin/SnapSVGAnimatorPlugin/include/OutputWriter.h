@@ -120,6 +120,7 @@ namespace SnapSVGAnimator
         virtual FCM::Result EndDefineTimeline(
             FCM::U_Int32 resId, 
             FCM::StringRep16 pName, 
+            FCM::StringRep16 pLinkageName,
             ITimelineWriter* pTimelineWriter);
 
         // Marks the start of a shape
@@ -411,7 +412,7 @@ namespace SnapSVGAnimator
 
         const JSONNode* GetRoot();
 
-        void Finish(FCM::U_Int32 resId, FCM::StringRep16 pName);
+        void Finish(FCM::U_Int32 resId, FCM::StringRep16 pName, FCM::StringRep16 pLinkageName);
 
 
     private:
@@ -428,6 +429,8 @@ namespace SnapSVGAnimator
         JSONNode* m_pCommandArray;
 
         JSONNode* m_pFrameArray;
+
+        JSONNode* m_pFrameLabelArray;
 
         JSONNode* m_pTimelineElement;
 

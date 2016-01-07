@@ -135,6 +135,7 @@ namespace SnapSVGAnimator
         virtual FCM::Result EndDefineTimeline(
             FCM::U_Int32 resId, 
             FCM::StringRep16 pName,
+            FCM::StringRep16 pLinkageName,
             ITimelineWriter* pTimelineWriter) = 0;
 
         // Marks the start of a shape

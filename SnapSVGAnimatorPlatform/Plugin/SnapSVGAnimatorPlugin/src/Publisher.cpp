@@ -258,7 +258,7 @@ namespace SnapSVGAnimator
         }
 
         (static_cast<TimelineBuilderFactory*>(pTimelineBuilderFactory.m_Ptr))->Init(
-            pOutputWriter.get(), precision);
+            pFlaDocument, pOutputWriter.get(), precision);
 
         ResourcePalette* pResPalette = static_cast<ResourcePalette*>(m_pResourcePalette.m_Ptr);
         pResPalette->Clear();
@@ -353,12 +353,6 @@ namespace SnapSVGAnimator
                 ((TimelineBuilder*)pTimelineBuilder.m_Ptr)->Build(0, NULL, &pTimelineWriter);
             }
 
-            res = pOutputWriter->EndDocument();
-            ASSERT(FCM_SUCCESS_CODE(res));
-
-            res = pOutputWriter->EndOutput();
-            ASSERT(FCM_SUCCESS_CODE(res));
-
             // Export the library items with linkages
             FCM::FCMListPtr pLibraryItemList;
             res = pFlaDocument->GetLibraryItems(pLibraryItemList.m_Ptr);
@@ -367,7 +361,13 @@ namespace SnapSVGAnimator
                 return res;
             }
 
-            ExportLibraryItems(pLibraryItemList);
+            ExportLibraryItems(pLibraryItemList, pDictPublishSettings, pTimelineBuilderFactory);
+
+            res = pOutputWriter->EndDocument();
+            ASSERT(FCM_SUCCESS_CODE(res));
+
+            res = pOutputWriter->EndOutput();
+            ASSERT(FCM_SUCCESS_CODE(res));
         }
         else
         {
@@ -636,10 +636,13 @@ namespace SnapSVGAnimator
     // Note: This function is NOT completely implemented but provides guidelines 
     // on how this can be possibly done.      
     //
-    FCM::Result CPublisher::ExportLibraryItems(FCM::FCMListPtr pLibraryItemList)
+    FCM::Result CPublisher::ExportLibraryItems(
+        FCM::FCMListPtr pLibraryItemList, 
+        const PIFCMDictionary pDictPublishSettings,
+        PITimelineBuilderFactory pTimelineBuilderFactory)
     {
         FCM::U_Int32 count = 0;
-        FCM::Result res;
+        FCM::Result res = FCM_SUCCESS;
 
 
         ASSERT(pLibraryItemList);
@@ -671,7 +674,7 @@ namespace SnapSVGAnimator
                 ASSERT(FCM_SUCCESS_CODE(res));
 
                 // Export all its children
-                res = ExportLibraryItems(pChildren);
+                res = ExportLibraryItems(pChildren, pDictPublishSettings, pTimelineBuilderFactory);
                 ASSERT(FCM_SUCCESS_CODE(res));
             }
             else
@@ -704,8 +707,38 @@ namespace SnapSVGAnimator
                         res = pResPalette->HasResource(libItemName, hasResource);
                         if (!hasResource)
                         {
-                            // Resource is not yet exported. Export it using 
-                            // FrameCommandGenerator::GenerateFrameCommands
+                            // Symbol is not yet exported. Export it.
+                            Exporter::Service::RANGE range;
+                            AutoPtr<ITimelineBuilder> pTimelineBuilder;
+                            ITimelineWriter* pTimelineWriter;
+
+                            AutoPtr<DOM::ITimeline> timeline;
+                            pSymbolItem->GetTimeLine(timeline.m_Ptr);
+
+                            range.min = 0;
+                            res = timeline->GetMaxFrameCount(range.max);
+                            if (FCM_FAILURE_CODE(res))
+                            {
+                                break;
+                            }
+
+                            range.max--;
+
+                            // Generate frame commands
+                            res = m_frameCmdGeneratorService->GenerateFrameCommands(
+                                timeline, 
+                                range, 
+                                pDictPublishSettings,
+                                m_pResourcePalette, 
+                                pTimelineBuilderFactory, 
+                                pTimelineBuilder.m_Ptr);
+
+                            if (FCM_FAILURE_CODE(res))
+                            {
+                                break;
+                            }
+
+                            ((TimelineBuilder*)pTimelineBuilder.m_Ptr)->Build(0, pLibItemName, &pTimelineWriter);
                         }
                     }
                     else if (pMediaItem)
@@ -734,7 +767,7 @@ namespace SnapSVGAnimator
 
             callocService->Free((FCM::PVoid)pLibItemName);
         }
-        return FCM_SUCCESS;
+        return res;
     }
 
 
@@ -1107,6 +1140,7 @@ namespace SnapSVGAnimator
     void ResourcePalette::Clear()
     {
         m_resourceList.clear();
+        m_resourceNames.clear();
     }
 
     FCM::Result ResourcePalette::HasResource(
@@ -2159,8 +2193,45 @@ namespace SnapSVGAnimator
         ITimelineWriter** ppTimelineWriter)
     {
         FCM::Result res;
+        FCM::StringRep16 pLinkageName = NULL;
 
-        res = m_pOutputWriter->EndDefineTimeline(resourceId, pName, m_pTimelineWriter);
+        // Get the linkage name
+        if (pName)
+        {
+            DOM::PILibraryItem pLibItem;
+            res = m_document->GetLibraryItemByPath(pName, pLibItem);
+            if (FCM_SUCCESS_CODE(res))
+            {
+                FCM::FCMDictRecTypeID type;
+                FCM::U_Int32 valLen;
+                FCM::AutoPtr<IFCMDictionary> pDict;
+
+                res = pLibItem->GetProperties(pDict.m_Ptr);
+                ASSERT(FCM_SUCCESS_CODE(res));
+
+                res = pDict->GetInfo(kLibProp_LinkageClass_DictKey, type, valLen);
+                if (FCM_SUCCESS_CODE(res))
+                {
+                    FCM::StringRep8 linkName;
+                    linkName = new char[valLen];
+                    pDict->Get(kLibProp_LinkageClass_DictKey, type, linkName, valLen);
+                    pLinkageName = Utils::ToString16(linkName, GetCallback());
+                    delete linkName;
+                }
+            }
+        }
+
+        res = m_pOutputWriter->EndDefineTimeline(resourceId, pName, pLinkageName, m_pTimelineWriter);
+
+        if (pLinkageName)
+        {
+            FCM::AutoPtr<FCM::IFCMCalloc> pCalloc;
+
+            pCalloc = SnapSVGAnimator::Utils::GetCallocService(GetCallback());
+            ASSERT(pCalloc.m_Ptr != NULL);
+
+            pCalloc->Free(pLinkageName);
+        }
 
         *ppTimelineWriter = m_pTimelineWriter;
 
@@ -2179,15 +2250,17 @@ namespace SnapSVGAnimator
     {
     }
 
-    void TimelineBuilder::Init(IOutputWriter* pOutputWriter, DataPrecision precision)
+    void TimelineBuilder::Init(DOM::PIFLADocument& pFLADocument, IOutputWriter* pOutputWriter, DataPrecision precision)
     {
         m_pOutputWriter = pOutputWriter;
+        m_document = pFLADocument;
 
         m_pOutputWriter->StartDefineTimeline();
 
         m_pTimelineWriter = new JSONTimelineWriter(GetCallback(), precision);
         ASSERT(m_pTimelineWriter);
     }
+
 
     /* ----------------------------------------------------- TimelineBuilderFactory */
 
@@ -2205,15 +2278,16 @@ namespace SnapSVGAnimator
 
         TimelineBuilder* pTimeline = static_cast<TimelineBuilder*>(pTimelineBuilder);
         
-        pTimeline->Init(m_pOutputWriter, m_dataPrecision);
+        pTimeline->Init(m_document.m_Ptr, m_pOutputWriter, m_dataPrecision);
 
         return res;
     }
 
-    void TimelineBuilderFactory::Init(IOutputWriter* pOutputWriter, DataPrecision dataPrecision)
+    void TimelineBuilderFactory::Init(DOM::PIFLADocument& pFLADocument, IOutputWriter* pOutputWriter, DataPrecision dataPrecision)
     {
         m_pOutputWriter = pOutputWriter;
         m_dataPrecision = dataPrecision;
+        m_document = pFLADocument;
     }
 
     FCM::Result RegisterPublisher(PIFCMDictionary pPlugins, FCM::FCMCLSID docId)

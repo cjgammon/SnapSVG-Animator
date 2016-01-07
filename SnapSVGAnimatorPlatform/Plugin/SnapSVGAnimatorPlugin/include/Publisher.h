@@ -150,7 +150,10 @@ namespace SnapSVGAnimator
         
         FCM::Result StopPreview();
 
-        FCM::Result ExportLibraryItems(FCM::FCMListPtr pLibraryItemList);
+        FCM::Result ExportLibraryItems(
+            FCM::FCMListPtr pLibraryItemList, 
+            const PIFCMDictionary pDictPublishSettings,
+            PITimelineBuilderFactory pTimelineBuilderFactory);
 
         FCM::Result CopyRuntime(const std::string& outputFolder);
 
@@ -338,7 +341,7 @@ namespace SnapSVGAnimator
             FCM::StringRep16 pName,
             ITimelineWriter** ppTimelineWriter);
 
-        void Init(IOutputWriter* pOutputWriter, DataPrecision precision);
+        void Init(DOM::PIFLADocument& pFLADocument, IOutputWriter* pOutputWriter, DataPrecision precision);
 
     private:
 
@@ -347,6 +350,8 @@ namespace SnapSVGAnimator
         ITimelineWriter* m_pTimelineWriter;
 
         FCM::U_Int32 m_frameIndex;
+
+        FCM::AutoPtr<DOM::IFLADocument> m_document;
     };
 
 
@@ -364,13 +369,15 @@ namespace SnapSVGAnimator
 
         ~TimelineBuilderFactory();
 
-        void Init(IOutputWriter* pOutputWriter, DataPrecision dataPrecision);
+        void Init(DOM::PIFLADocument& pFLADocument, IOutputWriter* pOutputWriter, DataPrecision dataPrecision);
 
     private:
 
         IOutputWriter* m_pOutputWriter;
 
         DataPrecision m_dataPrecision;
+
+        FCM::AutoPtr<DOM::IFLADocument> m_document;
     };
 
     FCM::Result RegisterPublisher(PIFCMDictionary pPlugins, FCM::FCMCLSID docId);

@@ -248,11 +248,12 @@ namespace SnapSVGAnimator
     FCM::Result JSONOutputWriter::EndDefineTimeline(
         FCM::U_Int32 resId, 
         FCM::StringRep16 pName,
+        FCM::StringRep16 pLinkageName,
         ITimelineWriter* pTimelineWriter)
     {
         JSONTimelineWriter* pWriter = static_cast<JSONTimelineWriter*> (pTimelineWriter);
 
-        pWriter->Finish(resId, pName);
+        pWriter->Finish(resId, pName, pLinkageName);
 
         m_pTimelineArray->push_back(*(pWriter->GetRoot()));
 
@@ -2226,10 +2227,10 @@ namespace SnapSVGAnimator
         {
             JSONNode commandElement(JSON_NODE);
 
-            commandElement.push_back(JSONNode("cmdType", "SetFrameLabel"));
-            commandElement.push_back(JSONNode("Name", label));
+            commandElement.push_back(JSONNode("name", label));
+            commandElement.push_back(JSONNode("frameNum", SnapSVGAnimator::Utils::ToString(m_FrameCount)));
 
-            m_pCommandArray->push_back(commandElement);
+            m_pFrameLabelArray->push_back(commandElement);
         }
 
         // Ignore rest of the label types
@@ -2256,6 +2257,10 @@ namespace SnapSVGAnimator
         ASSERT(m_pTimelineElement);
         m_pTimelineElement->set_name("Timeline");
 
+        m_pFrameLabelArray = new JSONNode(JSON_ARRAY);
+        ASSERT(m_pFrameLabelArray);
+        m_pFrameLabelArray->set_name("Label");
+
         m_pFrameElement = new JSONNode(JSON_NODE);
         ASSERT(m_pFrameElement);
 
@@ -2272,6 +2277,8 @@ namespace SnapSVGAnimator
         delete m_pTimelineElement;
         
         delete m_pFrameElement;
+
+        delete m_pFrameLabelArray;
     }
 
 
@@ -2281,7 +2288,7 @@ namespace SnapSVGAnimator
     }
 
 
-    void JSONTimelineWriter::Finish(FCM::U_Int32 resId, FCM::StringRep16 pName)
+    void JSONTimelineWriter::Finish(FCM::U_Int32 resId, FCM::StringRep16 pName, FCM::StringRep16 pLinkageName)
     {
         if (resId != 0)
         {
@@ -2303,6 +2310,20 @@ namespace SnapSVGAnimator
             }
         }
 
+        if (pLinkageName != NULL)
+        {
+            std::string str = Utils::ToString(pLinkageName, m_pCallback);
+            if (!str.empty())
+            {
+                m_pTimelineElement->push_back(JSONNode("linkageName", str));
+            }
+        }
+
+        if (!m_pFrameLabelArray->empty())
+        {
+            m_pTimelineElement->push_back(*m_pFrameLabelArray);
+        }
+        
         m_pTimelineElement->push_back(*m_pFrameArray);
     }
 
