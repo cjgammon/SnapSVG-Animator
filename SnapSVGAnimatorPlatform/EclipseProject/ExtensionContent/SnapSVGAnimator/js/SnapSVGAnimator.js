@@ -581,6 +581,7 @@ var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, 
     this.m_frameCount = this.m_timeline.frameCount;
 
     this._scripts = {};
+    this._labels = [];
     this.children = [];
     this.isMask = false;
     this.isMasked = false;
@@ -696,6 +697,10 @@ MovieClip.prototype.containsMask = function () {
 
     return false;
 };
+
+MovieClip.prototype.getFrameLabels = function () {
+  return this._labels;
+}
 
 MovieClip.prototype.getMatrix = function () {
   //TODO:: set to newM if exists
@@ -877,7 +882,7 @@ MovieClip.prototype._runCommands = function (commands) {
       cmdData = commands[c];
       type = cmdData.cmdType;
       command = null;
-
+      
       switch(type)
       {
           case "Place":
@@ -932,6 +937,7 @@ MovieClip.prototype._runCommands = function (commands) {
             this.commandList.push(command);
           break;
           case "SetFrameLabel":
+            console.log('label', cmdData);
             command = new CMD.SetFrameLabelCommand(cmdData.Name);
             this.commandList.push(command);
           break;
@@ -1023,6 +1029,21 @@ MovieClip.prototype.gotoAndPlay = function (fr) {
 MovieClip.prototype._gotoAndPlayStop = function (frame, bStop) {
 
   //TODO::handle labels
+  if (typeof frame === "string") {
+    var labels = this.getFrameLabels();
+    var bFound = false;
+    for (var i = labels.length - 1; i >= 0; i--) {
+        if (frame === labels[i].name) {
+            frame = labels[i].frameNum;
+            bFound = true;
+            break;
+        }
+    }
+
+    if (bFound === false) {
+      return;
+    }
+  }
 
   //if frame number is invalid, don't do anything
   if (frame < 1 || frame > this.m_frameCount) {
@@ -1383,7 +1404,7 @@ MovieClip.prototype.log = function () {
 
 		CMD.SetFrameLabelCommand.prototype.execute = function (parentMC, resourceManager)
 		{
-
+			
 		};
 
 

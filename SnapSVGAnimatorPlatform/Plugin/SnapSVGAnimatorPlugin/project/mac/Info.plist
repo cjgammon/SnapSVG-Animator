@@ -2,26 +2,26 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleIdentifier</key>
-	<string>${DVA_BUNDLE_IDENTIFIER}</string>
-	<key>CFBundleName</key>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
 	<string>${PRODUCT_NAME}</string>
 	<key>CFBundleGetInfoString</key>
 	<string>${PRODUCT_NAME} ${DVA_MAJOR_VERSION}.${DVA_MINOR_VERSION}.${DVA_PATCH_VERSION}, Copyright © ${DVA_COPYRIGHT_YEAR}-${DVA_BUILD_YEAR} Adobe Systems Incorporated.  All rights reserved.</string>
-	<key>CFBundleShortVersionString</key>
-	<string>${DVA_MAJOR_VERSION}.${DVA_MINOR_VERSION}.${DVA_PATCH_VERSION}</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>${PRODUCT_NAME}</string>
 	<key>CFBundlePackageType</key>
 	<string>${DVA_BUNDLE_OS_CODE}</string>
+	<key>CFBundleShortVersionString</key>
+	<string>${DVA_MAJOR_VERSION}.${DVA_MINOR_VERSION}.${DVA_PATCH_VERSION}</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>${DVA_MAJOR_VERSION}.${DVA_MINOR_VERSION}.${DVA_PATCH_VERSION}.${DVA_BUILD_NUMBER}</string>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleExecutable</key>
-	<string>${PRODUCT_NAME}</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © ${DVA_COPYRIGHT_YEAR}-${DVA_BUILD_YEAR} Adobe Systems Incorporated.  All rights reserved.</string>
 </dict>

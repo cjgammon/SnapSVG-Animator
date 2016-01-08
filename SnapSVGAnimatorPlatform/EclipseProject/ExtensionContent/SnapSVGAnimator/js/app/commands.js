@@ -268,5 +268,5 @@
 
 		CMD.SetFrameLabelCommand.prototype.execute = function (parentMC, resourceManager)
 		{
-
+			
 		};

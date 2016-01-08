@@ -316,6 +316,7 @@
 		F5D357240948E8C4008C36CA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastUpgradeCheck = 0720;
 			};
 			buildConfigurationList = F5D357250948E8C4008C36CA /* Build configuration list for PBXProject "SnapSVGAnimatorPlugin.mp" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -468,6 +469,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F5977F0F09B7D4150058A43E /* project_debug.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					MAC_ENV,
 					_MAC,
@@ -492,6 +494,7 @@
 					../../include,
 				);
 				LIBRARY_SEARCH_PATHS = "../../../Common/ThirdParty/xerces/mac/xerces-c-3.1.1/Build/Mac/Release";
+				PRODUCT_BUNDLE_IDENTIFIER = "${DVA_BUNDLE_IDENTIFIER}";
 			};
 			name = Default;
 		};
@@ -500,7 +503,20 @@
 			baseConfigurationReference = F5977F0C09B7D3B80058A43E /* project.xcconfig */;
 			buildSettings = {
 				CLANG_LINK_OBJC_RUNTIME = NO;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					"../mac-xcode",
 					../../../../../CustomPlatformSupportDevelopmentKit/core/include/common,
@@ -521,6 +537,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F5977F1109B7D41E0058A43E /* project_release.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					MAC_ENV,
 					_MAC,
@@ -545,6 +562,7 @@
 					../../include,
 				);
 				LIBRARY_SEARCH_PATHS = "../../../Common/ThirdParty/xerces/mac/xerces-c-3.1.1/Build/Mac/Release";
+				PRODUCT_BUNDLE_IDENTIFIER = "${DVA_BUNDLE_IDENTIFIER}";
 			};
 			name = Default;
 		};
