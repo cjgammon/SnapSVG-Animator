@@ -37,13 +37,9 @@ var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, 
     this.commandList = [];
     this.matrix = new Snap.Matrix();
 
-    //TODO:: collect all labels into labels array
-    //with @prop name & @prop frameNum
-    console.log(this.m_timeline.Label);
-    if (this.m_timeline.Label) {
+    if (typeof(this.m_timeline.Label) !== 'undefined') {
       this._labels = this.m_timeline.Label;
     }
-    console.log(this._labels);
 
     if(this.transform !== undefined)
     {
@@ -483,9 +479,10 @@ MovieClip.prototype._gotoAndPlayStop = function (frame, bStop) {
   if (typeof frame === "string") {
     var labels = this.getFrameLabels();
     var bFound = false;
+
     for (var i = labels.length - 1; i >= 0; i--) {
         if (frame === labels[i].name) {
-            frame = labels[i].frameNum;
+            frame = parseInt(labels[i].frameNum) + 1;
             bFound = true;
             break;
         }

@@ -39,6 +39,7 @@ function SVGAnim(data, w, h, fps, params) {
         window.addEventListener('keydown', handleKeyDown);
     }
 
+    /*
     //TODO:: collect all linkage names from all timelines
     for (var i = 0; i < data.DOMDocument.Timeline.length; i += 1) {
       if (data.DOMDocument.Timeline[i].linkageName) {
@@ -48,9 +49,10 @@ function SVGAnim(data, w, h, fps, params) {
       }
 
       //don't create movieclip until it's added to stage
-      //instance.movieclip = new MovieClip(instance.s, data.DOMDocument.Timeline[i], instance.resourceManager, id);
+      //instance.movieclip = new MovieClip(parentEL, data.DOMDocument.Timeline[i], instance.resourceManager, id);
     }
-
+    */
+    
     function create(s) {
         var maintimelineIndex,
             mainTimeline;

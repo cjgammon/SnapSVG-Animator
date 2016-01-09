@@ -594,6 +594,14 @@ var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, 
     this.commandList = [];
     this.matrix = new Snap.Matrix();
 
+    //TODO:: collect all labels into labels array
+    //with @prop name & @prop frameNum
+    console.log('a', this.m_timeline.Label);
+    if (typeof(this.m_timeline.Label) !== 'undefined') {
+      this._labels = this.m_timeline.Label;
+    }
+    console.log('b', this._labels);
+
     if(this.transform !== undefined)
     {
         transformData = this.transform;
@@ -882,7 +890,7 @@ MovieClip.prototype._runCommands = function (commands) {
       cmdData = commands[c];
       type = cmdData.cmdType;
       command = null;
-      
+
       switch(type)
       {
           case "Place":
@@ -1032,13 +1040,18 @@ MovieClip.prototype._gotoAndPlayStop = function (frame, bStop) {
   if (typeof frame === "string") {
     var labels = this.getFrameLabels();
     var bFound = false;
+
+    console.log(frame);
+
     for (var i = labels.length - 1; i >= 0; i--) {
         if (frame === labels[i].name) {
-            frame = labels[i].frameNum;
+            frame = parseInt(labels[i].frameNum) + 1;
             bFound = true;
             break;
         }
     }
+
+    console.log(frame);
 
     if (bFound === false) {
       return;
@@ -1510,6 +1523,20 @@ function SVGAnim(data, w, h, fps, params) {
         window.addEventListener('keydown', handleKeyDown);
     }
 
+    /*
+    //TODO:: collect all linkage names from all timelines
+    for (var i = 0; i < data.DOMDocument.Timeline.length; i += 1) {
+      if (data.DOMDocument.Timeline[i].linkageName) {
+        //instance.linkage[data.DOMDocument.Timeline[i].linkageName] = data.DOMDocument.Timeline[i];
+      } else if (data.DOMDocument.Timeline[i].name) {
+        //instance.linkage[data.DOMDocument.Timeline[i].name] = data.DOMDocument.Timeline[i];
+      }
+
+      //don't create movieclip until it's added to stage
+      //instance.movieclip = new MovieClip(parentEL, data.DOMDocument.Timeline[i], instance.resourceManager, id);
+    }
+    */
+    
     function create(s) {
         var maintimelineIndex,
             mainTimeline;
