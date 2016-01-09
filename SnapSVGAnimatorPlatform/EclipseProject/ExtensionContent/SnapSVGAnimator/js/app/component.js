@@ -39,20 +39,21 @@ function SVGAnim(data, w, h, fps, params) {
         window.addEventListener('keydown', handleKeyDown);
     }
 
-    /*
-    //TODO:: collect all linkage names from all timelines
+    instance.linkage = {};
+
     for (var i = 0; i < data.DOMDocument.Timeline.length; i += 1) {
       if (data.DOMDocument.Timeline[i].linkageName) {
-        //instance.linkage[data.DOMDocument.Timeline[i].linkageName] = data.DOMDocument.Timeline[i];
+        instance.linkage[data.DOMDocument.Timeline[i].linkageName] = data.DOMDocument.Timeline[i];
       } else if (data.DOMDocument.Timeline[i].name) {
-        //instance.linkage[data.DOMDocument.Timeline[i].name] = data.DOMDocument.Timeline[i];
+        instance.linkage[data.DOMDocument.Timeline[i].name] = data.DOMDocument.Timeline[i];
       }
 
-      //don't create movieclip until it's added to stage
+      //TODO::don't create movieclip until it's added to stage
       //instance.movieclip = new MovieClip(parentEL, data.DOMDocument.Timeline[i], instance.resourceManager, id);
     }
-    */
-    
+
+    console.log(instance.linkage);
+
     function create(s) {
         var maintimelineIndex,
             mainTimeline;

@@ -594,13 +594,9 @@ var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, 
     this.commandList = [];
     this.matrix = new Snap.Matrix();
 
-    //TODO:: collect all labels into labels array
-    //with @prop name & @prop frameNum
-    console.log('a', this.m_timeline.Label);
     if (typeof(this.m_timeline.Label) !== 'undefined') {
       this._labels = this.m_timeline.Label;
     }
-    console.log('b', this._labels);
 
     if(this.transform !== undefined)
     {
@@ -1041,8 +1037,6 @@ MovieClip.prototype._gotoAndPlayStop = function (frame, bStop) {
     var labels = this.getFrameLabels();
     var bFound = false;
 
-    console.log(frame);
-
     for (var i = labels.length - 1; i >= 0; i--) {
         if (frame === labels[i].name) {
             frame = parseInt(labels[i].frameNum) + 1;
@@ -1050,8 +1044,6 @@ MovieClip.prototype._gotoAndPlayStop = function (frame, bStop) {
             break;
         }
     }
-
-    console.log(frame);
 
     if (bFound === false) {
       return;
@@ -1523,20 +1515,24 @@ function SVGAnim(data, w, h, fps, params) {
         window.addEventListener('keydown', handleKeyDown);
     }
 
-    /*
+    instance.linkage = {};
+
     //TODO:: collect all linkage names from all timelines
     for (var i = 0; i < data.DOMDocument.Timeline.length; i += 1) {
       if (data.DOMDocument.Timeline[i].linkageName) {
-        //instance.linkage[data.DOMDocument.Timeline[i].linkageName] = data.DOMDocument.Timeline[i];
+        console.log(data.DOMDocument.Timeline[i].linkageName);
+        instance.linkage[data.DOMDocument.Timeline[i].linkageName] = data.DOMDocument.Timeline[i];
       } else if (data.DOMDocument.Timeline[i].name) {
-        //instance.linkage[data.DOMDocument.Timeline[i].name] = data.DOMDocument.Timeline[i];
+        console.log(data.DOMDocument.Timeline[i].name);
+        instance.linkage[data.DOMDocument.Timeline[i].name] = data.DOMDocument.Timeline[i];
       }
 
       //don't create movieclip until it's added to stage
       //instance.movieclip = new MovieClip(parentEL, data.DOMDocument.Timeline[i], instance.resourceManager, id);
     }
-    */
-    
+
+    console.log(instance.linkage);
+
     function create(s) {
         var maintimelineIndex,
             mainTimeline;
