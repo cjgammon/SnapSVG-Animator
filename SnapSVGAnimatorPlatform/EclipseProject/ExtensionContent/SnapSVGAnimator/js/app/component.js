@@ -39,31 +39,28 @@ function SVGAnim(data, w, h, fps, params) {
         window.addEventListener('keydown', handleKeyDown);
     }
 
-    instance.linkage = {};
-
-    for (var i = 0; i < data.DOMDocument.Timeline.length; i += 1) {
-      if (data.DOMDocument.Timeline[i].linkageName) {
-        instance.linkage[data.DOMDocument.Timeline[i].linkageName] = data.DOMDocument.Timeline[i];
-      } else if (data.DOMDocument.Timeline[i].name) {
-        instance.linkage[data.DOMDocument.Timeline[i].name] = data.DOMDocument.Timeline[i];
-      }
-
-      //TODO::don't create movieclip until it's added to stage
-      //instance.movieclip = new MovieClip(parentEL, data.DOMDocument.Timeline[i], instance.resourceManager, id);
-    }
-
-    console.log(instance.linkage);
-
     function create(s) {
         var maintimelineIndex,
-            mainTimeline;
+            mainTimeline,
+            i;
 
         if(instance.rootAnimator !== undefined)
         {
             instance.rootAnimator.dispose();
         }
 
-        maintimelineIndex = instance.resourceManager.m_data.DOMDocument.Timeline.length - 1;
+        //generate linked movieclips
+        instance.linkage = {};
+
+        for (i = data.DOMDocument.Timeline.length - 1; i > -1; i -= 1) {
+          if (typeof(data.DOMDocument.Timeline[i].linkageName) !== 'undefined') {
+            instance.linkage[data.DOMDocument.Timeline[i].linkageName] = data.DOMDocument.Timeline[i];
+          } else {
+            maintimelineIndex = i;
+            break;
+          }
+        }
+
         mainTimeline = instance.resourceManager.m_data.DOMDocument.Timeline[maintimelineIndex];
         instance.movieclip = new MovieClip(instance.s, mainTimeline, instance.resourceManager, id);
 
