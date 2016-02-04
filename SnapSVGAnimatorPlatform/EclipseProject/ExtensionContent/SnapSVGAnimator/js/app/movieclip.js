@@ -1,10 +1,9 @@
 
-var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, name, placeAfter, transform) {
+var MovieClip = function (commandTimeline, s, resourceManager, objectID, name, transform) {
     var i,
         transformData,
-        transformArray,
-        afterEl,
-        parentEl = parentMC.type == 'svg' ? parentMC : parentMC.el;  //parent is stage if svg
+        transformArray;
+        parentEl = s.type == 'svg' ? s : s.el;  //parent is stage if svg
 
     if (objectID) {
       this.id = objectID;
@@ -15,6 +14,7 @@ var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, 
       parentMC[this.name] = this;
     }
 
+    //this.el = parentEl.g();
     this.el = parentEl.g();
     this.el.attr({'class': 'movieclip', 'token': this.id});
     this.transform = transform;
@@ -49,6 +49,7 @@ var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, 
         this.el.transform(this.matrix);
     }
 
+    /*
     if (placeAfter && parseInt(placeAfter) !== 0) {
         afterMC = parentMC.getChildById(parseInt(placeAfter));
 
@@ -61,7 +62,28 @@ var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, 
     } else {
         parentEl.add(this.el);
     }
+    */
 };
+
+MovieClip.prototype.addChild = function (child, placeAfter) {
+  placeAfter = placeAfter ? placeAfter : 0;
+  this.insertAtIndex(child, placeAfter);
+}
+
+MovieClip.prototype._addChild = function (child, placeAfter) {
+  if (placeAfter && parseInt(placeAfter) !== 0) {
+      var afterMC = this.getChildById(parseInt(placeAfter));
+
+      if (afterMC.isMasked) {  //if masked add outside mask group
+          afterMC.el.parent().before(child.el);
+      } else {
+          afterMC.el.before(child.el);
+      }
+
+  } else {
+      this.el.add(child.el);
+  }
+}
 
 //manage children methods
 MovieClip.prototype.getChildById = function (id) {
@@ -120,6 +142,8 @@ MovieClip.prototype.swapChildIndex = function (id, placeAfter) {
 
 MovieClip.prototype.insertAtIndex = function (child, placeAfter) {
     var i;
+
+    this._addChild(child, placeAfter);
 
     if (parseInt(placeAfter) === 0) {
         this.children.unshift(child);

@@ -46,9 +46,9 @@
             movieclipTimeline = resourceManager.getMovieClip(this.m_charID);
             if(movieclipTimeline)
             {
-                movieclip = new MovieClip(parentMC, movieclipTimeline, resourceManager, this.m_objectID, this.m_name, this.m_placeAfter, this.m_transform);
-                parentMC.insertAtIndex(movieclip, this.m_placeAfter);
-                movieclip.play(resourceManager);
+								movieclip = new MovieClip(movieclipTimeline, parentMC, resourceManager, this.m_objectID, this.m_name, this.m_transform);
+								parentMC.insertAtIndex(movieclip, this.m_placeAfter);
+                movieclip.play();
             }
         }
     };
@@ -268,5 +268,5 @@
 
 		CMD.SetFrameLabelCommand.prototype.execute = function (parentMC, resourceManager)
 		{
-			
+
 		};

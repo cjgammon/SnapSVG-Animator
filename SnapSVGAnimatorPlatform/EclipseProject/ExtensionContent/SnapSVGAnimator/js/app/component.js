@@ -17,11 +17,13 @@ function SVGAnim(data, w, h, fps, params) {
 
     autoplay = params.autoplay;
 
-    instance.debug = false;
+    instance.debug = true;
 
     SVGAnim.prototype.toString = function () {
         return "SnapSVGAnimator v" + this.version;
     };
+
+    instance.MovieClip = MovieClip;
 
     instance.resourceManager = new ResourceManager(data);
 
@@ -62,25 +64,25 @@ function SVGAnim(data, w, h, fps, params) {
         }
 
         mainTimeline = instance.resourceManager.m_data.DOMDocument.Timeline[maintimelineIndex];
-        instance.movieclip = new MovieClip(instance.s, mainTimeline, instance.resourceManager, id);
+        instance.mc = new MovieClip(mainTimeline, instance.s, instance.resourceManager, id);
 
         cbk = setTimeout(interval, 1000 / fps);
     }
 
     this.play = function () {
-      instance.movieclip.play();
+      instance.mc.play();
     };
 
     this.stop = function () {
-      instance.movieclip.stop();
+      instance.mc.stop();
     };
 
     this.setLoop = function (l) {
-        instance.movieclip.loops = l;
+        instance.mc.loops = l;
     };
 
     function interval() {
-        instance.movieclip._animate();
+        instance.mc._animate();
 
         clearTimeout(cbk);
         cbk = setTimeout(interval, 1000 / fps);
@@ -91,11 +93,11 @@ function SVGAnim(data, w, h, fps, params) {
         switch (e.keyCode) {
           case 39:
             instance.play();
-            instance.movieclip._animate();
+            instance.mc._animate();
             instance.stop();
           break;
           case 32:
-            if (instance.movieclip.playing) {
+            if (instance.mc.playing) {
               instance.stop();
             } else {
               instance.play();
@@ -152,9 +154,9 @@ function SVGAnim(data, w, h, fps, params) {
             }
         }
 
-        str += instance.movieclip.id + '<br/>';
-        str += instance.movieclip.m_currentFrameNo + '<br/>';
-        traceChildren(2, instance.movieclip);
+        str += instance.mc.id + '<br/>';
+        str += instance.mc.m_currentFrameNo + '<br/>';
+        traceChildren(2, instance.mc);
 
         debug.innerHTML = str;
     }

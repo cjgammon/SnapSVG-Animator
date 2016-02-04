@@ -556,12 +556,11 @@ var Shape = function (parentMC,resourceManager,charId,ObjectId,placeAfter,transf
 };
 
 
-var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, name, placeAfter, transform) {
+var MovieClip = function (commandTimeline, s, resourceManager, objectID, name, transform) {
     var i,
         transformData,
-        transformArray,
-        afterEl,
-        parentEl = parentMC.type == 'svg' ? parentMC : parentMC.el;  //parent is stage if svg
+        transformArray;
+        parentEl = s.type == 'svg' ? s : s.el;  //parent is stage if svg
 
     if (objectID) {
       this.id = objectID;
@@ -572,11 +571,11 @@ var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, 
       parentMC[this.name] = this;
     }
 
+    //this.el = parentEl.g();
     this.el = parentEl.g();
     this.el.attr({'class': 'movieclip', 'token': this.id});
     this.transform = transform;
 
-    console.log('??', commandTimeline);
     this.m_timeline = commandTimeline;
     this.m_currentFrameNo = 0;
     this.m_frameCount = this.m_timeline.frameCount;
@@ -607,6 +606,7 @@ var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, 
         this.el.transform(this.matrix);
     }
 
+    /*
     if (placeAfter && parseInt(placeAfter) !== 0) {
         afterMC = parentMC.getChildById(parseInt(placeAfter));
 
@@ -619,7 +619,28 @@ var MovieClip = function (parentMC, commandTimeline, resourceManager, objectID, 
     } else {
         parentEl.add(this.el);
     }
+    */
 };
+
+MovieClip.prototype.addChild = function (child, placeAfter) {
+  placeAfter = placeAfter ? placeAfter : 0;
+  this.insertAtIndex(child, placeAfter);
+}
+
+MovieClip.prototype._addChild = function (child, placeAfter) {
+  if (placeAfter && parseInt(placeAfter) !== 0) {
+      var afterMC = this.getChildById(parseInt(placeAfter));
+
+      if (afterMC.isMasked) {  //if masked add outside mask group
+          afterMC.el.parent().before(child.el);
+      } else {
+          afterMC.el.before(child.el);
+      }
+
+  } else {
+      this.el.add(child.el);
+  }
+}
 
 //manage children methods
 MovieClip.prototype.getChildById = function (id) {
@@ -678,6 +699,8 @@ MovieClip.prototype.swapChildIndex = function (id, placeAfter) {
 
 MovieClip.prototype.insertAtIndex = function (child, placeAfter) {
     var i;
+
+    this._addChild(child, placeAfter);
 
     if (parseInt(placeAfter) === 0) {
         this.children.unshift(child);
@@ -1188,9 +1211,9 @@ MovieClip.prototype.log = function () {
             movieclipTimeline = resourceManager.getMovieClip(this.m_charID);
             if(movieclipTimeline)
             {
-                movieclip = new MovieClip(parentMC, movieclipTimeline, resourceManager, this.m_objectID, this.m_name, this.m_placeAfter, this.m_transform);
-                parentMC.insertAtIndex(movieclip, this.m_placeAfter);
-                movieclip.play(resourceManager);
+								movieclip = new MovieClip(movieclipTimeline, parentMC, resourceManager, this.m_objectID, this.m_name, this.m_transform);
+								parentMC.insertAtIndex(movieclip, this.m_placeAfter);
+                movieclip.play();
             }
         }
     };
@@ -1410,7 +1433,7 @@ MovieClip.prototype.log = function () {
 
 		CMD.SetFrameLabelCommand.prototype.execute = function (parentMC, resourceManager)
 		{
-			
+
 		};
 
 
@@ -1494,11 +1517,13 @@ function SVGAnim(data, w, h, fps, params) {
 
     autoplay = params.autoplay;
 
-    instance.debug = false;
+    instance.debug = true;
 
     SVGAnim.prototype.toString = function () {
         return "SnapSVGAnimator v" + this.version;
     };
+
+    instance.MovieClip = MovieClip;
 
     instance.resourceManager = new ResourceManager(data);
 
@@ -1516,21 +1541,6 @@ function SVGAnim(data, w, h, fps, params) {
         window.addEventListener('keydown', handleKeyDown);
     }
 
-
-    /*
-    for (var i = 0; i < data.DOMDocument.Timeline.length; i += 1) {
-      if (data.DOMDocument.Timeline[i].linkageName) {
-        instance.linkage[data.DOMDocument.Timeline[i].linkageName] = data.DOMDocument.Timeline[i];
-      } else if (data.DOMDocument.Timeline[i].name) {
-        instance.linkage[data.DOMDocument.Timeline[i].name] = data.DOMDocument.Timeline[i];
-      }
-
-      //TODO::don't create movieclip until it's added to stage
-      //instance.movieclip = new MovieClip(parentEL, data.DOMDocument.Timeline[i], instance.resourceManager, id);
-    }
-    */
-
-
     function create(s) {
         var maintimelineIndex,
             mainTimeline,
@@ -1541,42 +1551,38 @@ function SVGAnim(data, w, h, fps, params) {
             instance.rootAnimator.dispose();
         }
 
+        //generate linked movieclips
         instance.linkage = {};
 
-        console.log('hmm:', data.DOMDocument.Timeline.length - 1);
         for (i = data.DOMDocument.Timeline.length - 1; i > -1; i -= 1) {
           if (typeof(data.DOMDocument.Timeline[i].linkageName) !== 'undefined') {
             instance.linkage[data.DOMDocument.Timeline[i].linkageName] = data.DOMDocument.Timeline[i];
           } else {
-            console.log(i);
             maintimelineIndex = i;
             break;
           }
         }
-        console.log(maintimelineIndex, instance.resourceManager.m_data.DOMDocument.Timeline.length - 1);
-        console.log(instance.linkage);
 
-        //maintimelineIndex = instance.resourceManager.m_data.DOMDocument.Timeline.length - 1;  //is it not the root timeline?
         mainTimeline = instance.resourceManager.m_data.DOMDocument.Timeline[maintimelineIndex];
-        instance.movieclip = new MovieClip(instance.s, mainTimeline, instance.resourceManager, id);
+        instance.mc = new MovieClip(mainTimeline, instance.s, instance.resourceManager, id);
 
         cbk = setTimeout(interval, 1000 / fps);
     }
 
     this.play = function () {
-      instance.movieclip.play();
+      instance.mc.play();
     };
 
     this.stop = function () {
-      instance.movieclip.stop();
+      instance.mc.stop();
     };
 
     this.setLoop = function (l) {
-        instance.movieclip.loops = l;
+        instance.mc.loops = l;
     };
 
     function interval() {
-        instance.movieclip._animate();
+        instance.mc._animate();
 
         clearTimeout(cbk);
         cbk = setTimeout(interval, 1000 / fps);
@@ -1587,11 +1593,11 @@ function SVGAnim(data, w, h, fps, params) {
         switch (e.keyCode) {
           case 39:
             instance.play();
-            instance.movieclip._animate();
+            instance.mc._animate();
             instance.stop();
           break;
           case 32:
-            if (instance.movieclip.playing) {
+            if (instance.mc.playing) {
               instance.stop();
             } else {
               instance.play();
@@ -1648,9 +1654,9 @@ function SVGAnim(data, w, h, fps, params) {
             }
         }
 
-        str += instance.movieclip.id + '<br/>';
-        str += instance.movieclip.m_currentFrameNo + '<br/>';
-        traceChildren(2, instance.movieclip);
+        str += instance.mc.id + '<br/>';
+        str += instance.mc.m_currentFrameNo + '<br/>';
+        traceChildren(2, instance.mc);
 
         debug.innerHTML = str;
     }
