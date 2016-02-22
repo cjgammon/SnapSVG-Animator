@@ -5,16 +5,16 @@ This is a Plugin for Flash CC exporting animated SVG using the Snap.svg javascri
 
 This is in **active development**.
 
-##Install
+##Install Plugin
 There are two ways to install the plug-in.
 
 ###Adobe Add-Ons Portal
 Install the plug-in from the [Adobe add-ons site](https://creative.adobe.com/addons/products/12329).
 
 ###Manage Extensions Utility
-Install and run the Manage Extensions Utility following the instruction for your platform found [here](http://blogs.adobe.com/flashpro/installing-zxp-extensions-using-the-manage-extensions-utility/). Use it to install the .zxp file which can be downloaded [here](https://github.com/cjgammon/SnapSVG-Animator/blob/master/SnapSVGAnimatorPlatform/EclipseProject/SnapSVGAnimator.zxp?raw=true).
+Install and run the [Manage Extensions Utility](https://helpx.adobe.com/animate/kb/install-animate-extensions.html#Install-extensions-gui) following the instruction for your platform. Use it to install the [.ZXP file](https://github.com/cjgammon/SnapSVG-Animator/blob/master/SnapSVGAnimatorPlatform/EclipseProject/SnapSVGAnimator.zxp?raw=true).
 
-
+##Use Plugin
 Once the plug-in is installed you can create a new 'SnapSVGAnimator' document and publish like normal.
 
 ##More Info
