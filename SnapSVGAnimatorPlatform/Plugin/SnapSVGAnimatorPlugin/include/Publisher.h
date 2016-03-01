@@ -43,6 +43,9 @@
 #include "OutputWriter.h"
 #include "PluginConfiguration.h"
 
+#include <set>
+#include <map>
+
 /* -------------------------------------------------- Forward Decl */
 
 using namespace FCM;
@@ -159,11 +162,41 @@ namespace SnapSVGAnimator
 
     private:
 
+        FCM::Result _FCMCALL GenerateFrameCommands(
+                DOM::PITimeline pTimeline, 
+                const RANGE& frameRange, 
+                const PIFCMDictionary pDictPublishSettings, 
+                PIResourcePalette pResourcePalette, 
+                PITimelineBuilderFactory pTimelineBuilderFactory, 
+                PITimelineBuilder& pTimelineBuilder);
         AutoPtr<IFrameCommandGenerator> m_frameCmdGeneratorService;
         AutoPtr<IResourcePalette> m_pResourcePalette;
         bool m_minify;
     };
 
+
+    class ResourceIDManager 
+    {
+    public:
+
+        void MapResId(FCM::U_Int32 resourceId, FCM::U_Int32 &newResourceId);
+        void GetMappedResId(FCM::U_Int32 resourceId, FCM::U_Int32 &newResourceId);
+        bool HasResource(FCM::U_Int32 resourceId);
+        void ClearResIdMap();
+        void Reset();
+
+        static ResourceIDManager& GetInstance() {static ResourceIDManager s_instance; return s_instance;}
+
+    private:
+    
+        ResourceIDManager();
+        void MarksAsUsedResId(FCM::U_Int32 resourceId);
+
+        std::set<FCM::U_Int32> m_usedResIDs;
+        typedef std::map<FCM::U_Int32,FCM::U_Int32> ResourceIDMap;
+        ResourceIDMap m_resIDMap;
+        FCM::U_Int32 m_largestResID;
+    };
 
     class ResourcePalette : public IResourcePalette, public FCMObjectBase
     {
@@ -255,7 +288,6 @@ namespace SnapSVGAnimator
         IOutputWriter* m_pOutputWriter;
 
         std::vector<FCM::U_Int32> m_resourceList;
-
         std::vector<std::string> m_resourceNames;
     };
 
