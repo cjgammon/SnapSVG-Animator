@@ -174,44 +174,6 @@ namespace SnapSVGAnimator
         bool m_minify;
     };
 
-    /*
-    class ResourceIDManager 
-    {
-    public:
-
-        void AutoMapResId(FCM::U_Int32 resourceId, FCM::U_Int32 &newResourceId);
-        void GetMappedResId(FCM::U_Int32 resourceId, FCM::U_Int32 &newResourceId);
-        void SetResIdMapping(FCM::U_Int32 resourceId, FCM::U_Int32 newResourceId);
-        bool HasResource(FCM::U_Int32 resourceId);
-        FCM::Result HasResource(const std::string& name, FCM::Boolean& hasResource);
-
-        void IncrementUseCount(FCM::U_Int32 resourceId);
-        void DecrementUseCount(FCM::U_Int32 resourceId);
-        void LinkResourceNameAndID(std::string,FCM::U_Int32);
-        void GetResourceIDFromName(const std::string& name, FCM::U_Int32& resourceID);
-        void GetNameFromResourceID(FCM::U_Int32 resourceID, std::string& name);
-
-        void ClearResIdMap();
-        void Reset();
-        static ResourceIDManager& GetInstance() {
-            static ResourceIDManager s_instance; return s_instance;
-        }
-
-    private:
-    
-        ResourceIDManager();
-        void MarksAsUsedResId(FCM::U_Int32 resourceId);
-
-        std::map<FCM::U_Int32,FCM::U_Int32> m_usedResIDs;
-        typedef std::map<FCM::U_Int32,FCM::U_Int32> ResourceIDMap;
-        ResourceIDMap m_resIDMap;
-        FCM::U_Int32 m_largestResID;
-        
-        typedef std::pair<std::string,FCM::U_Int32> NameIDPair;
-        std::map<std::string,FCM::U_Int32> m_resourceNamesToID;
-    };
-    */
-
     class ResourcePalette : public IResourcePalette, public FCMObjectBase
     {
     public:
