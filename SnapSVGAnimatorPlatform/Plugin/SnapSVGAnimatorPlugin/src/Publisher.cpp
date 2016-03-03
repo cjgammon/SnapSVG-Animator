@@ -18,6 +18,7 @@
 
 #include "Publisher.h"
 #include "Utils.h"
+#include "ResourceIDManager.h"
 #include "HTTPServer.h"
 #include "FlashFCMPublicIDs.h"
 
@@ -706,7 +707,8 @@ namespace SnapSVGAnimator
                         // Check if it has been exported already by comparing names of resources 
                         // already exported from the timelines.
                         //
-                        res = pResPalette->HasResource(libItemName, hasResource);
+                        res = ResourceIDManager::GetInstance().HasResource(libItemName,hasResource);
+
                         if (!hasResource)
                         {
                             // Symbol is not yet exported. Export it.
@@ -739,8 +741,10 @@ namespace SnapSVGAnimator
                             {
                                 break;
                             }
+                            FCM::U_Int32 resourceId = ResourceIDManager::GetInstance().CreateUnusedResourceID();
+                            ((TimelineBuilder*)pTimelineBuilder.m_Ptr)->Build(resourceId, pLibItemName, &pTimelineWriter);
+                            ResourceIDManager::GetInstance().LinkResourceNameAndID(libItemName,resourceId);
 
-                            ((TimelineBuilder*)pTimelineBuilder.m_Ptr)->Build(0, pLibItemName, &pTimelineWriter);
                         }
                     }
                     else if (pMediaItem)
@@ -749,7 +753,7 @@ namespace SnapSVGAnimator
                         // Check if it has been exported already by comparing names of resources 
                         // already exported from the timelines.
                         //
-                        res = pResPalette->HasResource(libItemName, hasResource);
+                        res = ResourceIDManager::GetInstance().HasResource(libItemName,hasResource);
                         if (!hasResource)
                         {
                             // Resource is not yet exported. Export it.
@@ -857,22 +861,34 @@ namespace SnapSVGAnimator
         FCM::Result res;
         ITimelineWriter* pTimelineWriter;
 
+        TimelineBuilder* pTimeline = static_cast<TimelineBuilder*>(pTimelineBuilder);
         FCM::U_Int32 resourceId; 
-        ResourceIDManager::GetInstance().MapResId(resourceIdIn,resourceId);
-
-        LOG(("[EndSymbol] ResId: %d\n", resourceId));
-
-        m_resourceList.push_back(resourceId);
-
-        if (pName != NULL)
+        std::string symbolName;
+        FCM::Boolean hasResource = false;
+ 
+        if(pName)
         {
-            m_resourceNames.push_back(Utils::ToString(pName, GetCallback()));
+            symbolName = Utils::ToString(pName, GetCallback());
+            res = ResourceIDManager::GetInstance().HasResource(symbolName, hasResource);
         }
 
-        TimelineBuilder* pTimeline = static_cast<TimelineBuilder*>(pTimelineBuilder);
+        if(!hasResource)
+        {
+            ResourceIDManager::GetInstance().AutoMapResId(resourceIdIn,resourceId);
 
-        res = pTimeline->Build(resourceId, pName, &pTimelineWriter);
-
+            if (pName != NULL)
+            {
+                ResourceIDManager::GetInstance().LinkResourceNameAndID(Utils::ToString(pName, GetCallback()),resourceId);
+            }
+            res = pTimeline->Build(resourceId, pName, &pTimelineWriter);
+        }else {
+            //resource already present, so just map the ID and exit
+            ResourceIDManager::GetInstance().GetResourceIDFromName(symbolName,resourceId);
+            ResourceIDManager::GetInstance().SetResIdMapping(resourceIdIn,resourceId);
+            pTimeline->Discard();
+        }
+        LOG(("[EndSymbol] ResId: %d\n", resourceId));
+ 
         return res;
     }
 
@@ -886,11 +902,10 @@ namespace SnapSVGAnimator
         FCM::AutoPtr<DOM::FrameElement::IShape> pNewShape;
 
         FCM::U_Int32 resourceId; 
-        ResourceIDManager::GetInstance().MapResId(resourceIdIn,resourceId);
+        ResourceIDManager::GetInstance().AutoMapResId(resourceIdIn,resourceId);
 
         LOG(("[DefineShape] ResId: %d\n", resourceId));
 
-        m_resourceList.push_back(resourceId);
         m_pOutputWriter->StartDefineShape();
 
         if (pShape)
@@ -927,11 +942,9 @@ namespace SnapSVGAnimator
         std::string libName;
 
         FCM::U_Int32 resourceId; 
-        ResourceIDManager::GetInstance().MapResId(resourceIdIn,resourceId);
+        ResourceIDManager::GetInstance().AutoMapResId(resourceIdIn,resourceId);
 
         LOG(("[DefineSound] ResId: %d\n", resourceId));
-
-        m_resourceList.push_back(resourceId);
 
         // Store the resource name
         pLibItem = pMediaItem;
@@ -939,7 +952,7 @@ namespace SnapSVGAnimator
         res = pLibItem->GetName(&pName);
         ASSERT(FCM_SUCCESS_CODE(res));
         libName = Utils::ToString(pName, GetCallback());
-        m_resourceNames.push_back(libName);
+        ResourceIDManager::GetInstance().LinkResourceNameAndID(libName,resourceId);
 
         res = pMediaItem->GetMediaInfo(pUnknown.m_Ptr);
         ASSERT(FCM_SUCCESS_CODE(res));
@@ -968,11 +981,9 @@ namespace SnapSVGAnimator
         FCM::StringRep16 pName;
 
         FCM::U_Int32 resourceId; 
-        ResourceIDManager::GetInstance().MapResId(resourceIdIn,resourceId);
+        ResourceIDManager::GetInstance().AutoMapResId(resourceIdIn,resourceId);
 
         LOG(("[DefineBitmap] ResId: %d\n", resourceId));
-
-        m_resourceList.push_back(resourceId);
 
         pLibItem = pMediaItem;
 
@@ -980,7 +991,7 @@ namespace SnapSVGAnimator
         res = pLibItem->GetName(&pName);
         ASSERT(FCM_SUCCESS_CODE(res));
         std::string libItemName = Utils::ToString(pName, GetCallback());
-        m_resourceNames.push_back(libItemName);
+        ResourceIDManager::GetInstance().LinkResourceNameAndID(libItemName,resourceId);
 
         AutoPtr<FCM::IFCMUnknown> medInfo;
         pMediaItem->GetMediaInfo(medInfo.m_Ptr);
@@ -1027,7 +1038,7 @@ namespace SnapSVGAnimator
         ASSERT(pClassicText);
 
         FCM::U_Int32 resourceId; 
-        ResourceIDManager::GetInstance().MapResId(resourceIdIn,resourceId);
+        ResourceIDManager::GetInstance().AutoMapResId(resourceIdIn,resourceId);
 
         pTextItem = pClassicText;
 
@@ -1138,27 +1149,16 @@ namespace SnapSVGAnimator
 
 
 
-    FCM::Result ResourcePalette::HasResource(FCM::U_Int32 resourceIdIn, FCM::Boolean& hasResource)
+    FCM::Result ResourcePalette::HasResource(FCM::U_Int32 resourceId, FCM::Boolean& hasResource)
     {
         hasResource = false;
 
-        if(ResourceIDManager::GetInstance().HasResource(resourceIdIn)) {
-            FCM::U_Int32 resourceId; 
-            ResourceIDManager::GetInstance().GetMappedResId(resourceIdIn,resourceId);
-
-            for (std::vector<FCM::U_Int32>::iterator listIter = m_resourceList.begin();
-                    listIter != m_resourceList.end(); listIter++)
-            {
-                if (*listIter == resourceId)
-                {
-                    hasResource = true;
-                    break;
-                }
-            }
-            ASSERT(hasResource);
+        if(ResourceIDManager::GetInstance().HasResource(resourceId)) {
+            hasResource = true;            
+            ResourceIDManager::GetInstance().GetMappedResId(resourceId,resourceId);
        }
 
-        //LOG(("[HasResource] ResId: %d HasResource: %d\n", resourceId, hasResource));
+       LOG(("[HasResource] ResId: %d HasResource: %d\n", resourceId, hasResource));
 
         return FCM_SUCCESS;
     }
@@ -1182,27 +1182,8 @@ namespace SnapSVGAnimator
 
     void ResourcePalette::Clear()
     {
-        m_resourceList.clear();
-        m_resourceNames.clear();
+        ResourceIDManager::GetInstance().Reset();
     }
-
-    FCM::Result ResourcePalette::HasResource(
-            const std::string& name, 
-            FCM::Boolean& hasResource)
-    {
-        hasResource = false;
-        for (FCM::U_Int32 index = 0; index < m_resourceNames.size(); index++)
-        {
-            if (m_resourceNames[index] == name)
-            {
-                hasResource = true;
-                break;
-            }
-        }
-
-        return FCM_SUCCESS;
-    }
-
 
     FCM::Result ResourcePalette::ExportFill(DOM::FrameElement::PIShape pIShape)
     {
@@ -1743,7 +1724,7 @@ namespace SnapSVGAnimator
         res = pLibItem->GetName(&pName);
         ASSERT(FCM_SUCCESS_CODE(res));
         std::string libItemName = Utils::ToString(pName, GetCallback());
-        m_resourceNames.push_back(libItemName);
+        ResourceIDManager::GetInstance().LinkResourceNameAndID(libItemName,0);
 
         // Get image width
         FCM::S_Int32 width;
@@ -1930,16 +1911,33 @@ namespace SnapSVGAnimator
         return (it != m_resIDMap.end());
     }
     
+    FCM::Result ResourceIDManager::HasResource(
+        const std::string& name, 
+        FCM::Boolean& hasResource)
+    {
+        hasResource = false;
+        try {
+            FCM::U_Int32 resourceID = m_resourceNamesToID.at(name);
+            hasResource = true;
+        }catch(...) {
+        
+        }
+ 
+        return FCM_SUCCESS;
+    }
 
     void ResourceIDManager::MarksAsUsedResId(FCM::U_Int32 resourceId)
     {
         m_largestResID = (m_largestResID < resourceId)?resourceId:m_largestResID;
-        m_usedResIDs.insert(resourceId);
+        m_usedResIDs.insert(std::pair<FCM::U_Int32,FCM::U_Int32>(resourceId,0));
     }
         
-    void ResourceIDManager::MapResId(FCM::U_Int32 resourceId, FCM::U_Int32 &newResourceId)
+    void ResourceIDManager::AutoMapResId(FCM::U_Int32 resourceId, FCM::U_Int32 &newResourceId)
     {
-        std::set<FCM::U_Int32>::iterator it = m_usedResIDs.find(resourceId);
+        ResourceIDMap::iterator mapIter =  m_resIDMap.find(resourceId);
+        ASSERT(mapIter == m_resIDMap.end());
+
+        std::map<FCM::U_Int32,FCM::U_Int32>::iterator it = m_usedResIDs.find(resourceId);
         if(it == m_usedResIDs.end())
         {
             newResourceId = resourceId;
@@ -1950,6 +1948,26 @@ namespace SnapSVGAnimator
         MarksAsUsedResId(newResourceId);
     }
     
+    FCM::U_Int32 ResourceIDManager::CreateUnusedResourceID()
+    {
+        FCM::U_Int32 resourceId = m_largestResID+1;
+        FCM::U_Int32 newResourceID;
+        AutoMapResId(resourceId,newResourceID);
+        return newResourceID;
+    }
+
+    void ResourceIDManager::SetResIdMapping(FCM::U_Int32 resourceId, FCM::U_Int32 newResourceId)
+    {
+        ResourceIDMap::iterator mapIter =  m_resIDMap.find(resourceId);
+        ASSERT(mapIter == m_resIDMap.end());
+
+        std::map<FCM::U_Int32,FCM::U_Int32>::iterator it = m_usedResIDs.find(newResourceId);
+        ASSERT(it != m_usedResIDs.end());
+        if(it != m_usedResIDs.end())
+        {
+            m_resIDMap[resourceId] = newResourceId;
+        }
+    }
     void ResourceIDManager::GetMappedResId(FCM::U_Int32 resourceId, FCM::U_Int32 &newResourceId)
     {
         ResourceIDMap::iterator it = m_resIDMap.find(resourceId);
@@ -1957,6 +1975,27 @@ namespace SnapSVGAnimator
         if(it != m_resIDMap.end())
         {
             newResourceId = it->second;
+        }
+    }
+
+    void ResourceIDManager::IncrementUseCount(FCM::U_Int32 resourceId)
+    {
+        std::map<FCM::U_Int32,FCM::U_Int32>::iterator it = m_usedResIDs.find(resourceId);
+        ASSERT(it != m_usedResIDs.end());
+        if(it != m_usedResIDs.end())
+        {
+            m_usedResIDs[resourceId] = m_usedResIDs[resourceId] + 1;
+        }
+    }
+
+    void ResourceIDManager::DecrementUseCount(FCM::U_Int32 resourceId)
+    {
+        std::map<FCM::U_Int32,FCM::U_Int32>::iterator it = m_usedResIDs.find(resourceId);
+        ASSERT(it != m_usedResIDs.end());
+        if(it != m_usedResIDs.end())
+        {
+            ASSERT(m_usedResIDs[resourceId] > 0);
+            m_usedResIDs[resourceId] = m_usedResIDs[resourceId] - 1;
         }
     }
 
@@ -1970,11 +2009,56 @@ namespace SnapSVGAnimator
         m_largestResID = 0;
         m_resIDMap.clear();
         m_usedResIDs.clear();
+        m_resourceNamesToID.clear();
     }
 
     ResourceIDManager::ResourceIDManager()
     {
         Reset();
+    }
+
+    void ResourceIDManager::LinkResourceNameAndID(std::string name,FCM::U_Int32 resourceId)
+    {
+        m_resourceNamesToID.insert(NameIDPair(name,resourceId));
+    }
+
+    void ResourceIDManager::GetResourceIDFromName(
+        const std::string& name, 
+        FCM::U_Int32& resourceID)
+    {
+        resourceID = 0;
+        try {
+            resourceID = m_resourceNamesToID.at(name);
+        }catch(...) {
+        
+        }
+ 
+    }
+
+    void ResourceIDManager::GetNameFromResourceID(FCM::U_Int32 resourceID, std::string& name)
+    {
+        name.clear();
+        std::map<std::string,FCM::U_Int32>::iterator it = m_resourceNamesToID.begin();
+        while(it != m_resourceNamesToID.end())
+        {
+            if(it->second == resourceID)
+            {
+                name= it->first;
+                break;
+            }
+            ++it;
+        }
+    }
+
+    FCM::U_Int32 ResourceIDManager::GetUseCount(FCM::U_Int32 resourceId)
+    {
+        std::map<FCM::U_Int32,FCM::U_Int32>::iterator it = m_usedResIDs.find(resourceId);
+        ASSERT(it != m_usedResIDs.end());
+        if(it != m_usedResIDs.end())
+        {
+            return m_usedResIDs[resourceId];
+        }
+        return 0;
     }
 
     /* ----------------------------------------------------- TimelineBuilder */
@@ -1988,7 +2072,7 @@ namespace SnapSVGAnimator
         ASSERT(pShapeInfo->structSize >= sizeof(SHAPE_INFO));
 
         FCM::U_Int32 resourceId;
-        ResourceIDManager::GetInstance().GetMappedResId(pShapeInfo->resourceId,resourceId);
+        GetMappedResId(pShapeInfo->resourceId,resourceId);
 
         LOG(("[AddShape] ObjId: %d ResId: %d PlaceAfter: %d\n", 
             objectId, resourceId, pShapeInfo->placeAfterObjectId));
@@ -2011,7 +2095,7 @@ namespace SnapSVGAnimator
         ASSERT(pClassicTextInfo->structSize >= sizeof(CLASSIC_TEXT_INFO));
 
         FCM::U_Int32 resourceId;
-        ResourceIDManager::GetInstance().GetMappedResId(pClassicTextInfo->resourceId,resourceId);
+        GetMappedResId(pClassicTextInfo->resourceId,resourceId);
 
         LOG(("[AddClassicText] ObjId: %d ResId: %d PlaceAfter: %d\n", 
             objectId, resourceId, pClassicTextInfo->placeAfterObjectId));
@@ -2047,7 +2131,7 @@ namespace SnapSVGAnimator
         ASSERT(pBitmapInfo->structSize >= sizeof(BITMAP_INFO));
 
         FCM::U_Int32 resourceId;
-        ResourceIDManager::GetInstance().GetMappedResId(pBitmapInfo->resourceId,resourceId);
+        GetMappedResId(pBitmapInfo->resourceId,resourceId);
 
         LOG(("[AddBitmap] ObjId: %d ResId: %d PlaceAfter: %d\n", 
             objectId, resourceId, pBitmapInfo->placeAfterObjectId));
@@ -2069,12 +2153,6 @@ namespace SnapSVGAnimator
         ASSERT(pMovieClipInfo);
         ASSERT(pMovieClipInfo->structSize >= sizeof(MOVIE_CLIP_INFO));
       
-        FCM::U_Int32 resourceId;
-        ResourceIDManager::GetInstance().GetMappedResId(pMovieClipInfo->resourceId,resourceId);
-
-        LOG(("[AddMovieClip] ObjId: %d ResId: %d PlaceAfter: %d\n", 
-            objectId, resourceId, pMovieClipInfo->placeAfterObjectId));
-
         // Instance name
         FCM::StringRep16 pMovieName;
         res = pMovieClip->GetName(&pMovieName);
@@ -2082,6 +2160,13 @@ namespace SnapSVGAnimator
         {
             return res;
         }
+ 
+        FCM::U_Int32 resourceId;
+        GetMappedResId(pMovieClipInfo->resourceId,resourceId);
+
+        LOG(("[AddMovieClip] ObjId: %d ResId: %d PlaceAfter: %d\n", 
+            objectId, resourceId, pMovieClipInfo->placeAfterObjectId));
+
 
         res = m_pTimelineWriter->PlaceObject(
             resourceId, 
@@ -2109,7 +2194,7 @@ namespace SnapSVGAnimator
         ASSERT(pGraphicInfo->structSize >= sizeof(GRAPHIC_INFO));
 
         FCM::U_Int32 resourceId;
-        ResourceIDManager::GetInstance().GetMappedResId(pGraphicInfo->resourceId,resourceId);
+        GetMappedResId(pGraphicInfo->resourceId,resourceId);
 
         LOG(("[AddGraphic] ObjId: %d ResId: %d PlaceAfter: %d\n", 
             objectId, resourceId, pGraphicInfo->placeAfterObjectId));
@@ -2136,7 +2221,7 @@ namespace SnapSVGAnimator
         ASSERT(pSoundInfo->structSize == sizeof(SOUND_INFO));
 
         FCM::U_Int32 resourceId;
-        ResourceIDManager::GetInstance().GetMappedResId(pSoundInfo->resourceId,resourceId);
+        GetMappedResId(pSoundInfo->resourceId,resourceId);
 
         LOG(("[AddSound] ObjId: %d ResId: %d\n", 
             objectId, resourceId));
@@ -2307,6 +2392,19 @@ namespace SnapSVGAnimator
         return res;
     }
 
+    void TimelineBuilder::GetMappedResId(FCM::U_Int32 resourceIdIn, FCM::U_Int32 &resourceId)
+    {
+        ResourceIDManager::GetInstance().GetMappedResId(resourceIdIn,resourceId);
+        ResourceIDManager::GetInstance().IncrementUseCount(resourceId);
+        std::map<FCM::U_Int32,FCM::U_Int32>::iterator it = m_usedResIDs->find(resourceId);
+        if(it == m_usedResIDs->end())
+        {
+            m_usedResIDs->insert(std::pair<FCM::U_Int32,FCM::U_Int32>(resourceId,1));
+        }else {
+            it->second = it->second + 1;
+        }
+    }
+
     FCM::Result TimelineBuilder::Build(
         FCM::U_Int32 resourceId, 
         FCM::StringRep16 pName,
@@ -2364,16 +2462,35 @@ namespace SnapSVGAnimator
         m_frameIndex(0)
     {
         //LOG(("[CreateTimeline]\n"));
+        m_usedResIDs = new std::map<FCM::U_Int32,FCM::U_Int32>;
+    }
+
+    void TimelineBuilder::Discard()
+    {
+        std::map<FCM::U_Int32,FCM::U_Int32>::iterator it = m_usedResIDs->begin();
+        while(it != m_usedResIDs->end())
+        {
+            FCM::U_Int32 count = it->second;
+            while(count > 0)
+            {
+                ResourceIDManager::GetInstance().DecrementUseCount(it->first);
+                --count;
+            }
+            ++it;
+        }
+        m_usedResIDs->clear();
     }
 
     TimelineBuilder::~TimelineBuilder()
     {
+        delete m_usedResIDs;
     }
 
     void TimelineBuilder::Init(DOM::PIFLADocument& pFLADocument, IOutputWriter* pOutputWriter, DataPrecision precision)
     {
         m_pOutputWriter = pOutputWriter;
         m_document = pFLADocument;
+        m_usedResIDs->clear();
 
         m_pOutputWriter->StartDefineTimeline();
 

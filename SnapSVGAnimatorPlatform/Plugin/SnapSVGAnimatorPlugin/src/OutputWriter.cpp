@@ -39,6 +39,7 @@
 #include "GraphicFilter/IGradientGlowFilter.h"
 #include "Utils/ILinearColorGradient.h"
 #include <math.h>
+#include "ResourceIDManager.h"
 
 #ifdef _WINDOWS
 #include "Windows.h"
@@ -195,10 +196,32 @@ namespace SnapSVGAnimator
         return FCM_SUCCESS;
     }
 
+    void JSONOutputWriter::RemoveUnusedNodes()
+    {
+        // Removes only Shapes
+        JSONNode::iterator it = m_pShapeArray->begin();
+        for (; it!=m_pShapeArray->end(); )
+        {
+            const JSONNode& arrayNode = *it;
+            FCM::U_Int32 char_id = (FCM::U_Int32)(arrayNode["charid"].as_int());
+            std::string name;
+            if(ResourceIDManager::GetInstance().GetUseCount(char_id) == 0)
+            {
+                (it++)->clear();            
+            }else {
+                ++it;
+            }
+        }
+       
+    
+    }
 
     FCM::Result JSONOutputWriter::EndDocument()
     {
         std::fstream file;
+        
+        RemoveUnusedNodes();
+
         m_pRootNode->push_back(*m_pShapeArray);
         m_pRootNode->push_back(*m_pBitmapArray);
         m_pRootNode->push_back(*m_pSoundArray);
@@ -2237,8 +2260,7 @@ namespace SnapSVGAnimator
 
         return FCM_SUCCESS;
     }
-
-
+ 
     JSONTimelineWriter::JSONTimelineWriter(
         FCM::PIFCMCallback pCallback,
         DataPrecision dataPrecision) :

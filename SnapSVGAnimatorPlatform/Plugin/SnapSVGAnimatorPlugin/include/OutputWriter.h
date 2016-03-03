@@ -267,6 +267,7 @@ namespace SnapSVGAnimator
 
         void SetImageExportFileName(const std::string& libPathName, const std::string& name);
 
+        void RemoveUnusedNodes();
     private:
 
         JSONNode* m_pRootNode;
