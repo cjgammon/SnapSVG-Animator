@@ -11,10 +11,8 @@ var MovieClip = function (commandTimeline, s, resourceManager, objectID, name, t
 
     if (name) {
       this.name = name;
-      parentMC[this.name] = this;
     }
 
-    //this.el = parentEl.g();
     this.el = parentEl.g();
     this.el.attr({'class': 'movieclip', 'token': this.id});
     this.transform = transform;
@@ -71,6 +69,10 @@ MovieClip.prototype.addChild = function (child, placeAfter) {
 }
 
 MovieClip.prototype._addChild = function (child, placeAfter) {
+  if (child.name) {
+      this[child.name] = child;
+  }
+
   if (placeAfter && parseInt(placeAfter) !== 0) {
       var afterMC = this.getChildById(parseInt(placeAfter));
 
