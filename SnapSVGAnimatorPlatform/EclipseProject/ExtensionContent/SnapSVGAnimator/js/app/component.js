@@ -7,6 +7,7 @@
 function SVGAnim(data, w, h, fps, params) {
     var instance = this,
         timeline,
+        playing,
         autoplay,
         cbk;
 
@@ -16,8 +17,9 @@ function SVGAnim(data, w, h, fps, params) {
     h = h || 100;
 
     autoplay = params.autoplay;
+    playing = autoplay;
 
-    instance.debug = false;
+    instance.debug = true;
 
     SVGAnim.prototype.toString = function () {
         return "SnapSVGAnimator v" + this.version;
@@ -71,10 +73,12 @@ function SVGAnim(data, w, h, fps, params) {
 
     this.play = function () {
       instance.mc.play();
+      playing = true;
     };
 
     this.stop = function () {
       instance.mc.stop();
+      playing = false;
     };
 
     this.setLoop = function (l) {
@@ -85,16 +89,15 @@ function SVGAnim(data, w, h, fps, params) {
         instance.mc._animate();
 
         clearTimeout(cbk);
-        cbk = setTimeout(interval, 1000 / fps);
+        if (playing) {
+            cbk = setTimeout(interval, 1000 / fps);
+        }
     }
 
     function handleKeyDown(e) {
-
         switch (e.keyCode) {
           case 39:
-            instance.play();
-            instance.mc._animate();
-            instance.stop();
+           interval();
           break;
           case 32:
             if (instance.mc.playing) {
