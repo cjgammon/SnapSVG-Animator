@@ -53,8 +53,8 @@ namespace DOM
     {
 
         /**
-         * @brief Defines the Interface ID (which is universally unique) for 
-         *        IBitmapFillStyle
+         * @brief Defines the universally-unique Interface ID for 
+         *        IBitmapFillStyle.
          *
          * @note  Textual Representation: {49C1053B-256E-4031-B35E-6B410B21CB09}
          */
@@ -88,7 +88,7 @@ namespace DOM
              *         Bitmap library item - This can successfully queried for ILibraryItem
              *         and IMediaItem.
              *
-             * @return On success, FCM_SUCCESS is returned; else an error code is returned.
+             * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              *
              * @see    LibraryItem::IMediaItem
              *
@@ -100,7 +100,7 @@ namespace DOM
             /**
              * @brief  This function can be used to check if the bitmap is larger than
              *         the fill area. If the bitmap is larger than the fill area,  
-             *         the bitmap is clipped; else it is repeated.
+             *         the bitmap is clipped, else it is repeated.
              *
              * @param  clipped (OUT)
              *         Set to true if the bitmap is larger than the fill area and the 
@@ -118,7 +118,7 @@ namespace DOM
              * @param  matrix (OUT)
              *         Transformation matrix
              *
-             * @return On success, FCM_SUCCESS is returned; else an error code is returned.
+             * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              */
             virtual FCM::Result _FCMCALL GetMatrix(Utils::MATRIX2D& matrix) = 0;
 

@@ -43,7 +43,7 @@ namespace FCM
      * @def   kFCMDictKey_ServiceDict
      *
      * @brief Service Dictionary Key. The value for this key should be a dictionary
-     *        that defines services the plugin provides.
+     *        that defines services the plug-in provides.
      */
     #define kFCMDictKey_ServiceDict                "FCM.Service.Dictionary"
 
@@ -60,7 +60,7 @@ namespace FCM
      * @def   kFCMComponent
      *
      * @brief FCM component key. The value for this key should be a dictionary
-     *        that defines the components in the plugin.
+     *        that defines the components in the plug-in.
      */
     #define kFCMComponent                    "FCM.Component"
 

@@ -88,14 +88,14 @@ namespace DOM
             /**
              * @class IShapeService
              *
-             * @brief Defines a service that provides shape related utility methods.
+             * @brief Defines a service that provides shape-related utility methods.
              */
             BEGIN_DECLARE_INTERFACE(IShapeService, IID_ISHAPE_SERVICE)
 
                 /**
                  * @brief  This function takes a shape "pSrcShape" as input and converts all the 
                  *         strokes in the shape to fills and returns a new temporary shape 
-                 *         object "pDstShape". The fills in the original shape are not part of 
+                 *         object "pDstShape." The fills in the original shape are not part of 
                  *         the destination shape. Only the strokes are copied and converted to fills. 
                  *         The source shape object is not modified.
                  *
@@ -104,8 +104,8 @@ namespace DOM
                  *
                  * @param  pDstShape (OUT)
                  *         A new shape with only the strokes of pSrcShape converted to fills. If 
-                 *         "pShape" contains "fills" along with "strokes", only the strokes 
-                 *         will be converted and placed in the resultant shape "pConvertedShape".
+                 *         "pShape" contains "fills" along with "strokes," only the strokes 
+                 *         are converted and placed in the resultant shape "pConvertedShape".
                  *
                  * @return On success, FCM_SUCCESS is returned, else an error code is returned.
                  */
@@ -133,7 +133,7 @@ namespace DOM
                  *         results in a transformation matrix that when applied on shapeA will 
                  *         result in shapeB.
                  *
-                 * @return On success, FCM_SUCCESS is returned; otherwise an error code is returned.
+                 * @return On success, FCM_SUCCESS is returned, otherwise an error code is returned.
                  */
                 virtual FCM::Result _FCMCALL TestShapeSimilarity(
                     DOM::FrameElement::PIShape pShapeA, 

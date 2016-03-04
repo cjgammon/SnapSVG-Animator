@@ -83,7 +83,7 @@ namespace DOM
                  * @brief  This function is used to export a bitmap to a file.
                  *
                  * @param  pBitmap (IN)
-                 *         An IMediaItem of a bitmap in libary.
+                 *         An IMediaItem of a bitmap in library.
                  *
                  * @param  pFilePath (IN)
                  *         A string that specifies the absolute path (including name) 

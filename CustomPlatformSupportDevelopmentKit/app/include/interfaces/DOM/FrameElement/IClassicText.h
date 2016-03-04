@@ -85,7 +85,7 @@ namespace DOM
     {
         /**
          * @brief Defines the universally-unique interface ID for 
-         *        IClassicText
+         *        IClassicText.
          *
          * @note  Textual Representation: {5C41008C-3FBD-496D-A3D1-EE752D091DDA}
          */
@@ -120,7 +120,7 @@ namespace DOM
         /**
          * @struct AA_MODE_PROP
          *
-         * @brief  Structure that consists of Anti alias mode and custom mode.
+         * @brief  Structure that consists of Anti-Alias mode and custom mode.
          */    
         struct AA_MODE_PROP
         {
@@ -159,7 +159,7 @@ namespace DOM
              * @param  aaModeProp (OUT)
              *         Anti alias mode.
              *
-             * @return On success, FCM_SUCCESS is returned; otherwise an error code is returned.
+             * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              *
              * @note   Caller of this function must set aaModeProp.structSize to 
              *         sizeof(AA_MODE_PROP).
@@ -192,18 +192,18 @@ namespace DOM
              *
              * @see    IParagraph
              *
-             * @note   For empty dynamic and input text, this function will return a 
-             *         list with one paragraph in it which in turn will contain only 
+             * @note   For empty dynamic and input text, this function  returns a 
+             *         list with one paragraph in it which in turn contains only 
              *         one text run.
              */
             virtual FCM::Result _FCMCALL GetParagraphs(PIFCMList& pParagraphList) = 0;
             
 
             /**
-             * @brief  The function returns the behaviour of a text element. 
+             * @brief  The function returns the behavior of a text element. 
              *
              * @param  pTextBehaviour (OUT)
-             *         The current behaviour of the text element is returned.
+             *         The current behavior of the text element is returned.
              *
              * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              */

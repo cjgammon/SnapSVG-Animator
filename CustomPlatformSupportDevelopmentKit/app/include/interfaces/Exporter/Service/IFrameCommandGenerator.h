@@ -80,7 +80,7 @@ namespace Exporter
         /**
          * @struct RANGE
          *
-         * @brief  Defines a range of numbers
+         * @brief  Defines a range of numbers.
          */
         struct RANGE
         {
@@ -115,25 +115,25 @@ namespace Exporter
              *        Timeline object for which frame commands need to be generated.
              *
              * @param frameRange (IN)
-             *        Range of frames
+             *        Range of frames.
              *
              * @param pDictPublishSettings (IN)
              *        Dictionary containing publish settings. Only setting key that is recognized   
              *        by this service is Exporter::Service::kPublishSettingsKey_IncludeInvisibleLayer.
              *        If this key is not set or an invalid value is set, default value of "true" 
-             *        will be used. All other settings in the dictionary will be ignored.
+             *        is used. All other settings in the dictionary are ignored.
              *
              * @param pResourcePalette (IN)
              *        Resource palette object. Definition of resources are added to 
              *        the resource palette.
              *
              * @param pTimelineBuilderFactory (IN)
-             *        Factory interface to build timeline for each symbol (movie-clip / graphic).
+             *        Factory interface to build timeline for each symbol (movie-clip/graphic).
              *        This interface is invoked every time a symbol is encountered during 
              *        DOM parsing.
              *
              * @param pTimelineBuilder (OUT)
-             *        Root(or main) timeline builder
+             *        Root(or main) timeline builder.
              *
              * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              */

@@ -22,8 +22,8 @@
  * @brief This file contains the interface for IPublisher. The IPublisher 
  *        interface needs to be implemented by a "Publisher" plugin.
  *        It contains methods to publish a FLA document and a single timeline.
- *        FlashPro would invoke methods in this interface in the test-movie 
- *        and publish workflows.
+ *        'Adobe Animate CC' would invoke methods in this interface in the 
+ *        test-movie and publish workflows.
  */
 
 #ifndef IPUBLISHER_H_
@@ -77,8 +77,8 @@ namespace Publisher
     BEGIN_DECLARE_INTERFACE(IPublisher, FCMIID_IPublisher)
 
         /**
-         * @brief  This function is "typically" called by FlashPro in the Publish/Test-Movie 
-         *         workflow. The implementor of this function must publish the entire Fla Document
+         * @brief  This function is "typically" called by 'Adobe Animate CC' in the Publish/Test-Movie 
+         *         workflow. The implementor of this function must publish the entire FLA Document
          *         on invocation of this function.
          *
          * @param  pFlaDocument (IN)
@@ -89,7 +89,7 @@ namespace Publisher
          *
          * @param  pDictConfig (IN) 
          *         Publish configuration parameters. These are controlled by 
-         *         FlashPro and the plugins have no control over them. For e.g.,
+         *         'Adobe Animate CC' and the plug-ins have no control over them. For e.g.,
          *           pDictConfig[kPublishSettingsKey_PreviewNeeded] = "true" or "false";
          *
          * @return On success, FCM_SUCCESS is returned, else an error code is returned.
@@ -101,7 +101,7 @@ namespace Publisher
         
         
         /**
-         * @brief  This function is "typically" called by FlashPro in the Test-Scene/Test-Movie 
+         * @brief  This function is "typically" called by 'Adobe Animate CC' in the Test-Scene/Test-Movie 
          *         workflow. The implementor of this function must publish the timeline on invocation 
          *         of this function.
          *
@@ -120,7 +120,7 @@ namespace Publisher
          *
          * @param  pDictConfig (IN) 
          *         Publish configuration parameters. These are controlled by 
-         *         FlashPro and the plugins have no control over them. For e.g.,
+         *         'Adobe Animate CC' and the plug-ins have no control over them. For e.g.,
          *           pDictConfig[kPublishSettingsKey_PreviewNeeded] = "true" or "false";
          *
          * @return On success, FCM_SUCCESS is returned, else an error code is returned.

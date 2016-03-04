@@ -79,7 +79,7 @@ namespace DocType
           *        For any value of inFeatureName not mentioned in the list below, isSupported
           *        should be set to FALSE.
           *
-          * @return On success, FCM_SUCCESS is returned; else an error code is returned.
+          * @return On success, FCM_SUCCESS is returned, else an error code is returned.
           *
           * @note  The following are the possible valid values for the inFeatureName:
           *         "Stroke", 
@@ -126,11 +126,11 @@ namespace DocType
          *        Name of the property related to feature(inFeatureName)
          *
          * @param isSupported (OUT) 
-         *        This parameter is updated based on whether feature is supported or not
-         *        For any cobination of <inFeatureName, inPropName> not mentioned in the list below,
+         *        This parameter is updated based on whether feature is supported or not.
+         *        For any combination of <inFeatureName, inPropName> not mentioned in the list below,
          *        isSupported should be set to FALSE.
          *
-         * @return On success, FCM_SUCCESS is returned; else an error code is returned.
+         * @return On success, FCM_SUCCESS is returned, else an error code is returned.
          *
          * @note  The following are the possible valid combinations of 
          *        <inFeatureName, inPropName>:
@@ -208,14 +208,14 @@ namespace DocType
          *        Name of the property related to feature(inFeatureName)
          *
          * @param inValName (IN)
-         *        Name of the value assosciated with a property(inPropName)
-         *        For any cobination of <inFeatureName, inPropName, inValName> not mentioned 
+         *        Name of the value associated with a property(inPropName).
+         *        For any combination of <inFeatureName, inPropName, inValName> that is not mentioned 
          *        in the list below, isSupported should be set to FALSE.
          *
          * @param isSupported (OUT)
-         *        This param is updated according to whether value for the property is supported
+         *        This parameter is updated according to whether value for the property is supported.
          *
-         * @return On success, FCM_SUCCESS is returned; else an error code is returned.
+         * @return On success, FCM_SUCCESS is returned, else an error code is returned.
          *
          * @note  The following are the valid possible combinations of 
          *        <inFeatureName, inPropName, inValName>:
@@ -336,9 +336,9 @@ namespace DocType
          *        Name of the property related to the feature(inFeatureName)
          *
          * @param outDefVal (OUT) 
-         *        This param is updated with the default value of unsupported property
+         *        This parameter is updated with the default value of unsupported property.
          *
-         * @return On success, FCM_SUCCESS is returned; otherwise an error code is returned.
+         * @return On success, FCM_SUCCESS is returned, else an error code is returned.
          */
         virtual FCM::Result _FCMCALL GetDefaultValue(
             CStringRep16 inFeatureName, 

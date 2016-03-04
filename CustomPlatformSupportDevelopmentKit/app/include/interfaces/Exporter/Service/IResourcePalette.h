@@ -144,15 +144,15 @@ namespace Exporter
              * @brief  This function is invoked to add a sound object to the resource palette.
              *
              * @param  resourceId (IN)
-             *         Resource Id associated with the sound which is getting 
+             *         Resource Id associated with the sound that is getting 
              *         added to the palette.
              *
              * @param  pMediaItem (IN) 
-             *         Library object associated with sound via which sound information
+             *         Library object associated with sound through which sound information
              *         is extracted. This parameter can also be successfully queried for 
              *         DOM::ILibraryItem.
              *
-             * @return On success, FCM_SUCCESS is returned; otherwise an error code is returned.
+             * @return On success, FCM_SUCCESS is returned, otherwise an error code is returned.
              *
              * @note   Sound service (FLA_SOUND_SERVICE) can be used to export the media item to a 
              *         known sound format.
@@ -172,7 +172,7 @@ namespace Exporter
              *         added to the palette.
              *
              * @param  pMediaItem (IN) 
-             *         Library object associated with bitmap via which bitmap information
+             *         Library object associated with bitmap through which bitmap information
              *         is extracted. This parameter can also be successfully queried for 
              *         DOM::ILibraryItem.
              *
@@ -196,7 +196,7 @@ namespace Exporter
              * @param  pClassicText (IN) 
              *         Text object which contains the text related information.
              *
-             * @return On success, FCM_SUCCESS is returned; otherwise an error code is returned.
+             * @return On success, FCM_SUCCESS is returned, otherwise an error code is returned.
              */
             virtual FCM::Result _FCMCALL AddClassicText(
                 FCM::U_Int32 resourceId, 

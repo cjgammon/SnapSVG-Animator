@@ -21,8 +21,8 @@
  *
  * @brief This file contains interface for IFCMNotificationService. 
  *        The IFCMNotificationService interface is supported by any FCM Application that wants to
- *        provide system wide notification hooks to plugins.  These notifications are mainly 
- *        provided by the application, but can also be provided by specific plugins. This Interface
+ *        provide system wide notification hooks to plug-ins.  These notifications are mainly 
+ *        provided by the application, but can also be provided by specific plug-ins. This Interface
  *        can be obtained by GetService of the main Application callback Interface.
  */
 
@@ -111,7 +111,7 @@ namespace FCM
         /**
          * @brief  Sends a notification call to all <tt>IFCMNotificationClients</tt> registered for
          *         the event specified by nid. Any data passed in the pNotificationData parameter 
-         *         will be passed on to the client interfaces in the pNotificationData parmaeter of
+         *         will be passed on to the client interfaces in the pNotificationData parameter of
          *         the <tt>Notify</tt> method. 
          *
          * @param  pNotificationData (IN)

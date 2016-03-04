@@ -20,12 +20,12 @@
  * @file  IFCMPluginDictionary.h
  *
  * @brief This file contains interface for IFCMPluginDictionary. 
- *        The IFCMPluginDictionary interface provides a generic mechanism for exchanging Plugin
+ *        The IFCMPluginDictionary interface provides a generic mechanism for exchanging plug-in
  *        data with FCM Application. This interface provides a list of registry dictionaries. Each
- *        registry dictionary corresponds to dictionary for an interface implementation in Plugin.
+ *        registry dictionary corresponds to dictionary for an interface implementation in plug-in.
  *        <tt>IFCMPluginDictionary</tt> aggregates <tt>IFCMDictionary</tt>. The FCM Application
  *        can define a set of keys for an interface and data corresponding to these keys will be 
- *        populated by the plugin in the registry dictionary and this data can be used by the FCM
+ *        populated by the plug-in in the registry dictionary and this data can be used by the FCM
  *        Application.
  */
 

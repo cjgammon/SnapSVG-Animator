@@ -45,7 +45,7 @@ namespace DOM
     {
         /**
          * @brief Defines the universally-unique interface ID for 
-         *        IFrameDisplayElement
+         *        IFrameDisplayElement.
          *
          * @note  Textual Representation: {800F6FF6-59C5-4FE3-ABBB-CEE26261A6B8}
          */

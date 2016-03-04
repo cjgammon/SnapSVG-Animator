@@ -45,7 +45,7 @@ namespace DOM
     {
         /**
          * @brief Defines the universally-unique interface ID for 
-         *        IFolderItem
+         *        IFolderItem.
          *
          * @note  Textual Representation: {20733731-4EDF-4F5A-97C6-04FAA0E48C52}
          */
@@ -72,7 +72,7 @@ namespace DOM
         BEGIN_DECLARE_INTERFACE(IFolderItem, IID_IFOLDER_ITEM)
 
             /**
-             * @brief  This function gets the  children of the folder item in the library.
+             * @brief  This function gets the children of the folder item in the library.
              *
              * @param  pChildList (OUT)
              *         List of items within the folder. Each of the item in the list can be 

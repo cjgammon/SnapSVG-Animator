@@ -45,7 +45,7 @@ namespace DOM
     {
         /**
          * @brief Defines the universally-unique interface ID for 
-         *        IFontItem
+         *        IFontItem.
          *
          * @note  Textual Representation: {731BCB32-50DB-4A6C-9750-9E6CEF8DF1AF}
          */
@@ -72,7 +72,7 @@ namespace DOM
         BEGIN_DECLARE_INTERFACE(IFontItem, IID_IFONT_ITEM)
         
             /**
-             * @brief  This function determines name of the device font that should be associated with this Font Item.
+             * @brief  This function determines the name of the device font that should be associated with this Font Item.
              *
              * @param  ppFontName (OUT)
              *         The name of the device font that should be associated with this font item is returned.
@@ -126,11 +126,11 @@ namespace DOM
             
 
             /**
-             * @brief  This function returns a series of delimited integers which correspond to 
+             * @brief  This function returns a series of delimited integers that correspond to 
              *         the items that are selected in the font embedding dialog. 
              *
              * @param  ppEmbeddedRanges (OUT)
-             *         The delimited integers which correspond to the embedded ranges that are selected 
+             *         The delimited integers that correspond to the embedded ranges that are selected 
              *         in the font embedding dialog are returned.
              *
              * @return On success, FCM_SUCCESS is returned, else an error code is returned.

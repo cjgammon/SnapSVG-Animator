@@ -20,7 +20,7 @@
  * @file  ITextRun.h
  *
  * @brief This file contains the interface for ITextRun. ITextRun interface 
- *        represents a string of characters which have the same text style. 
+ *        represents a string of characters that have the same text style. 
  */
 
 #ifndef ITEXT_RUN_H_

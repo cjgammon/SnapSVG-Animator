@@ -23,7 +23,7 @@
  *        The IFCMCallback interface is a glue for the objects created to access the FCM. Each object
  *        of an interface implementation contains pointer IFCMCallback object, which can be used
  *        to create a new object of any classID and interfaceID and also can be used to register
- *        a service which can be used by FCM Application or Plugin. By default, the IFCMCalloc
+ *        a service which can be used by FCM Application or Plug-in. By default, the IFCMCalloc
  *        and IFCMNotificationService are registered with IFCMCallback by FCM Application.
  */
 

@@ -88,7 +88,7 @@ namespace DOM
              *         Fill style of the stroke (ISolidFillStyle or IGradientFillStyle
              *         or IBitmapFillStyle).
              *
-             * @return On success, FCM_SUCCESS is returned; otherwise an error code is returned.
+             * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              *
              * @see    DOM::FillStyle::ISolidFillStyle
              *
@@ -105,7 +105,7 @@ namespace DOM
              * @param  dotSpace (OUT)
              *         Spacing between dots in a dotted line.
              *
-             * @return On success, FCM_SUCCESS is returned; otherwise an error code is returned.
+             * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              */
             virtual FCM::Result _FCMCALL GetDotSpace(FCM::U_Int32& dotSpace) = 0;
 

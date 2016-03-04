@@ -224,7 +224,7 @@ namespace DOM
              *         width stroke.
              *
              * @param  strokeHinting (OUT)
-             *         Set to true if stroke hinting is on; otherwise false is set.
+             *         Set to true if stroke hinting is on, else false is set.
              *
              * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              */

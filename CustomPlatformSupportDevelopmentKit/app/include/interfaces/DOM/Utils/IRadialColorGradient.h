@@ -79,7 +79,7 @@ namespace DOM
              * @param  nColors (OUT)
              *         Number of points in the color ramp
              *
-             * @return On success, FCM_SUCCESS is returned; else an error code is returned.
+             * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              */
             virtual FCM::Result _FCMCALL GetKeyColorCount(FCM::U_Int8& nColors) = 0;
 
@@ -93,9 +93,9 @@ namespace DOM
              *         GetKeyColorCount() - 1
              *
              * @param  colorpoint (OUT)
-             *         The value of a color and its position in the color ramp;
+             *         The value of a color and its position in the color ramp.
              *
-             * @return On success, FCM_SUCCESS is returned; else an error code is returned.
+             * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              */
             virtual FCM::Result _FCMCALL GetKeyColorAtIndex(
                 FCM::U_Int8 index, 
@@ -111,7 +111,7 @@ namespace DOM
              *         Horizontal offset of the focal point from the transformation
              *         point.
              *
-             * @return On success, FCM_SUCCESS is returned; else an error code is returned.
+             * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              */
             virtual Result _FCMCALL GetFocalPoint(FCM::S_Int32& focalPoint) = 0;
             

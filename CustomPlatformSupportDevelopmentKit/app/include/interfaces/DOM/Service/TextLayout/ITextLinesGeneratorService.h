@@ -20,7 +20,7 @@
  * @file  ITextLinesGeneratorService.h
  *
  * @brief This file contains the interface for ITextLinesGeneratorService. 
- *        ITextLinesGeneratorService contains methods which fetches text lines from the 
+ *        ITextLinesGeneratorService contains methods that fetch text lines from the 
  *        text element.
  */
 
@@ -56,7 +56,7 @@ namespace DOM
         namespace TextLayout
         {        
             /**
-             * @brief Defines the Interface ID (which is universally unique) for 
+             * @brief Defines the universally-unique Interface ID for 
              *        ITextLinesGeneratorService.
              *
              * @note  Textual Representation: {30D8005F-7046-4E66-A437-4FCD6A78DED5}

@@ -122,7 +122,7 @@ namespace DOM
                  *         regions.
                  *
                  * @param  pFillStyle (OUT)
-                 *         Fill style of the filled regions. This can queried for the following 
+                 *         Fill style of the filled regions. This can be queried for the following 
                  *         interfaces: ISolidFillStyle, IBitmapFillStyle and IGradientFillStyle.
                  *
                  * @return On success, FCM_SUCCESS is returned, else an error code is returned.

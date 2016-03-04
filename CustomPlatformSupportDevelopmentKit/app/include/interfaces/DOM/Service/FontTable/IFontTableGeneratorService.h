@@ -69,7 +69,7 @@ namespace DOM
         {        
             /**
              * @brief Defines the universally-unique interface ID for 
-             *        IFontTableGeneratorService
+             *        IFontTableGeneratorService.
              *
              * @note  Textual Representation: {DFA12563-76B3-4F88-9E04-FD150CB63968}
              */

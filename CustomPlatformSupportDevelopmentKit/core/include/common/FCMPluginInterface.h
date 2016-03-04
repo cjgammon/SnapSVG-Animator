@@ -155,7 +155,7 @@ namespace FCM
         /**
          * @brief  Constructs an <tt> AutoPtr<T> </tt> object from a pointer to Q,
          *         where both T and Q have to be interfaces derived from
-         *         IFCMUnknown. The construction succeeds if and only if  
+         *         IFCMUnknown. The construction succeeds only if  
          *         the QueryInterface call for the interface T succeeds
          *         on the object passed.
          *
@@ -163,9 +163,9 @@ namespace FCM
          *         A pointer to an object of type Q. Q has to be derived
          *         from IFCMUnknown. The QueryInterface call for the interface 
          *         T on the object p points to should succeed for successful
-         *         construction of <tt> AutoPtr<T> </tt>. On successful construction
-         *         it calls <tt>AddRef</tt> on the pointer p. If case of failure the
-         *         <tt> AutoPtr<T> </tt> object created will point to NULL.
+         *         construction of <tt> AutoPtr<T> </tt>. On successful construction,
+         *         it calls <tt>AddRef</tt> on the pointer p. In case of failure, the
+         *         <tt> AutoPtr<T> </tt> object created points to NULL.
          *
          */
         template <typename Q>
@@ -181,7 +181,7 @@ namespace FCM
         /**
          * @brief  Constructs an <tt> AutoPtr<T> </tt> object from an <tt> AutoPtr<Q> </tt> 
          *         object, where both T and Q are interfaces derived from IFCMUnknown.
-         *         The construction succeeds if and only if the QueryInterface
+         *         The construction succeeds only if the QueryInterface
          *         call for the interface T succeeds on the object passed.
          *
          * @param  pObj (IN)
@@ -271,7 +271,7 @@ namespace FCM
         }
 
         /**
-         * @brief  The overloded assignment operator to assign a pointer
+         * @brief  The overloaded assignment operator to assign a pointer.
          *
          * @param  p (IN)
          *         The pointer to assign.
@@ -306,7 +306,7 @@ namespace FCM
          * @param  pObj (IN)
          *         The <tt> AutoPtr<Q> </tt> object to assign.
          *         The QueryInterface call for the interface
-         *         T on the object <tt>pObj</tt> should succeed
+         *         T on the object <tt>pObj</tt> should succeed.
          */
         template <typename Q>
         void operator =(const AutoPtr<Q>& pObj)
@@ -365,7 +365,7 @@ namespace FCM
         }
         
         /**
-         * @brief  Retuns true if the underlying <tt>IFCMUnknown</tt> pointer
+         * @brief  Returns true if the underlying <tt>IFCMUnknown</tt> pointer
          *         this object is same as that of the argument.
          */
         template <typename Q>
@@ -427,10 +427,10 @@ namespace FCM
          *
          * @param  index (IN)
          *         The index to the object in the list
-         *         that needs to be accessed
+         *         that needs to be accessed.
          *
          * @return Returns the IFCMUnknown pointer to the 
-         *         object corresponding to <tt>index</tt>
+         *         object corresponding to <tt>index</tt>.
          */
         PIFCMUnknown operator [](FCM::U_Int32 index)
         {
@@ -828,7 +828,7 @@ namespace FCM
      *
      * @brief   Defines the type of a function that will be called 
      *          immediately after the DLL/framework load. Perform any 
-     *          global intitialization inside this.
+     *          global initialization inside this.
      */
     typedef FCM::Result (*PluginBootProc)(PIFCMCallback pCallback);
         
@@ -836,15 +836,15 @@ namespace FCM
      * @typedef PluginGetClassInfoProc
      *
      * @brief   Defines the type of a function used by FCM framework to 
-     *          know various classes implemented by the plugin.
-     *          Do no have any app specific logic in this function
+     *          know various classes implemented by the plug-in.
+     *          Do no have any app-specific logic in this function
      *
      * @param   pCalloc (IN)
      *          The pointer to the memory allocator service object.
      *
      * @param   ppClassInfo (OUT)
      *          The pointer to an array of the FCMClassInterfaceInfo objects.
-     *          The plugin has to allocate the array using pCalloc
+     *          The plug-in has to allocate the array using pCalloc
      */
     typedef FCM::Result (*PluginGetClassInfoProc)(PIFCMCalloc pCalloc,PFCMClassInterfaceInfo* ppClassInfo);
 
@@ -852,8 +852,8 @@ namespace FCM
      * @typedef PluginGetClassObjectProc
      *
      * @brief   Defines the function called by FCM framework to get the 
-     *          factory objects for the classes implemented by the plugin.
-     *          Do no perform any app specific logic inside this function
+     *          factory objects for the classes implemented by the plug-in.
+     *          Do no perform any app-specific logic inside this function
      *         
      * @param   pUnkOuter (IN)
      *          If NULL, indicates that the object is not being created as part of
@@ -883,13 +883,13 @@ namespace FCM
      * @typedef PluginRegisterProc
      *
      * @brief   Defines the function called by FCM framework to register
-     *          the plugin. The plugin has to add the details of the
+     *          the plug-in. The plug-in has to add the details of the
      *          the services and the various components it contains to this
      *          dictionary.
      *
      * @param   pPluginDict (IN)
      *          pointer to the registration dictionary that has to be filled
-     *          by the plugin.
+     *          by the plug-in.
      */
     typedef FCM::Result (*PluginRegisterProc)(PIFCMPluginDictionary pPluginDict);
 
@@ -897,13 +897,13 @@ namespace FCM
      * @typedef PluginCanUnloadNowProc
      *
      * @brief   Defines the function called by FCM framework to check
-     *          if the plugin can be unloaded. This function returns 
-     *          the number of live object instances from by this plugin.
+     *          if the plug-in can be unloaded. This function returns 
+     *          the number of live object instances from by this plug-in.
      *          Just before the shutdown, all the instances should be deleted
      *          and zero should be returned
      *
      * @return  This function returns the number of live object instances 
-     *          from by this plugin.
+     *          from by this plug-in.
      */
     typedef FCM::U_Int32 (*PluginCanUnloadNowProc)(void);
 
@@ -911,8 +911,8 @@ namespace FCM
      * @typedef PluginShutdownProc
      *
      * @brief   Defines the function called by FCM framework to notify
-     *          the plugin that the plugin will be unloaded soon. This 
-     *          function allows the plugin to perform proper clean-up 
+     *          the plug-in that the plug-in will be unloaded soon. This 
+     *          function allows the plug-in to perform proper clean-up 
      *          before unloading.
      */
     typedef FCM::Result (*PluginShutdownProc)();

@@ -210,7 +210,7 @@ namespace DOM
              * @param thickness (OUT)
              *        Thickness of the stroke.
              *
-             * @return On success, FCM_SUCCESS is returned; else an error code is returned.
+             * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              */
             virtual FCM::Result _FCMCALL GetThickness(FCM::Double& thickness) = 0;
 

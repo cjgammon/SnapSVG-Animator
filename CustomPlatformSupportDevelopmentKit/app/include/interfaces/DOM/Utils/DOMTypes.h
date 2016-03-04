@@ -158,7 +158,7 @@ namespace DOM
 /**
  * @def   TWIPS_PER_PIXEL
  *
- * @brief Twips is defined as twentieth of a pixel
+ * @brief Twips is defined as twentieth of a pixel.
  */
 #define TWIPS_PER_PIXEL 20
 
@@ -173,7 +173,7 @@ namespace DOM
         /**
          * @struct COLOR
          *
-         * @brief  Defines a color in RGBA format
+         * @brief  Defines a color in RGBA format.
          */
         struct COLOR
         {
@@ -194,7 +194,7 @@ namespace DOM
         /**
          * @struct MATRIX2D
          *
-         * @brief  Represents a transformation matrix
+         * @brief  Represents a transformation matrix.
          */
         struct MATRIX2D
         {
@@ -264,7 +264,7 @@ namespace DOM
         /**
          * @struct RECT
          *
-         * @brief  Defines a Rectangle
+         * @brief  Defines a rectangle.
          */
         struct RECT
         {
@@ -342,7 +342,7 @@ namespace DOM
         /**
          * @struct GRADIENT_COLOR_POINT
          *
-         * @brief  Map of a color and its position in the gradient 
+         * @brief  Map of a color and its position in the gradient.
          */
         struct GRADIENT_COLOR_POINT
         {

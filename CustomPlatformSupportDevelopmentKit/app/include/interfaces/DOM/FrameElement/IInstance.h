@@ -52,7 +52,7 @@ namespace DOM
     {
         /**
          * @brief Defines the universally-unique interface ID for 
-         *        IInstance
+         *        IInstance.
          *
          * @note  Textual Representation: {FAAAC715-FA2B-43E2-8B33-62A1C4059D1E}
          */

@@ -45,7 +45,7 @@ namespace DOM
         namespace Tween
         {
             /**
-             * @brief Defines the property for "shape".
+             * @brief Defines the property for "shape."
              */
             #define kDOMShapeProperty  "com.adobe.shape"
 
@@ -53,14 +53,14 @@ namespace DOM
             /**
              * @var   SHAPE_PROPERTY_ID
              *
-             * @brief Defines the property ID for "shape".
+             * @brief Defines the property ID for "shape."
              */
             FCM::ConstFCMIID SHAPE_PROPERTY_ID =
                 {0xf8dfae9, 0x2aa3, 0x49fa, {0x83, 0x25, 0xcb, 0x4e, 0x2, 0xca, 0xe, 0x88}};
 
 
             /**
-             * @brief Defines the property for "geometry".
+             * @brief Defines the property for "geometry."
              */
             #define kDOMGeometricProperty  "com.adobe.geometry"
 
@@ -75,7 +75,7 @@ namespace DOM
 
 
             /**
-             * @brief Defines the property for "color".
+             * @brief Defines the property for "color."
              */
             #define kDOMColorProperty  "com.adobe.color"
 
@@ -90,7 +90,7 @@ namespace DOM
 
 
             /**
-             * @brief Defines the property for "filter".
+             * @brief Defines the property for "filter."
              */
             #define kDOMFilterProperty  "com.adobe.filter"
 
