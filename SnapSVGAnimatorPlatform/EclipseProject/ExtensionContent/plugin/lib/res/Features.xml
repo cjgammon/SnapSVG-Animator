@@ -8,6 +8,7 @@
 			<Value name="Ragged" supported="false"/>
 			<Value name="Stippled" supported="false"/>
 			<Value name="Hatched" supported="false"/>
+			<Value name="PaintBrushed" supported="true"/>
 		</Property>
 		<Property name="Scale" default="Normal" supported="true">
 			<Value name="Normal" supported="true"/>
