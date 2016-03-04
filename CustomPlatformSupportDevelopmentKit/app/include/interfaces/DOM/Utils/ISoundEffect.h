@@ -118,7 +118,7 @@ namespace DOM
              * @param  soundEnvelope (OUT)
              *         Value of a sound envelope.
              *
-             * @return On success, FCM_SUCCESS is returned; else an error code is 
+             * @return On success, FCM_SUCCESS is returned, else an error code is 
              *         returned.
              *
              * @note   Caller of this function must set soundEnvelope.structSize to 

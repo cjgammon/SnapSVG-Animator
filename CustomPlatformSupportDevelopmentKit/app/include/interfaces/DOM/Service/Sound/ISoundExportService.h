@@ -48,8 +48,8 @@ namespace DOM
         namespace Sound
         {
             /**
-             * @brief Defines the Interface ID (which is universally unique) for 
-             *        ISoundExportService
+             * @brief Defines the universally-unique Interface ID for 
+             *        ISoundExportService.
              *
              * @note  Textual Representation: {DEAD57CE-C4DC-44D2-B140-E82374272CF5}
              */
@@ -83,10 +83,10 @@ namespace DOM
                 * @brief  This function exports a sound to a ".wav" or ".mp3" format.
                 *
                 * @param  pSound (IN)
-                *         An IMediaItem of a sound in libary.
+                *         An IMediaItem of a sound in library.
                 *
                 * @param  pFilePath (IN)
-                *         A string, that specifies the absolute path (including name) 
+                *         A string that specifies the absolute path (including name) 
                 *         of the exported file. The parent directory should exist.
                 *         The file extension must be ".WAV" or ".MP3".
                 * 

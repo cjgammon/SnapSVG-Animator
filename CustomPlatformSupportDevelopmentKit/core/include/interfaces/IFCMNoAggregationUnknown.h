@@ -71,7 +71,7 @@ namespace FCM
          * @brief  Return pointers to supported interfaces on given object.
          *
          * @param  pInterfaceID (IN)
-         *         pointer to identifier interface.
+         *         Pointer to identifier interface.
          *
          * @param  ppvObj (OUT)
          *         pointer to requested interface object. 

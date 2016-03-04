@@ -77,7 +77,7 @@ namespace FCM
          *         parameter that further describes the event that occurred.
          *
          * @param  nid (IN)
-         *         The type of the event that occured.
+         *         The type of the event that occurred.
          *
          * @param  pNotificationData (IN)
          *         Event-type specific data describing the event that occurred.
@@ -85,7 +85,7 @@ namespace FCM
          * @param  pRefCon (IN)
          *         The refcon value that was passed when the client was registered for this event.
          *
-         * @return return FCM_SUCCESS on success, else an error code.
+         * @return Return FCM_SUCCESS on success, else an error code.
          */
          virtual FCM::Result _FCMCALL Notify(
             ConstRefFCMNotifyID nid,

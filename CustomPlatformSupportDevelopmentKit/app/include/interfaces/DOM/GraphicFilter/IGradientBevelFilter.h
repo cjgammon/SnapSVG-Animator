@@ -46,7 +46,7 @@ namespace DOM
     {
         /**
          * @brief Defines the universally-unique interface ID for 
-         *        IGradientBevelFilter
+         *        IGradientBevelFilter.
          *
          * @note  Textual Representation:  {09BF0D5C-78ED-4D0F-9BF5-75F81B2DE0AB}
          */
@@ -147,7 +147,7 @@ namespace DOM
              * @brief  This function is used to determine if knockout is enabled or disabled.
              *
              * @param  knockOut (OUT) 
-             *         Boolean variable which is set to true when Knock out property is enabled.
+             *         Boolean variable that is set to true when Knock out property is enabled.
              *
              * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              */
@@ -169,7 +169,7 @@ namespace DOM
              * @brief  This function is used to get the gradient color.
              *
              * @param  pGradient (OUT) 
-             *         This parameter used to get key color count and color at index 
+             *         This parameter is used to get key color count and color at index 
              *         required to make up gradient. Depending on type of gradient, this 
              *         can be either queried for ILinearColorGradient or IRadialColorGradient.
              *
@@ -183,7 +183,7 @@ namespace DOM
              *         filter is enabled for the object.
              *
              * @param  enabled (OUT) 
-             *         Boolean value which is set to true when filter is enabled 
+             *         Boolean value that is set to true when filter is enabled 
              *         for the object in context else set to false.
              *
              * @return On success, FCM_SUCCESS is returned, else an error code is returned.

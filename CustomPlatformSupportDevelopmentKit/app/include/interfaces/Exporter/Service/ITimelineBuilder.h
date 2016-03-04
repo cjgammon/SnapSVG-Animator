@@ -118,7 +118,7 @@ namespace Exporter
          *
          * @brief  This structure contains placement information about a display object
          *         on the stage, that are not present in DISPLAY_OBJECT_INFO
-         *         Given a DISPLAY_OBJECT_INFO pointer pDisplayObjectInfo, access the fileds
+         *         Given a DISPLAY_OBJECT_INFO pointer pDisplayObjectInfo, access the fields
          *         in this structure only if the condition
          *         (pDisplayObjectInfo->structSize >= sizeof(DISPLAY_OBJECT_INFO_2)) is true.
          */
@@ -176,7 +176,7 @@ namespace Exporter
          * @typedef CLASSIC_TEXT_INFO_2
          *
          * @brief   This structure contains a few more placement information about a 
-         *          text object in addition to containing all the the nformation that 
+         *          text object in addition to containing all the the information that 
          *          is present in the structure CLASSIC_TEXT_INFO.
          */
         typedef DISPLAY_OBJECT_INFO_2 CLASSIC_TEXT_INFO_2;
@@ -195,7 +195,7 @@ namespace Exporter
          *
          * @brief This interface represents a builder for a timeline. Timeline builder
          *        contains methods that are invoked by FrameCommandGenerator service (implemented 
-         *        in FlashPro) to add frame commands for a timeline.
+         *        in 'Adobe Animate CC') to add frame commands for a timeline.
          */
         BEGIN_DECLARE_INTERFACE(ITimelineBuilder, IID_ITIMELINE_BUILDER)
 
@@ -219,10 +219,10 @@ namespace Exporter
              * @brief  This function is invoked to add a text element to the timeline.
              *
              * @param  objectId (IN)
-             *         Object Identifier of the text instance
+             *         Object Identifier of the text instance.
              *
              * @param  pClassicTextInfo (IN)
-             *         Text placement information
+             *         Text placement information.
              *
              * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              */
@@ -235,10 +235,10 @@ namespace Exporter
              * @brief  This function is invoked to add a bitmap element to the timeline.
              *
              * @param  objectId (IN)
-             *         Object Identifier of the bitmap
+             *         Object Identifier of the bitmap.
              *
              * @param  pBitmapInfo (IN)
-             *         Bitmap placement information
+             *         Bitmap placement information.
              *
              * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              */
@@ -340,7 +340,7 @@ namespace Exporter
              *        Object Identifier
              *
              * @param blendMode (IN)
-             *        Blend mode which needs to be applied to the resource.
+             *        Blend mode that needs to be applied to the resource.
              *
              * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              */
@@ -356,7 +356,7 @@ namespace Exporter
              *        Object Identifier
              *
              * @param visible (IN)
-             *        Boolean variable which determines whether or not the object should be visible.
+             *        Boolean variable that determines whether or not the object should be visible.
              *
              * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              */
@@ -373,7 +373,7 @@ namespace Exporter
              *        Object Identifier
              *
              * @param pFilterable (IN)
-             *        List of filter/s which needs to be applied to the resource.
+             *        List of filter/s that needs to be applied to the resource.
              *
              * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              */
@@ -390,7 +390,7 @@ namespace Exporter
              *        Object Identifier
              *
              * @param matrix (IN)
-             *        A 2D matrix which defines the transform to be applied to the object.
+             *        A 2D matrix that defines the transform to be applied to the object.
              *
              * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              */
@@ -407,7 +407,7 @@ namespace Exporter
              *        Object Identifier
              *
              * @param colorMatrix (IN)
-             *        A matrix which defines the color transform to be applied to the object.
+             *        A matrix that defines the color transform to be applied to the object.
              *
              * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              */
@@ -427,7 +427,7 @@ namespace Exporter
 
 
             /**  
-             * @brief  This function is invoked for a frame which has frame script associated with it.
+             * @brief  This function is invoked for a frame that has frame script associated with it.
              *         This function can be called multiple times between two consecutive calls to
              *         ShowFrame(). Number of times this function is called depends on the number of 
              *         layers that has frame scripts.
@@ -451,13 +451,13 @@ namespace Exporter
              * @param  layerNum (IN)
              *         Layer number in which the frame script resided and now needs to be removed.
              *
-             * @return On success, FCM_SUCCESS is returned; otherwise an error code is returned.
+             * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              */
             virtual FCM::Result _FCMCALL RemoveFrameScript(FCM::U_Int32 layerNum) = 0;
 
             
             /**  
-             * @brief  This function is invoked for a frame which has frame label associated with it.
+             * @brief  This function is invoked for a frame that has frame label associated with it.
              *         This function can be called multiple times between two consecutive calls to
              *         ShowFrame(). 
              *
@@ -467,7 +467,7 @@ namespace Exporter
              * @param  labelType (IN)
              *         Type of label. This can be either KEY_FRAME_LABEL_NAME or KEY_FRAME_LABEL_ANCHOR.
              *
-             * @return On success, FCM_SUCCESS is returned; otherwise an error code is returned.
+             * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              *
              * @note   Caller of this function owns "pLabel" and is responsible for deleting it.
              */

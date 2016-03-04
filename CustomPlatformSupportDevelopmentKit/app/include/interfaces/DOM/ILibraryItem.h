@@ -253,8 +253,8 @@ namespace DOM
         * @brief  GetProperties returns a set of property names and their values.
         *
         * @param  pPropDict (OUT)
-        *         Dictionary containing the preperties and their values. The possible properties 
-        *         int the dictionary are as follows:
+        *         Dictionary containing the properties and their values. The possible properties 
+        *         in the dictionary are as follows:
         *           kLibProp_LinkageClass_DictKey,
         *           kLibProp_LinkageBaseClass_DictKey,
         *           kLibProp_LinkageIdentifier_DictKey,

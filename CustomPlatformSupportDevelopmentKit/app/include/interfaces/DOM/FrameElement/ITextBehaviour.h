@@ -268,7 +268,7 @@ namespace DOM
              *         returns true if a border around the text element is to be drawn.
              *
              * @return On success, FCM_SUCCESS is returned, else an error code is returned. 
-             */
+             */																																														
             virtual FCM::Result _FCMCALL IsBorderDrawn(FCM::Boolean& borderDrawn) = 0;
             
 
@@ -276,7 +276,7 @@ namespace DOM
              * @brief  This function returns if contents of the text element is to be rendered as html.
              *
              * @param  renderAsHtml (OUT)
-             *         returns true if a text of the text element is to be rendered as html.
+             *         returns true if a text of the text element is to be rendered as HTML.
              *
              * @return On success, FCM_SUCCESS is returned, else an error code is returned. 
              */

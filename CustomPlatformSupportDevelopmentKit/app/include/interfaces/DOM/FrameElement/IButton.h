@@ -40,7 +40,7 @@ namespace DOM
         /**
          * @enum ButtonTrackMode
          *
-         * @brief Defines the different tracking option availabe in Flash for a button instance.
+         * @brief Defines the different tracking options available for a Button instance.
          */
         enum ButtonTrackMode
         {
@@ -91,10 +91,10 @@ namespace DOM
 
             /**
              * @brief  This function gets the tracking option that is set for
-             *         the button instance.
+             *         the Button instance.
              *
              * @param  trackMode (OUT)
-             *         Tracking option that is set for the button instance.
+             *         Tracking option that is set for the Button instance.
              *
              * @return Returns FCM_SUCCESS on success, else returns an error code.
              */

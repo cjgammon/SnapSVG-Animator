@@ -51,7 +51,7 @@ namespace FCM
      *
      * @brief Minor version of the framework.
      */
-    #define FCM_VERSION_MINOR                   0x02
+    #define FCM_VERSION_MINOR                   0x03
     
 
     /**
@@ -281,7 +281,7 @@ namespace FCM
     /**
      * @def   INTERFACE_ENTRY_AGGREGATE
      *
-     * @brief Add interface with aggregration.
+     * @brief Add interface with aggregation.
      */
     #define INTERFACE_ENTRY_AGGREGATE(ifx, punk)\
     {IID(ifx),offsetofmem(punk,_ClassImpl),_Delegate},
@@ -308,7 +308,7 @@ namespace FCM
     /**
      * @def   BEGIN_CLASS_ENTRY
      *
-     * @brief Format to mark the begining of class map.
+     * @brief Format to mark the beginning of class map.
      */
     #define BEGIN_CLASS_ENTRY \
             public: \
@@ -343,7 +343,7 @@ namespace FCM
     /**
      * @def   DllExport
      *
-     * @brief Used to export a function from a plugin
+     * @brief Used to export a function from a plug-in
      */
     #if defined(__GNUC__)
         #ifndef DllExport
@@ -359,7 +359,7 @@ namespace FCM
     /**
      * @def   FCMPLUGIN_IMP_EXP
      *
-     * @brief Used to export a function from the plugin.
+     * @brief Used to export a function from the plug-in.
      */
     #if defined( __FCM_INTERNAL_PLUGIN__)
         #define FCMPLUGIN_IMP_EXP

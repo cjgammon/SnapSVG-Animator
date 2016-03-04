@@ -81,7 +81,7 @@ namespace DOM
                  * @brief  This function is used to open a FLA file.
                  *
                  * @param  pFullPath (IN)
-                 *         The absolue path of the file on disk.
+                 *         The absolute path of the file on disk.
                  * 
                  * @param  pOutDocument (OUT)
                  *         Document

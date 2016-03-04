@@ -161,7 +161,7 @@ namespace DOM
 
             /** 
              * This is valid only if loopMode is set to SOUND_REPEAT_FINITE. 
-             * Defines the number of times loop will be repeated.
+             * Defines the number of times the loop will be repeated.
              */
             FCM::U_Int16 repeatCount;
         };
@@ -170,7 +170,7 @@ namespace DOM
         /**
          * @struct SOUND_LIMIT
          *
-         * @brief  Defines the starting and ending point of the sound object. 
+         * @brief  Defines the starting and ending points of the sound object. 
          */
         struct SOUND_LIMIT
         {
@@ -206,7 +206,7 @@ namespace DOM
         BEGIN_DECLARE_INTERFACE(ISound, IID_ISOUND_ELEMENT)
 
             /**
-             * @brief  This functions gets the sound item in the library that is used to 
+             * @brief  This function gets the sound item in the library that is used to 
              *         instantiate the sound object.
              *
              * @param  pSoundItem (OUT)

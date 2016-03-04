@@ -20,7 +20,7 @@
  * @file  IMatrix2D.h
  *
  * @brief This file contains the interface for IMatrix2D. This interface provides 
- *        a way to deceompose a 2-dimensional transformation matrix.
+ *        a way to decompose a 2-dimensional transformation matrix.
  */
 
 #ifndef IMatrix2D_H_
@@ -77,7 +77,7 @@ namespace DOM
              * @param  matrix (IN)
              *         Matrix2D object.
              *
-             * @return On success, FCM_SUCCESS is returned; else an error code is returned.
+             * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              */
             virtual FCM::Result _FCMCALL SetMatrix(const MATRIX2D& matrix) = 0;
 
@@ -88,7 +88,7 @@ namespace DOM
              * @param  rotation (OUT)
              *         Rotation obtained by decomposing the matrix set.
              *
-             * @return On success, FCM_SUCCESS is returned; else an error code is returned.
+             * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              */
             virtual FCM::Result _FCMCALL GetRotation(FCM::Float& rotation) = 0;
 
@@ -99,7 +99,7 @@ namespace DOM
              * @param  scale (OUT)
              *         Scale obtained by decomposing the matrix set.
              *
-             * @return On success, FCM_SUCCESS is returned; else an error code is returned.
+             * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              */
             virtual FCM::Result _FCMCALL GetScale(POINT2D& scale) = 0;
 
@@ -110,7 +110,7 @@ namespace DOM
              * @param  skew (OUT)
              *         Skew obtained by decomposing the matrix set.
              *
-             * @return On success, FCM_SUCCESS is returned; else an error code is returned.
+             * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              */
             virtual FCM::Result _FCMCALL GetSkew(POINT2D& skew) = 0;
 

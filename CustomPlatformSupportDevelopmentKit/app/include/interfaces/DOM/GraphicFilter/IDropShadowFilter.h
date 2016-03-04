@@ -124,7 +124,7 @@ namespace DOM
              *         effects are applied.
              *
              * @param  angle (OUT) 
-             *         Angle at which the filter effects are applied(in Radians).
+             *         Angle at which the filter effects are applied (in Radians).
              *
              * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              */
@@ -195,7 +195,7 @@ namespace DOM
              *
              * @param  enabled (OUT) 
              *         Boolean value which is set to true when filter is enabled 
-             *         for the object in context else set to false.
+             *         for the object in context, else set to false.
              *
              * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              */

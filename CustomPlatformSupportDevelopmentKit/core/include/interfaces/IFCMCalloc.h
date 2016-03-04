@@ -21,8 +21,8 @@
  *
  * @brief This file contains interface for IFCMCalloc. 
  *        The IFCMCalloc interface provides a mechanism for allocating and deallocating memory.
- *        This interface is used when there is shared memory between Plugin and FCM Application and
- *        the memory being allocated by Plugin is freed by FCM Application (or) vice-versa.
+ *        This interface is used when there is shared memory between Plug-in and FCM Application and
+ *        the memory being allocated by Plug-in is freed by FCM Application (or) vice-versa.
  */
 
 #ifndef IFCM_CALLOC_H_
@@ -71,9 +71,9 @@ namespace FCM
      * @brief  Allocates memory of the size requested by the parameter cb.
      *
      * @param  cb (IN)
-     *         size of the memory to be allocated.
+     *         Size of the memory to be allocated.
      *
-     * @return returns a pointer to the allocated memory.
+     * @return Returns a pointer to the allocated memory.
      */
     virtual FCM::PVoid _FCMCALL Alloc(FCM::U_Int32 cb) = 0;
 
@@ -82,7 +82,7 @@ namespace FCM
     * @brief  Deallocates the memory pointed by the param pv.
     *
     * @param  pv (IN)
-    *         pointer to memory to be deallocated.
+    *         Pointer to memory to be deallocated.
     */
     virtual void _FCMCALL Free(FCM::PVoid pv) = 0;
 

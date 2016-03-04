@@ -85,11 +85,11 @@ namespace Exporter
              *         FLA Document
              *
              * @param  pFilePath (IN)
-             *         A string, that specifies the absolute path (including name) 
+             *         A string that specifies the absolute path (including name) 
              *         of the exported "SWF" file. The parent directory should exist.
              * 
-             * @return On success, FCM_SUCCESS is returned; on cancellation FCM_OPERATION_CANCELLED
-             *         is returned; for any other failure a non-zero error code is returned.
+             * @return On success, FCM_SUCCESS is returned, on cancellation FCM_OPERATION_CANCELLED
+             *         is returned. For any other failure, a non-zero error code is returned.
              *
              * @note   It uses the publish settings set through the publish setting dialog using
              *         "com.adobe.events.flash.extension.savestate" event.
@@ -106,11 +106,11 @@ namespace Exporter
              *         Timeline to be exported
              *
              * @param  pFilePath (IN)
-             *         A string, that specifies the absolute path (including name) 
+             *         A string that specifies the absolute path (including name) 
              *         of the exported "SWF" file. The parent directory should exist.
              * 
-             * @return On success, FCM_SUCCESS is returned; on cancellation FCM_OPERATION_CANCELLED
-             *         is returned; for any other failure a non-zero error code is returned.
+             * @return On success, FCM_SUCCESS is returned. On cancellation FCM_OPERATION_CANCELLED
+             *         is returned. For any other failure, a non-zero error code is returned.
              *
              * @note   It uses the publish settings set through the publish setting dialog using
              *         "com.adobe.events.flash.extension.savestate" event.

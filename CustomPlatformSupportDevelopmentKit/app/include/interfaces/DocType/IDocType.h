@@ -20,9 +20,9 @@
  * @file  IDocType.h
  *
  * @brief This file contains interface for IDocType. IDocType provides 
- *        information about feature matrix through which Flash is able to 
- *        control UI and handle copy/paste of items across docs of different
- *        doctypes. The IDocType interface needs to be implemented by a 
+ *        information about feature matrix through which 'Adobe Animate CC' is 
+ *        able to control UI and handle copy/paste of items across docs of 
+ *        different doctypes. The IDocType interface needs to be implemented by a 
  *        "DocType" plugin.
  */
 
@@ -69,7 +69,7 @@ namespace DocType
          * @param pFeatureMatrix (OUT)  
          *        Feature matrix
          *
-         * @return On success, FCM_SUCCESS is returned; else an error code is returned.
+         * @return On success, FCM_SUCCESS is returned, else an error code is returned.
          */
         virtual FCM::Result _FCMCALL GetFeatureMatrix(PIFeatureMatrix& pFeatureMatrix) = 0;
 

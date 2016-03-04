@@ -46,7 +46,7 @@ namespace DOM
     {
 
         /**
-         * @brief Defines the universally unique Interface ID for IRect.
+         * @brief Defines the universally-unique Interface ID for IRect.
          *
          * @note  Textual Representation:  {340DA6FD-EDEF-4969-9E66-EE9D7FF13099}
          */
@@ -78,7 +78,7 @@ namespace DOM
              * @param  rect (OUT)
              *         Rectangular bounds
              *
-             * @return On success, FCM_SUCCESS is returned; else an error code is returned.
+             * @return On success, FCM_SUCCESS is returned, else an error code is returned.
              */
             virtual FCM::Result _FCMCALL GetRect(RECT& rect) = 0;
             

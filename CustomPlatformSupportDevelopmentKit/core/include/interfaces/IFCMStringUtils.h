@@ -21,7 +21,7 @@
  *
  * @brief This file contains interface for IFCMStringUtils. 
  *        The IFCMStringUtils interface is supported by any FCM Application that wants to provide
- *        string utility functions to plugins. This Interface can be obtained by GetService of the
+ *        string utility functions to plug-ins. This Interface can be obtained by GetService of the
  *        main Application callback Interface.
  */
 

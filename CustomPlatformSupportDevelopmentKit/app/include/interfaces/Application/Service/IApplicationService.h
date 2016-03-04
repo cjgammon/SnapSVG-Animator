@@ -2,7 +2,7 @@
 * ADOBE CONFIDENTIAL
 * ___________________
 *
-*  Copyright [2013] Adobe Systems Incorporated
+*  Copyright [2015] Adobe Systems Incorporated
 *  All Rights Reserved.
 *
 * NOTICE:  All information contained herein is, and remains
@@ -17,16 +17,16 @@
 ******************************************************************************/
 
 /**
- * @file  IFlashApplicationService.h
+ * @file  IApplicationService.h
  *
- * @brief This file contains interface for IFlashApplicationService.
- *        IFlashApplicationService provides Flash Application level services.
- *
- * @deprecated This file is deprecated. Please use IApplicationService.h.
+ * @brief This file contains interface for IApplicationService.
+ *        IApplicationService provides "Adobe Animate CC" application level services.
+ *        The definitions in this file are valid for CPSDK version 1.3 and above
+ *        (or for 'Adobe Animate CC').
  */
 
-#ifndef IFLASH_APPLICATION_SERVICE_H_
-#define IFLASH_APPLICATION_SERVICE_H_
+#ifndef IAPPLICATION_SERVICE_H_
+#define IAPPLICATION_SERVICE_H_
 
 #include "FCMPreConfig.h"
 #include "FCMTypes.h"
@@ -51,14 +51,12 @@ namespace Application
     namespace Service
     {
         /**
-         * @brief Defines the universally-unique Interface ID for IFlashApplicationService.
+         * @brief Defines the universally-unique Interface ID for IApplicationService.
          *
-         * @note  Textual Representation: {CF97A574-E99B-43AB-931A-1C3ABB2A98E6}
-         *
-         * @deprecated This constant is deprecated. Please use IID_IAPPLICATION_SERVICE.
+         * @note  Textual Representation: {9688268F-961D-4811-A8C3-DF7E06494B89}
          */
-        FCM::ConstFCMIID IID_IFLASH_APPLICATION_SERVICE =
-            {0xcf97a574, 0xe99b, 0x43ab, {0x93, 0x1a, 0x1c, 0x3a, 0xbb, 0x2a, 0x98, 0xe6}};
+        FCM::ConstFCMIID IID_IAPPLICATION_SERVICE =
+            {0x9688268f, 0x961d, 0x4811, {0xa8, 0xc3, 0xdf, 0x7e, 0x6, 0x49, 0x4b, 0x89}};
     }
 }
 
@@ -73,13 +71,14 @@ namespace Application
     namespace Service
     {
         /**
-         * @class IFlashApplicationService
+         * @class IApplicationService
          *
-         * @brief This service provides Flash application-level services.
+         * @brief This service provides "Adobe Animate CC" application-level services.
          *
-         * @deprecated This interface is deprecated. Please use IApplicationService.
+         * @note  This interface is supported for CPSDK version 1.3 and above 
+         *        (or for 'Adobe Animate CC').
          */
-        BEGIN_DECLARE_INTERFACE(IFlashApplicationService, IID_IFLASH_APPLICATION_SERVICE)
+        BEGIN_DECLARE_INTERFACE(IApplicationService, IID_IAPPLICATION_SERVICE)
 
             /**
              * @brief  This function returns the active FLA document.
@@ -88,17 +87,15 @@ namespace Application
              *         Active FLA document
              *
              * @return On success, FCM_SUCCESS is returned; else an error code is returned.
-             *
-             * @deprecated This function is deprecated. Please use IApplicationService::GetActiveFLADocument().
              */
             virtual FCM::Result _FCMCALL GetActiveFLADocument(DOM::PIFLADocument& pDocument) = 0;
 
 
             /**
-             * @brief  This function returns the Flash Professional version.
+             * @brief  This function returns the application version.
              *
              * @param  version (OUT)
-             *         FlashPro Version
+             *         Application Version
              *
              * @note   "version" is a 32-bit integer. Version can be converted into form 
              *         Major.Minor.Maintenance.Build, by doing the following:
@@ -109,14 +106,12 @@ namespace Application
              *         ((version      ) & 0xFF) gives the Build number.
              *
              * @return On success, FCM_SUCCESS is returned; else an error code is returned.
-             *
-             * @deprecated This function is deprecated. Please use IApplicationService::GetVersion().
              */
             virtual FCM::Result _FCMCALL GetVersion(FCM::U_Int32& version) = 0;
 
 
             /**
-             * @brief  This function returns the locale of the Flash Professional user interface.
+             * @brief  This function returns the locale of the application user interface.
              *
              * @param  ppLanguageCode (OUT)
              *         Five character code identifying the locale/language of the application’s user 
@@ -128,8 +123,6 @@ namespace Application
              *
              * @note   The caller of this function must release the 
              *         memory for 'ppLanguageCode' using IFCMCalloc::Free().
-             *
-             * @deprecated This function is deprecated. Please use IApplicationService::GetLanguageCode().
              */
             virtual FCM::Result _FCMCALL GetLanguageCode(StringRep8* ppLanguageCode) = 0;
 
@@ -143,5 +136,5 @@ namespace Application
 
 #include "FCMPostConfig.h"
 
-#endif // IFLASH_APPLICATION_SERVICE_H_
+#endif // IAPPLICATION_SERVICE_H_
 

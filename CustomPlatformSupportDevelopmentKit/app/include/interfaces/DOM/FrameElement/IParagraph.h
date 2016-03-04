@@ -49,7 +49,7 @@ namespace DOM
          {
              /** 
               * Left align if orientation is horizontal. Top align if orientation 
-              * is vertical 
+              * is vertical. 
               */
              ALIGN_MODE_LEFT,
 
@@ -77,7 +77,7 @@ namespace DOM
     {
         /**
          * @brief Defines the universally-unique interface ID for 
-         *        IParagraph
+         *        IParagraph.
          *
          * @note  Textual Representation: {BB9B73EA-06F7-4AC8-B51B-2E5A47BFC3B1}
          */

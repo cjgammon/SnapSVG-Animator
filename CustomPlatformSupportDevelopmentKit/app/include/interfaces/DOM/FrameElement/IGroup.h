@@ -50,7 +50,7 @@ namespace DOM
     {
         /**
          * @brief Defines the Interface ID (which is universally unique) for 
-         *        IGroup
+         *        IGroup.
          *
          * @note  Textual Representation: {E43E72E4-B425-46A4-9123-F3363AA59A37}
          */
