@@ -16,10 +16,10 @@ function SVGAnim(data, w, h, fps, params) {
     w = w || 100;
     h = h || 100;
 
-    autoplay = params.autoplay;
+    autoplay = params.autoplay || true;
     playing = autoplay;
 
-    instance.debug = true;
+    instance.debug = false;
 
     SVGAnim.prototype.toString = function () {
         return "SnapSVGAnimator v" + this.version;
@@ -40,6 +40,7 @@ function SVGAnim(data, w, h, fps, params) {
     create(instance.s);
 
     if (instance.debug) {
+        playing = false;
         window.addEventListener('keydown', handleKeyDown);
     }
 

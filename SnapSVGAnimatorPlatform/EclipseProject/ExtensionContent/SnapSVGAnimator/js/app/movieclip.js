@@ -322,16 +322,9 @@ MovieClip.prototype.clearChildren = function () {
 MovieClip.prototype._animate = function () {
     var i;
 
-    for(i = 0; i < this.children.length; i += 1)
-    {
-        if (this.children[i]._animate) {
-            this.children[i]._animate();
-        }
-    }
-
-    if (!this.playing) {
-      return;
-    }
+    //if (!this.playing) {
+    //  return;
+    //}
 
     this.step_1_animTimeline();
     this.step_2_enterFrame();
@@ -339,6 +332,13 @@ MovieClip.prototype._animate = function () {
     this.step_4_frameConstructed();
     this.step_5_frameScripts();
     this.step_6_exitFrame();
+
+    for(i = 0; i < this.children.length; i += 1)
+    {
+        if (this.children[i]._animate) {
+            this.children[i]._animate();
+        }
+    }
 
     GP.purge();
 };
@@ -410,7 +410,6 @@ MovieClip.prototype._runCommands = function (commands) {
             this.commandList.push(command);
           break;
           case "SetFrameLabel":
-            console.log('label', cmdData);
             command = new CMD.SetFrameLabelCommand(cmdData.Name);
             this.commandList.push(command);
           break;
@@ -426,7 +425,7 @@ MovieClip.prototype._runCommands = function (commands) {
   this.executeCommands(this.commandList, this.resourceManager);
 }
 
-//update timelien animations
+//update timeline animations
 MovieClip.prototype.step_1_animTimeline = function (seekMode, seekEnd) {
 
   if (typeof seekMode === "undefined") { seekMode = false; }
