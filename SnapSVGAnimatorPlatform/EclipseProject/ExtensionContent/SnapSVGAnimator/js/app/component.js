@@ -9,7 +9,14 @@ function SVGAnim(data, w, h, fps, params) {
         timeline,
         playing,
         autoplay,
-        cbk;
+        cbk,
+        msg,
+        color = '#008460';
+
+    instance.version = '1.2.1';
+
+    msg = 'Snap.svg Animator v' + instance.version;
+    console.log("%c" + msg, "color:" + color + ";font-weight:bold;");
 
     params = params|| {};
     fps = fps || 24;
@@ -22,7 +29,7 @@ function SVGAnim(data, w, h, fps, params) {
     instance.debug = false;
 
     SVGAnim.prototype.toString = function () {
-        return "SnapSVGAnimator v" + this.version;
+        return msg;
     };
 
     instance.MovieClip = MovieClip;
