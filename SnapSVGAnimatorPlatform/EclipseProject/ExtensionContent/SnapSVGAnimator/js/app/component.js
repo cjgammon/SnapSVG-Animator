@@ -13,7 +13,7 @@ function SVGAnim(data, w, h, fps, params) {
         msg,
         color = '#008460';
 
-    instance.version = '1.2.1';
+    instance.version = '1.2.3';
 
     msg = 'Snap.svg Animator v' + instance.version;
     console.log("%c" + msg, "color:" + color + ";font-weight:bold;");
@@ -23,7 +23,11 @@ function SVGAnim(data, w, h, fps, params) {
     w = w || 100;
     h = h || 100;
 
-    autoplay = params.autoplay || true;
+    if (typeof(params.autoplay) !== 'undefined') {
+        autoplay = params.autoplay;
+    } else {
+        autoplay = true;
+    }
     playing = autoplay;
 
     instance.debug = false;
@@ -85,6 +89,11 @@ function SVGAnim(data, w, h, fps, params) {
     };
 
     this.stop = function () {
+
+      if (instance.mc.m_currentFrameNo == 0) { //force render if called immediately
+        instance.mc._animate();
+      }
+
       instance.mc.stop();
       playing = false;
     };
