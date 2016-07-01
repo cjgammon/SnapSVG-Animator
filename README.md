@@ -1,7 +1,7 @@
 Snap.svg Animator
 =================
 
-This is a Plugin for Flash CC exporting animated SVG using the Snap.svg javascript library to render content.
+This is a Plugin for Animate CC exporting animated SVG using the Snap.svg javascript library to render content.
 
 ## Install Plugin
 There are two ways to install the plug-in. Once the plug-in is installed you can create a new 'SnapSVGAnimator' document and publish like normal.
@@ -20,4 +20,4 @@ External contributions can be made in the form of a [Pull Request](https://help.
 More instructions on installing plug-ins can be found [here](https://helpx.adobe.com/flash/using/custom-platform-support.html).
 
 ###### Building Custom Platform Plug-Ins
-To read more about building or writing your own Custom Platform Plugins for Flash go [here](https://helpx.adobe.com/flash/using/enabling-support-custom-platforms.html).
+To read more about building or writing your own Custom Platform Plugins for Animate go [here](https://helpx.adobe.com/flash/using/enabling-support-custom-platforms.html).
