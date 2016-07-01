@@ -3,8 +3,6 @@ Snap.svg Animator
 
 This is a Plugin for Flash CC exporting animated SVG using the Snap.svg javascript library to render content.
 
-This is in **active development**.
-
 ## Install Plugin
 There are two ways to install the plug-in. Once the plug-in is installed you can create a new 'SnapSVGAnimator' document and publish like normal.
 
