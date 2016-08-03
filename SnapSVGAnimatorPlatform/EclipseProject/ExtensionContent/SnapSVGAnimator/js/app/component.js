@@ -32,6 +32,13 @@ function SVGAnim(data, w, h, fps, params) {
 
     instance.debug = false;
 
+    if (instance.debug) {
+        console.log("%c" + "/*DEBUG*/", "color:#FF6666;font-weight:bold;");
+        playing = false;
+        autoplay = false;
+        window.addEventListener('keydown', handleKeyDown);
+    }
+
     SVGAnim.prototype.toString = function () {
         return msg;
     };
@@ -49,11 +56,6 @@ function SVGAnim(data, w, h, fps, params) {
     //TODO:: set bg color here
 
     create(instance.s);
-
-    if (instance.debug) {
-        playing = false;
-        window.addEventListener('keydown', handleKeyDown);
-    }
 
     function create(s) {
         var maintimelineIndex,
@@ -112,11 +114,12 @@ function SVGAnim(data, w, h, fps, params) {
     }
 
     function handleKeyDown(e) {
+
         switch (e.keyCode) {
-          case 39:
+          case 65: //A inc frame by 1
            interval();
           break;
-          case 32:
+          case 32: //SPACE toggles playing
             if (instance.mc.playing) {
               instance.stop();
             } else {

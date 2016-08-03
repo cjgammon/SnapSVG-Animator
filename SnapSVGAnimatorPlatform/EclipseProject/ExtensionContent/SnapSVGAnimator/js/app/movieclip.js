@@ -574,7 +574,7 @@ MovieClip.prototype._loopAround = function (seekMode, seekEnd) {
   if (typeof seekEnd === "undefined") { seekEnd = false; }
 
   this.commandList = [];
-  this._checkLoop();
+  this._loop();
   this.m_currentFrameNo = 0;
 
   frame = this.getFrame(this.m_currentFrameNo);
