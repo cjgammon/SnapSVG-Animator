@@ -1,6 +1,5 @@
 
-### banner.js  
-### footer.js  
+### footer.js/banner.js  
   - boilerplate for packaging library. banner.js goes at top, footer.js goes at bottom
 
 ### component.js  
