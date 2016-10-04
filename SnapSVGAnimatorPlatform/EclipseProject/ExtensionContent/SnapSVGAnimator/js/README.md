@@ -1,6 +1,6 @@
 
 ### footer.js/banner.js  
-  - boilerplate for packaging library. banner.js goes at top, footer.js goes at bottom
+  - boilerplate for packaging library. banner.js goes at top, footer.js goes at bottom.
 
 ### component.js  
   - `SVGAnim`, The base animation object for instantiating your timeline animation.
