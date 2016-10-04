@@ -1,38 +1,38 @@
 
-`banner.js`  
-`footer.js`  
+### banner.js  
+### footer.js  
   - boilerplate for packaging library. banner.js goes at top, footer.js goes at bottom
 
-`component.js`  
+### component.js  
   - `SVGAnim`, The base animation object for instantiating your timeline animation.
 
-`commands.js`  
+### commands.js  
   - Commands for placing removing or updating objects to the stage, defined in the timeline JSON.
-* PlaceObjectCommand
-* MoveObjectCommand
-* UpdateObjectCommand
-* RemoveObjectCommand
-* UpdateVisibilityCommand
-* UpdateMaskCommand
-* ApplyMaskCommand
-* UpdateColorTransformCommand
+* `PlaceObjectCommand`
+* `MoveObjectCommand`
+* `UpdateObjectCommand`
+* `RemoveObjectCommand`
+* `UpdateVisibilityCommand`
+* `UpdateMaskCommand`
+* `ApplyMaskCommand`
+* `UpdateColorTransformCommand`
 
-`bitmap.js`  
+### bitmap.js
   - Bitmap class for drawing bitmap assets as snap.svg image.
 
-`shape.js`  
+### shape.js  
   - Shape class for drawing geometry in snap.svg.
 
-`movieclip.js`  
+### movieclip.js  
   - MovieClip class displaying nested content with a timeline.
 
-`text.js`  
+### text.js  
   - Text class displaying text in snap.svg.
 
-`garbagePool.js`   
+### garbagePool.js    
   - helper class for managing and purging empty or unused elements in the DOM.
 
-`resourceManager.js`  
+### resourceManager.js  
   - model class for resources generated from JSON.
   * `getShape()`
   * `getMovieClip()`
