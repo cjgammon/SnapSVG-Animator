@@ -1,4 +1,10 @@
 
+### SnapSVGAnimator.js
+  - concatenated library.
+
+### SnapSVGAnimator.min.js
+  - minified concatenated library.  
+
 ### footer.js/banner.js  
   - boilerplate for packaging library. banner.js goes at top, footer.js goes at bottom.
 
