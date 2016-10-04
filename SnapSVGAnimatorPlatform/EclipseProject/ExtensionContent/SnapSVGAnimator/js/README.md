@@ -3,10 +3,10 @@
 `footer.js`  
   -boilerplate for packaging library. banner.js goes at top, footer.js goes at bottom
 
-`component.js`
+`component.js`  
   -`SVGAnim`, The base animation object for instantiating your timeline animation.
 
-`commands.js`
+`commands.js`  
   -Commands for placing removing or updating objects to the stage, defined in the timeline JSON.
   *PlaceObjectCommand
   *MoveObjectCommand
