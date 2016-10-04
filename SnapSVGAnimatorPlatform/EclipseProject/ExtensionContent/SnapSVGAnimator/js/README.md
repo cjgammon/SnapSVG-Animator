@@ -1,40 +1,40 @@
 
 `banner.js`  
 `footer.js`  
-  -boilerplate for packaging library. banner.js goes at top, footer.js goes at bottom
+  - boilerplate for packaging library. banner.js goes at top, footer.js goes at bottom
 
 `component.js`  
-  -`SVGAnim`, The base animation object for instantiating your timeline animation.
+  - `SVGAnim`, The base animation object for instantiating your timeline animation.
 
 `commands.js`  
-  -Commands for placing removing or updating objects to the stage, defined in the timeline JSON.
-  *PlaceObjectCommand
-  *MoveObjectCommand
-  *UpdateObjectCommand
-  *RemoveObjectCommand
-  *UpdateVisibilityCommand
-  *UpdateMaskCommand
-  *ApplyMaskCommand
-  *UpdateColorTransformCommand
+  - Commands for placing removing or updating objects to the stage, defined in the timeline JSON.
+* PlaceObjectCommand
+* MoveObjectCommand
+* UpdateObjectCommand
+* RemoveObjectCommand
+* UpdateVisibilityCommand
+* UpdateMaskCommand
+* ApplyMaskCommand
+* UpdateColorTransformCommand
 
-`bitmap.js`
-  -Bitmap class for drawing bitmap assets as snap.svg image.
+`bitmap.js`  
+  - Bitmap class for drawing bitmap assets as snap.svg image.
 
-`shape.js`
-  -Shape class for drawing geometry in snap.svg.
+`shape.js`  
+  - Shape class for drawing geometry in snap.svg.
 
-`movieclip.js`
-  -MovieClip class displaying nested content with a timeline.
+`movieclip.js`  
+  - MovieClip class displaying nested content with a timeline.
 
-`text.js`
-  -Text class displaying text in snap.svg.
+`text.js`  
+  - Text class displaying text in snap.svg.
 
-`garbagePool.js`
-  -helper class for managing and purging empty or unused elements in the DOM.
+`garbagePool.js`   
+  - helper class for managing and purging empty or unused elements in the DOM.
 
-`resourceManager.js`
-  -model class for resources generated from JSON.
-  *`getShape()`
-  *`getMovieClip()`
-  *`getBitmap()`
-  *`getText()`
+`resourceManager.js`  
+  - model class for resources generated from JSON.
+  * `getShape()`
+  * `getMovieClip()`
+  * `getBitmap()`
+  * `getText()`
