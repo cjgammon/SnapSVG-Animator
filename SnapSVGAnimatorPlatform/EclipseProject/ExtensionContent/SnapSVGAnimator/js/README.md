@@ -7,7 +7,7 @@
   -`SVGAnim`, The base animation object for instantiating your timeline animation.
 
 `commands.js`
-  -Commands for placing removing or updating objects to the stage, defined in the timeline JSON.
+  -Commands for placing removing or updating objects to the stage, defined in the timeline JSON. 
   *PlaceObjectCommand
   *MoveObjectCommand
   *UpdateObjectCommand
