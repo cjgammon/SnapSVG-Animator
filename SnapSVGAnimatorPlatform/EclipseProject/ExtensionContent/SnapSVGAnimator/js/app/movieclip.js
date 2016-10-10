@@ -322,16 +322,14 @@ MovieClip.prototype.clearChildren = function () {
 MovieClip.prototype._animate = function () {
     var i;
 
-    //if (!this.playing) {
-    //  return;
-    //}
-
-    this.step_1_animTimeline();
-    this.step_2_enterFrame();
-    //this.step_3_addPending();
-    this.step_4_frameConstructed();
-    this.step_5_frameScripts();
-    this.step_6_exitFrame();
+    if (this.playing !== false) {
+        this.step_1_animTimeline();
+        this.step_2_enterFrame();
+        //this.step_3_addPending();
+        this.step_4_frameConstructed();
+        this.step_5_frameScripts();
+        this.step_6_exitFrame();
+    }
 
     for(i = 0; i < this.children.length; i += 1)
     {
