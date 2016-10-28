@@ -1604,12 +1604,11 @@ function SVGAnim(data, w, h, fps, params) {
     };
 
     function interval() {
-        instance.mc._animate();
-
-        clearTimeout(cbk);
         if (playing) {
-            cbk = setTimeout(interval, 1000 / fps);
+            instance.mc._animate();
         }
+        clearTimeout(cbk);
+        cbk = setTimeout(interval, 1000 / fps);
     }
 
     function handleKeyDown(e) {
