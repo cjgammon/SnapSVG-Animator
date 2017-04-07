@@ -1510,17 +1510,19 @@ function SVGAnim(data, w, h, fps, params) {
         autoplay,
         cbk,
         msg,
-        color = '#008460';
+        color = '#008460',
+        elementId;
 
     instance.version = '1.2.3';
 
     msg = 'Snap.svg Animator v' + instance.version;
     console.log("%c" + msg, "color:" + color + ";font-weight:bold;");
 
-    params = params|| {};
+    params = params || {};
     fps = fps || 24;
     w = w || 100;
     h = h || 100;
+    elementId = params.elementId;
 
     if (typeof(params.autoplay) !== 'undefined') {
         autoplay = params.autoplay;
@@ -1547,12 +1549,18 @@ function SVGAnim(data, w, h, fps, params) {
     instance.resourceManager = new ResourceManager(data);
 
     //TODO:: RENDERER
-    instance.s = new Snap(w, h);
+    instance.s = elementId ? new Snap(elementId) : new Snap(w, h);
     id = instance.s.id;
     instance.s.attr('id', id);
     instance.s.attr('viewBox', "0 0 " + w + " " + h);
     instance.s.attr('preserveAspectRatio', 'xMidYMid meet');  //TODO::make this adjustable
     //TODO:: set bg color here
+
+    //Set width and height of element if element id given
+    if(elementId) {
+        instance.s.attr("width", w);
+        instance.s.attr("height", h);
+    }
 
     create(instance.s);
 
