@@ -9,7 +9,6 @@ function SVGAnim(data, w, h, fps, params) {
         timeline,
         playing,
         autoplay,
-        cbk,
         msg,
         color = '#008460',
         elementId;
@@ -90,12 +89,13 @@ function SVGAnim(data, w, h, fps, params) {
         mainTimeline = instance.resourceManager.m_data.DOMDocument.Timeline[maintimelineIndex];
         instance.mc = new MovieClip(mainTimeline, instance.s, instance.resourceManager, id);
 
-        cbk = setTimeout(interval, 1000 / fps);
+        requestAnimationFrame(interval);
     }
 
     this.play = function () {
       instance.mc.play();
       playing = true;
+      requestAnimationFrame(interval);
     };
 
     this.stop = function () {
@@ -112,12 +112,17 @@ function SVGAnim(data, w, h, fps, params) {
         instance.mc.loops = l;
     };
 
-    function interval() {
-        if (playing) {
-            instance.mc._animate();
+    function interval(timestamp) {
+      if(playing) {
+        if(interval.last_invocation === undefined) {
+          interval.last_invocation = -1;
         }
-        clearTimeout(cbk);
-        cbk = setTimeout(interval, 1000 / fps);
+        if(timestamp - interval.last_invocation >= 1000 / fps) {
+          interval.last_invocation = timestamp;
+          instance.mc._animate();
+        }
+        requestAnimationFrame(interval);
+      }
     }
 
     function handleKeyDown(e) {
