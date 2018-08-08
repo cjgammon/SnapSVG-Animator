@@ -879,16 +879,14 @@ MovieClip.prototype.clearChildren = function () {
 MovieClip.prototype._animate = function () {
     var i;
 
-    //if (!this.playing) {
-    //  return;
-    //}
-
-    this.step_1_animTimeline();
-    this.step_2_enterFrame();
-    //this.step_3_addPending();
-    this.step_4_frameConstructed();
-    this.step_5_frameScripts();
-    this.step_6_exitFrame();
+    if (this.playing !== false) {
+        this.step_1_animTimeline();
+        this.step_2_enterFrame();
+        //this.step_3_addPending();
+        this.step_4_frameConstructed();
+        this.step_5_frameScripts();
+        this.step_6_exitFrame();
+    }
 
     for(i = 0; i < this.children.length; i += 1)
     {
@@ -1131,7 +1129,7 @@ MovieClip.prototype._loopAround = function (seekMode, seekEnd) {
   if (typeof seekEnd === "undefined") { seekEnd = false; }
 
   this.commandList = [];
-  this._checkLoop();
+  this._loop();
   this.m_currentFrameNo = 0;
 
   frame = this.getFrame(this.m_currentFrameNo);
@@ -1512,22 +1510,35 @@ function SVGAnim(data, w, h, fps, params) {
         autoplay,
         cbk,
         msg,
-        color = '#008460';
+        color = '#008460',
+        elementId;
 
-    instance.version = '1.2.1';
+    instance.version = '1.2.3';
 
     msg = 'Snap.svg Animator v' + instance.version;
     console.log("%c" + msg, "color:" + color + ";font-weight:bold;");
 
-    params = params|| {};
+    params = params || {};
     fps = fps || 24;
     w = w || 100;
     h = h || 100;
+    elementId = params.elementId;
 
-    autoplay = params.autoplay || true;
+    if (typeof(params.autoplay) !== 'undefined') {
+        autoplay = params.autoplay;
+    } else {
+        autoplay = true;
+    }
     playing = autoplay;
 
     instance.debug = false;
+
+    if (instance.debug) {
+        console.log("%c" + "/*DEBUG*/", "color:#FF6666;font-weight:bold;");
+        playing = false;
+        autoplay = false;
+        window.addEventListener('keydown', handleKeyDown);
+    }
 
     SVGAnim.prototype.toString = function () {
         return msg;
@@ -1538,19 +1549,20 @@ function SVGAnim(data, w, h, fps, params) {
     instance.resourceManager = new ResourceManager(data);
 
     //TODO:: RENDERER
-    instance.s = new Snap(w, h);
+    instance.s = elementId ? new Snap(elementId) : new Snap(w, h);
     id = instance.s.id;
     instance.s.attr('id', id);
     instance.s.attr('viewBox', "0 0 " + w + " " + h);
     instance.s.attr('preserveAspectRatio', 'xMidYMid meet');  //TODO::make this adjustable
     //TODO:: set bg color here
 
-    create(instance.s);
-
-    if (instance.debug) {
-        playing = false;
-        window.addEventListener('keydown', handleKeyDown);
+    //Set width and height of element if element id given
+    if(elementId) {
+        instance.s.attr("width", w);
+        instance.s.attr("height", h);
     }
+
+    create(instance.s);
 
     function create(s) {
         var maintimelineIndex,
@@ -1586,6 +1598,11 @@ function SVGAnim(data, w, h, fps, params) {
     };
 
     this.stop = function () {
+
+      if (instance.mc.m_currentFrameNo == 0) { //force render if called immediately
+        instance.mc._animate();
+      }
+
       instance.mc.stop();
       playing = false;
     };
@@ -1595,20 +1612,20 @@ function SVGAnim(data, w, h, fps, params) {
     };
 
     function interval() {
-        instance.mc._animate();
-
-        clearTimeout(cbk);
         if (playing) {
-            cbk = setTimeout(interval, 1000 / fps);
+            instance.mc._animate();
         }
+        clearTimeout(cbk);
+        cbk = setTimeout(interval, 1000 / fps);
     }
 
     function handleKeyDown(e) {
+
         switch (e.keyCode) {
-          case 39:
+          case 65: //A inc frame by 1
            interval();
           break;
-          case 32:
+          case 32: //SPACE toggles playing
             if (instance.mc.playing) {
               instance.stop();
             } else {
