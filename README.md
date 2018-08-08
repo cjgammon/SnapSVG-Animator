@@ -1,7 +1,7 @@
 Snap.svg Animator
 =================
 
-## Note as you can tell by the lack of activity this project is no longer actively supported. You are welcome to fork or use any code in here as is for your needs.
+## Note: as you can tell by the lack of activity this project is no longer actively supported. You are welcome to fork or use any code in here as is for your needs.
 
 ------------
 
