@@ -1510,10 +1510,14 @@ function SVGAnim(data, w, h, fps, params) {
         autoplay,
         cbk,
         msg,
-        color = '#008460',
-        elementId;
+        style,
+        cssclass,
+        viewBox,
+        preserveAspectRatio,
+        elementId,
+        color = '#008460';
 
-    instance.version = '1.2.3';
+    instance.version = '1.2.4';
 
     msg = 'Snap.svg Animator v' + instance.version;
     console.log("%c" + msg, "color:" + color + ";font-weight:bold;");
@@ -1522,6 +1526,10 @@ function SVGAnim(data, w, h, fps, params) {
     fps = fps || 24;
     w = w || 100;
     h = h || 100;
+    style= params.style || '';
+    cssclass= params.class || '';
+    viewBox=  params.viewBox || "0 0 " + w + " " + h;
+    preserveAspectRatio =  params.preserveAspectRatio || 'xMidYMid meet';
     elementId = params.elementId;
 
     if (typeof(params.autoplay) !== 'undefined') {
@@ -1552,8 +1560,14 @@ function SVGAnim(data, w, h, fps, params) {
     instance.s = elementId ? new Snap(elementId) : new Snap(w, h);
     id = instance.s.id;
     instance.s.attr('id', id);
-    instance.s.attr('viewBox', "0 0 " + w + " " + h);
-    instance.s.attr('preserveAspectRatio', 'xMidYMid meet');  //TODO::make this adjustable
+    if ( cssclass != '' ) {
+        instance.s.attr('class', cssclass);
+    }
+    instance.s.attr('style', style );
+    instance.s.attr('viewBox',              viewBox );
+    instance.s.attr('preserveAspectRatio',  preserveAspectRatio);
+
+
     //TODO:: set bg color here
 
     //Set width and height of element if element id given
